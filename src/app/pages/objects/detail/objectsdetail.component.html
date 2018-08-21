@@ -1,0 +1,101 @@
+<div class="row">
+  <div class=col-md-3>
+    <div class="well well-lg">
+      <div class="thumbnail">
+        <img src="./../../../../assets/img/no-photo.jpg" *ngIf="objectList?.photoUrl == null">
+        <img [src]="objectList?.photoUrl" *ngIf="objectList?.photoUrl != null">
+      </div>
+        <div class="caption">
+          <button data-toggle="modal" data-target="#modalPhoto" class="btn  btn-sm">
+            <i class="fa fa-upload pull-left"></i> Загрузить фото
+          </button>
+          <h4>{{objectList?.name}}</h4>
+          <h5>{{objectList?.descr}}</h5>
+          <p>Статус строительства: <b>{{objectList?.status?.name}}</b></p>
+          <p>Год начала строительства: <b>{{objectList?.dateStartedConstruction  | date: 'dd.MM.yyyy'}}</b></p>
+          <p>Год окончания постройки: <b>{{objectList?.dateFinishedConstruction | date: 'dd.MM.yyyy'}}</b></p>
+          <br>
+          <p>Блоков <span class="badge"> {{objectList?.blocksCount}} </span></p>
+          <p>Подъездов <span class="badge">{{objectList?.porchsCount}}</span></p>
+          <p>Этажей <span class="badge">{{objectList?.floorsCount}}</span></p>
+        </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-9">
+
+    <div style="cursor:pointer" [routerLink]="['/cns/area', idObject]" class="link">Аудит при строительстве<i class="fa fa-level-down"></i></div>
+    <div style="cursor:pointer" [routerLink]="['/ppo/object/detail', idObject]" class="link">Аудит при передаче обьекта в эксплуатацию<i class="fa fa-level-down"></i></div>
+    <div style="cursor:pointer" [routerLink]="['/rpm/object/detail', idObject]" class="link">Аудит при эксплуатации<i class="fa fa-level-down"></i></div>
+    
+    <div style="cursor:pointer" [routerLink]="['/std/area', idObject]" class="link">Стандарты прикрепленные к обьекту<i class="fa fa-level-down"></i></div>
+    <br>
+    <div class="panel panel-primary overflow-hidden">
+      <div class="panel-heading">
+        <div class="panel-heading-btn">
+          <a class="btn btn-xs btn-icon btn-circle btn-warning " data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+            <i class="fa fa-minus"></i>
+          </a>
+        </div>
+        <h4 class="panel-title">Прикрепленные пользователи</h4>
+      </div>
+      <div class="panel-body">
+        <div class=table-responsive>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>ФИО</th>
+                <th>Тел</th>
+                <th>Email</th>
+                <th>Роли</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of UserList">
+                <td>
+                    {{user.fullName}}
+                </td>
+                <td>
+                    {{user.phoneNumber}}
+                </td>
+                <td>
+                    {{user.email}}
+                </td>
+                <td>
+                   <span *ngFor="let r of user.roles; last as isLast">{{r.name}}{{isLast ? '' : ', '}} </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+  
+  </div>
+</div>
+
+<div class="modal inmodal" id="modalPhoto" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Загрузить фото</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-file [(ngModel)]="photoUploads" name="photoUploads"></app-file>
+        <br/>
+        <button (click)="uploadPhoto()" class="btn btn-success btn-zakon" data-dismiss="modal">
+          <i class="fa fa-upload"></i> Загрузить</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-toaster></app-toaster>

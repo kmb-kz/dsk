@@ -1,0 +1,22 @@
+<div class="panel panel-primary overflow-hidden">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#t_collapse_{{itemsCheckList.constructive?.id}}">
+                <i class="fa fa-plus-circle pull-right"></i>
+                {{itemsCheckList.constructive?.name}}
+            </a>
+        </h3>
+    </div>
+    <div id="t_collapse_{{itemsCheckList.constructive?.id}}" class="panel-collapse collapse in">
+        <div class="panel-body">
+            <ng-container *ngIf="itemsCheckList.childrens.length == 0">
+                <app-rpm-clf-item-child [children]="itemsCheckList" [detour]="detour"></app-rpm-clf-item-child>
+            </ng-container>
+            <ng-container *ngIf="itemsCheckList.childrens.length > 0">
+                <ng-container *ngFor="let children of itemsCheckList.childrens">
+                    <app-rpm-clf-item-child [children]="children" [detour]="detour"></app-rpm-clf-item-child>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>

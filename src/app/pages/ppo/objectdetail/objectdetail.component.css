@@ -1,0 +1,13 @@
+.button-container {
+    margin-bottom: 15px;
+}
+.select2-container{
+    width: 100%;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    font-size: 12px;
+    line-height: 20px!important;
+}
+.label {
+    margin-left: 15px;
+}

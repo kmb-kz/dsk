@@ -1,0 +1,64 @@
+<h1 class="page-header">Объекты</h1>
+<div class="row">
+  <div class="col-md-12">
+    <input type="search" class="form-control m-b-10" placeholder="Поиск по названию..." name='search' [(ngModel)]='search' />
+    <button class="btn btn-primary btn-sm" (click)="toggleForm()" style="margin-top: 10px; margin-bottom: 10px;" *ngIf="auth.isInRole('Admin,CnsAdmin')">Добавить объект</button>
+  </div>
+  <div class="col-md-12" *ngIf="visableAddObject">
+    <div class="col-md-6" style="margin-left: 0px;">
+      <div class="panel">
+        <div class="panel-body">
+          <form>
+            <fieldset>
+              <legend>Добавление объекта</legend>
+              <div class="form-group">
+                <label for="nameObject">Наименование объекта</label>
+                <input class="form-control" pInputText [(ngModel)]="name" name="name" />
+              </div>
+              <button type="button" class="btn btn-sm btn-primary m-r-5" (click)="add()">Сохранить</button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngFor="let o of (areas|async)">
+    <div class="col-md-4 ui-sortable" *ngIf='!search || o.name.toLowerCase().indexOf(search.toLowerCase()) > -1'>
+      <div class="panel panel-inverse" data-sortable-id="index-1">
+        <div class="panel-heading" style="cursor: default;">
+          <h4 class="panel-title">
+            <i class="fa fa-home"></i> {{o.name}}
+            <button class="btn btn-danger btn-icon btn-circle btn-sm pull-right" title="Удалить объект" (click)="removeArea(o.id,o.name)">
+              <i class="fa fa-remove"></i>
+            </button>
+          </h4>
+        </div>
+        <div style="cursor:pointer" [routerLink]="['/cns/area', o.id]">
+          {{o.url}}
+          <div *ngIf="o.photoUrl!=null" [ngStyle]="{'background-image': 'url(' + host+o.photoUrl + ')'}" style="
+        height: 150px;  
+        background-size: cover;">
+          </div>
+          <div *ngIf="o.photoUrl==null" style="background-image: url('/assets/img/no-photo.jpg');
+        height: 150px;  
+        background-size: cover;">
+          </div>
+          <div class="list-group">
+            <a class="list-group-item list-group-item-inverse text-ellipsis">
+              <span class="badge badge-success">{{o.notMatches || 0}}</span>
+              1. Отмечено (Замечании)
+            </a>
+            <a class="list-group-item list-group-item-inverse text-ellipsis">
+              <span class="badge badge-primary">{{o.notMatches - o.fixed || 0}}</span>
+              2. В работе (Замечании)
+            </a>
+            <a class="list-group-item list-group-item-inverse text-ellipsis">
+              <span class="badge badge-inverse">{{o.fixed || 0}}</span>
+              3. Исполнено (Замечании)
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

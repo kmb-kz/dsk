@@ -1,0 +1,36 @@
+asdasdasd
+<b>Группа - {{(model.Standard|async)?.group}}</b>
+<br>
+<b>Конструктив - {{(model.Standard|async)?.constructive}}</b>
+<br>
+<b>Дата создания стандарта - {{(model.Standard|async)?.dateCreated | date: 'dd.MM.yyyy'}}</b>
+<br>
+<b>Дата назначения стандарта к объекту - {{(model.Standard|async)?.dateAttached | date: 'dd.MM.yyyy'}}</b>
+<br>
+<p>
+  {{(model.Standard|async)?.description}}
+</p>
+<div class="row">
+    <div class="col-md-6">
+        <h5>Примеры корректной работы</h5>
+        <p-galleria [images]="validImages" panelWidth="100%" [autoPlay]='false'></p-galleria>
+    </div>
+    <div class="col-md-6">
+        <h5>Примеры некорректной работы</h5>
+        <p-galleria [images]="invalidImages" panelWidth="100%" [autoPlay]='false'></p-galleria>
+    </div>
+</div>
+<table class="table table-stripper">
+  <tr>
+    <th>Показатель</th>
+    <th>Значение</th>
+    <th>Ед.измерения</th>
+  </tr>
+  <tr *ngFor='let parameter of (model.Standard|async)?.parameters'>
+    <td>{{parameter.type.name}}</td>
+    <td>{{parameter.value}}</td>
+    <td>{{parameter.measurement}}</td>
+  </tr>
+</table>
+
+<a *ngIf='auth.isInRole("ProjectManager")' [routerLink]='["change"]' class="btn btn-primary"> Запрос на замену стандарта</a>

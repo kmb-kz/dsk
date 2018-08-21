@@ -1,0 +1,15 @@
+<div class="col-md-4 col-sm-4 col-lg-4">
+  <button class="btn btn-primary btn-sm btn-block">Добавить конструктив</button>
+  <!--div class="btn-group-vertical btn-group-ppo btn-group-rpm">
+      <button type="button" class="btn btn-white btn-rpm btn-sm" *ngFor="let c of constructive" (click)="loadTypeRemark(c.id,1,null)">{{c.name}}</button>
+    </div-->
+
+
+  <div class="list-group">
+    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start"  *ngFor="let c of constructive">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{c.name}}</h5>       
+      </div>     
+    </a>
+  </div>
+</div>

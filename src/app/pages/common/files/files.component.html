@@ -1,0 +1,6 @@
+<div style="padding:5px">
+  <a id='invalidImages' (click)='add()' class="btn btn-primary btn-icon btn-circle">
+    <i class="fa fa-plus"></i> 
+  </a> <b>Добавить фото</b>
+  <app-file *ngFor="let image of files; let i = index" [(ngModel)]="files[i]" (delete)="delete(i)"></app-file>
+</div>

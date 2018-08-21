@@ -1,0 +1,7 @@
+<b>
+    <i class="fa fa-angle-right"></i>
+    <a [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }" [routerLink]='["/okk/area",areaModel.Id, areaModel.PartId, model.Id]'>
+        {{(model.Scheme|async)?.title}}
+    </a>
+</b>
+<router-outlet></router-outlet>

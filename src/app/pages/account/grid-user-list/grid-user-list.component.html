@@ -1,0 +1,322 @@
+<div class="alert alert-danger"  *ngIf="errorMessage != ''">{{errorMessage}}</div>
+<p-dataTable #dt [value]="userList" selectionMode="single" [globalFilter]="gb" [(selection)]="selectedUser" 
+  rows="3" [scrollable]="true" scrollHeight="{{height}}" [pageLinks]="10"  totalRecords="1000" [rowsPerPageOptions]="[5,10,20]" [(first)]="first">
+  <p-header>
+    <div class="ui-helper-clearfix" style="width:100%">
+
+      <button type="button" pButton icon="fa-plus" style="float:left" data-toggle="modal" data-target="#modalShowAddUser" label="Добавить"></button>
+      <button type="button" pButton icon="fa-edit" style="float:left" data-toggle="modal" data-target="#modalShowEditUser" label="Редактировать"
+        [disabled]="selectedUser == null"></button>
+      <button type="button" pButton icon="fa-minus" style="float:left" (click)="userActivateDeactivate(selectedUser.id)" label="Удалить"
+        [disabled]="selectedUser == null"></button>
+      <button type="button" pButton icon="fa-plus" style="float:left" data-toggle="modal" data-target="#modalShowAttachArea" (click)="getAreas()"
+        label="Прикрепить к объекту" [disabled]="selectedUser == null"></button>
+      <div *ngIf="selectedUser">
+        <button *ngIf="selectedUser.roles[0]==='Partner'" type="button" pButton icon="fa-check" style="float:left" data-toggle="modal"
+          data-target="#modalChangePassword" label="Сменить пароль"></button>
+      </div>
+      <input type="text" class="form-control pull-right" #gb style="width: 300px" placeholder="Поиск" />
+
+      <!--<input id="float-input" type="text" size="30" pInputText>-->
+      <!--<label for="float-input">ФИО</label>-->
+
+    </div>
+
+  </p-header>
+
+  <!--<p-dataTable [value]="userList" >-->
+  <!--<p-header>Пользователи</p-header>-->
+  <p-column field="fullName" header="ФИО" [sortable]="true"></p-column>
+  <p-column field="email" header="Электронная почта" [sortable]="true"></p-column>
+  <p-column field="userName" header="Имя пользователя" [sortable]="true"></p-column>
+  <p-column field="phoneNumber" header="Номер телефона" [sortable]="true"></p-column>
+  <p-column field="roleNames" header="Роль" [sortable]="true"></p-column>
+  <p-column field="state" header="Статус" [sortable]="true"></p-column>
+
+  <ng-template pTemplate="paginatorLeft" let-state>
+      {{state.first}}
+      <button type="button" pButton icon="fa-refresh"></button>
+  </ng-template>
+  <ng-template pTemplate="paginatorRight">
+      <button type="button" pButton icon="fa-cloud-upload"></button>
+  </ng-template>
+  
+</p-dataTable>
+
+
+<div class="modal inmodal" id="modalShowAddUser" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Добавление</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="col-md-3 control-label">Роль</label>
+            <div class="col-md-9">
+              <select class="form-control" #selRole (change)="changeRole(selRole.value)">
+                <ng-container *ngFor="let c of roleList">
+                  <option style="font-weight:bold" [value]="c.id">{{c.normalizedName}}</option>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="showADSearch == true">
+            <label class="col-md-3 control-label">Поиск по фио из AD</label>
+            <div class="col-md-9">
+              <p-autoComplete [(ngModel)]="adUserInfo" [suggestions]="adUserInfoList" (completeMethod)="searchFromADByFIO($event)" field="fullName"></p-autoComplete>
+              <div class="alert alert-danger" *ngIf="notFound" style="margin-top: 5px;">Пользователь ненайден в системе Active Directory</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Фамилия</label>
+            <div class="col-md-9">
+              <input type="text" class="form-control" placeholder="Введите фамилию" [(ngModel)]="adUserInfo.lastName">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Имя</label>
+            <div class="col-md-9">
+              <input type="text" class="form-control" placeholder="Введите имя" [(ngModel)]="adUserInfo.firstName">
+            </div>
+          </div>
+          <div class="form-group" *ngIf="showADSearch == false">
+            <label class="col-md-3 control-label">Отчество</label>
+            <div class="col-md-9">
+              <input type="text" class="form-control" placeholder="Введите отчество" [(ngModel)]="adUserInfo.patronumic">
+            </div>
+          </div>
+          <div class="form-group" *ngIf="showADSearch == false">
+            <label class="col-md-3 control-label">Электронная почта</label>
+            <div class="col-md-9">
+              <input type="email" class="form-control" placeholder="Введите адрес почты" [(ngModel)]="adUserInfo.email">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Имя пользователя</label>
+            <div class="col-md-9">
+              <input type="text" #accountName class="form-control" placeholder="Введите имя пользователя" [(ngModel)]="adUserInfo.accountName">
+            </div>
+          </div>
+          <div class="form-group" *ngIf="showADSearch == false">
+            <label class="col-md-3 control-label">Пароль</label>
+            <div class="col-md-9">
+              <input type="password" class="form-control" placeholder="Введите пароль" [(ngModel)]="adUserInfo.password">
+            </div>
+          </div>
+          <div class="form-group" *ngIf="showADSearch == false">
+            <label class="col-md-3 control-label">Номер телефона</label>
+            <div class="col-md-9">
+              <input type="tel" class="form-control" placeholder="Введите номер телефона" [(ngModel)]="adUserInfo.phoneNumber">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="save(accountName.value, selRole.value)" data-dismiss="modal">Сохранить</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal inmodal" id="modalShowEditUser" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" *ngIf="selectedUser">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Редактирование</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="col-md-3 control-label">Роль</label>
+            <div class="col-md-9">
+              <select class="form-control" #selEdtRole (change)="changeRole(selEdtRole.value)">
+                <!--<ng-container *ngFor="let r of roleList">-->
+                <!--<option style="font-weight:bold" [value]="r.id"  [selected]="r.name === selectedUser.roles[0]">{{r.normalizedName}}</option>-->
+                <!--</ng-container>-->
+                <option disabled value="">Выберите роль</option>
+                <option *ngFor="let role of roleList" value={{role.id}} class="role" [selected]="role.name === selectedUser.roles[0]">{{role.normalizedName}}</option>
+              </select>
+              
+              <span *ngFor="let role of selectedUser.roles;">
+                {{role.name}}
+                <a (click)="removeRole(role.id)" ><i class="fa fa-remove"></i></a>
+              </span>
+
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Фамилия</label>
+            <div class="col-md-9">
+              <input type="text" class="form-control" placeholder="Введите фамилию" [(ngModel)]="selectedUser.lastName">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Имя</label>
+            <div class="col-md-9">
+              <input type="text" class="form-control" placeholder="Введите имя" [(ngModel)]="selectedUser.firstName">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Отчество</label>
+            <div class="col-md-9">
+              <input type="text" class="form-control" placeholder="Введите отчество" [(ngModel)]="selectedUser.patronumic">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Электронная почта</label>
+            <div class="col-md-9">
+              <input type="email" name="email" class="form-control" placeholder="Введите адрес почты" [required] [(ngModel)]="selectedUser.email"
+                #email="ngModel">
+              <div [hidden]="email.valid" class="alert alert-danger">
+                Некорректный email
+              </div>
+            </div>
+
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Имя пользователя</label>
+            <div class="col-md-9">
+
+              <input type="text" [readonly]="showADSearch == true" #accountName class="form-control" placeholder="Введите имя пользователя"
+                [(ngModel)]="selectedUser.userName">
+
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-md-3 control-label">Номер телефона</label>
+            <div class="col-md-9">
+              <input type="tel" class="form-control" placeholder="Введите номер телефона" [(ngModel)]="selectedUser.phoneNumber">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="save_ed(selEdtRole.value)" data-dismiss="modal">Сохранить</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal inmodal" id="modalShowAttachArea" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Прикрепление к объекту</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Закрыть</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="col-md-3 control-label">Статус</label>
+            <div class="col-md-9">
+              <select class="form-control" style="width: 60%; float:left" (change)="changeAreaStatus()" [(ngModel)]="selectedAreaStatus">
+                <ng-container *ngFor="let status of areaStatuses">
+                  <option style="font-weight:bold" [value]="status.id">{{status.name}}</option>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Объект</label>
+            <div class="col-md-9">
+              <select class="form-control" style="width: 60%; float:left" (change)="changeArea()" [(ngModel)]="selectedArea">
+                <option [value]="null"></option>
+                <ng-container *ngFor="let obj of areas">
+                  <option style="font-weight:bold" [value]="obj.id">{{obj.name}}</option>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Блок</label>
+            <div class="col-md-9">
+              <select class="form-control" style="width: 60%; float:left" (change)="changeAreaPart()" [(ngModel)]="selectedAreaPart">
+                <option [value]="null"></option>
+                <ng-container *ngFor="let part of areaParts">
+                  <option style="font-weight:bold" [value]="part.id">{{part.name}}</option>
+                </ng-container>
+              </select>
+               </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Компания</label>
+            <div class="col-md-9">
+              <select class="form-control" style="width: 60%; float:left" [(ngModel)]="selectedCompany">
+                <option [value]="null"></option>
+                <ng-container *ngFor="let company of companies">
+                  <option style="font-weight:bold" [value]="company.id">{{company.name}}</option>
+                </ng-container>
+              </select>
+              <button class="btn btn-primary" style="float:left; margin-left: 20px" (click)="addUser()">Добавить</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <table class="table table-hover">
+            <tr *ngFor="let obj of userAreas">
+              <td>{{obj.name}}
+                <a href="javascript:;" (click)="removeUserArea(obj.id)">
+                  <i class="fa fa-remove"></i>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">ОК</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal inmodal" id="modalChangePassword" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" *ngIf="selectedUser">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Смена пароля</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="col-md-3 control-label">Новый пароль</label>
+            <div class="col-md-9">
+              <input type="password" class="form-control" placeholder="Введите новый пароль" #newPassword>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+          <button type="button" class="btn btn-primary" (click)="changePassword(newPassword.value)" data-dismiss="modal">Сохранить</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-message [headerTxt]="headerMsgValue" [infoMsgValue]="infoMsgValue" [display]=showDialog (onCloseDialog)="showDialog = $event"></app-message>

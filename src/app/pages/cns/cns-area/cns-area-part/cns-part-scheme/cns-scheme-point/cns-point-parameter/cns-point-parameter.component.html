@@ -1,0 +1,77 @@
+<div class="answer" [ngClass]='{"no":parameter.answer?.answerType?.id == 2, "yes":parameter.answer?.answerType?.id == 1}'>
+  <table class="parameter">
+    <tr>
+      <td rowspan="2">
+        <ng-container *ngIf='parameter.answer'>
+          <button class="btn btn-white m-r-10" *ngIf='!detailed' (click)='loadDetails()'>
+            <i class="fa fa-angle-down"></i>
+          </button>
+          <button class="btn btn-white m-r-10" *ngIf='detailed' (click)='detailed = false;'>
+            <i *ngIf='detailsDownloaded == 0' class="fa fa-ellipsis-h"></i>
+            <i *ngIf='detailsDownloaded == 1' class="fa fa-angle-up"></i>
+          </button>
+        </ng-container>
+        <ng-container *ngIf='!parameter.answer'>
+          <button class="btn btn-white m-r-10 disabled">
+            <i class="fa fa-file-o"></i>
+          </button>
+        </ng-container>
+      </td>
+      <td>
+        <div *ngIf="parameter.answer">Дата обновления: {{parameter.answer?.dateUpdated}}  </div>
+        <span *ngIf="detailed">{{parameter.parameter.name}}
+          </span>
+          <u *ngIf='parameter.answer || !detailed' (click)='loadDetails()'>
+            <small>Подробнее</small>
+          </u>
+       
+      </td>
+      <td>
+       
+
+       
+        <ng-container *ngIf='auth.isInRole("cnsInspector")'>
+          <button (click)='answerSave(1)' class="btn btn-success m-r-10" [ngClass]='{"active":parameter.answer?.id == 1}'>
+            <i class="fa fa-check"></i>
+          </button>
+          <button (click)='answerSave(2)' [disabled]="parameter.answer?.answerType?.id == 1" class="btn btn-danger" [ngClass]='{"active":parameter.answer?.id == 2}'>
+            <i class="fa fa-remove"></i>
+          </button>
+        </ng-container>
+      </td>
+    </tr>
+    <tr *ngIf='parameter.answer && detailsDownloaded == 1 && detailed'>
+      <td colspan="2">
+        <div class="row m-t-10">
+          <div class="col-md-8"  style="display:none">
+            <ng-container *ngIf='auth.isInRole("cnsInspector")'>
+              <!--<label for="newImage" class="btn btn-success">
+                <i class="fa fa-upload"></i> Добавить фото
+              </label>
+              <input type="file" id="newImage" accept="image/*" class="hidden" (change)='newImageChange($event)'>
+              <br>-->
+            </ng-container>
+            <div *ngFor='let image of parameter.answer.images, let i = index;' class="image" [ngStyle]="{ 'background-image': 'url(' + image.name + ')' }">
+              <i class="fa fa-remove" (click)='removeImage(i)'></i>
+              <a href="{{image.name}}" [attr.data-caption]="" data-fancybox="group">
+              </a>
+            </div>
+            <ng-container *ngIf='auth.isInRole("cnsInspector")'>
+              <textarea class="form-control m-t-10" [(ngModel)]='newcomment'></textarea>
+              <button (click)='commentSave()' *ngIf='newcomment && newcomment != parameter.answer.comment' class="m-t-3 btn btn-success">
+                <i class="fa fa-save"></i> Сохранить
+              </button>
+            </ng-container>
+            <p *ngIf='!auth.isInRole("cnsInspector")'>
+              {{parameter.answer.comment}}
+            </p>
+          </div>
+          <div class="col-md-12">
+
+            <app-cns-parameter-chat [id]='parameter.answer?.id' [readOnly]="parameter.answer?.answerType?.id == 1" [messages]='parameter.answer.messages'></app-cns-parameter-chat>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>

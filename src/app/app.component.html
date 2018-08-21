@@ -1,0 +1,15 @@
+<div id="page-container" class="page-container fade in page-sidebar-fixed page-header-fixed" [ngClass]="{
+
+  'page-without-sidebar': page_without_sidebar,
+  'page-with-two-sidebar': page_with_two_sidebar
+}">
+  <app-header *ngIf="!this.page_without_header"></app-header>
+  <app-sidebar *ngIf="!this.page_without_sidebar" [page_sidebar_transparent]="this.page_sidebar_transparent"></app-sidebar>
+  <div id="content" class="content" [ngClass]="{
+}">
+    <app-breadcrumb></app-breadcrumb>
+    <app-toaster></app-toaster>
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

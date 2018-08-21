@@ -1,0 +1,17 @@
+<div class="panel panel-primary overflow-hidden">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      <a class="accordion-toggle accordion-toggle-styled " data-toggle="collapse" data-parent="#accordion" href="#t_collapse_{{remark?.id}}">
+        <i class="fa fa-minus pull-right"></i>
+      </a>
+      {{remark?.name}} 
+    </h3>
+  </div>
+  <div id="t_collapse_{{remark?.id}}" class="panel-collapse collapse in">
+    <div class="panel-body">
+      <ng-container *ngFor="let items of remark?.items">
+        <app-rpm-remark-checklist-one [breakdown]="breakdown" [item]="items" [answerListId]="answerListId"></app-rpm-remark-checklist-one>
+      </ng-container>
+    </div>
+  </div>
+</div>

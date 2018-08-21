@@ -1,0 +1,13 @@
+<div class="flex">
+  <div class="filter">
+    <app-filter (submit)='getConstructives($event)'></app-filter>
+  </div>
+  <div class="result">
+    <div class="constuctivesWrapper">
+      <app-constructives (select)='getStandarts($event)'></app-constructives>
+    </div>
+    <div class="standardsWrapper">
+      <app-standards [standards]='standards'></app-standards>
+    </div>
+  </div>
+</div>

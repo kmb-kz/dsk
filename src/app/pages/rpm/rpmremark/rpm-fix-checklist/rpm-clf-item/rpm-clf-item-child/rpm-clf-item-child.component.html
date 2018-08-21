@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="note  ppo-note col-md-12" [ngClass]="{
+            'text-success':children?.answers?.answerType==2,                        
+            'text-danger':children?.answers?.answerType==3,
+            'text-warning':children?.answers?.answerType==1,
+            'text-default':children?.answers == null
+          }">
+    <div class="col-md-9">
+      <h5><!-- {{children?.constructive.name}}--> </h5>
+      <b>Статус:</b>
+      <span *ngIf="children?.answers == null">Не отмечено</span>
+      <span *ngIf="children?.answers?.answerType == 2">Соответствует</span>
+      <span *ngIf="children?.answers?.answerType == 3">Не соответствует</span>
+      <span *ngIf="children?.answers?.answerType == 1">Не применяется</span>
+      &nbsp;&nbsp;&nbsp;
+      <!--span *ngIf="children?.answers != null">
+        <a data-toggle="modal" style="cursor:pointer" title="История">
+          <i class="fa fa-history"></i> История изменений
+        </a>
+      </span-->
+      <!--span *ngIf="children?.answers?.dateCreated != null">
+        <b>Дата исправления</b>
+        {{children?.answers?.dateCreated | date:'dd.MM.yyyy'}}
+      </span-->
+      <span style="padding-left: 17px;" *ngIf="children?.answers != null">
+        <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{children?.answers?.id}}">Подробнее
+          <i class="fa fa-angle-down"></i>
+        </a>
+      </span>
+    </div>
+
+    <div class="col-md-3" *ngIf="auth.isInRole('Admin, ManagerRpm,InspectorRpm')">
+      <ng-container *ngIf="this.detour.statusDetour != 2">
+        <div style="padding-top: 7px;">
+          <button class="btn btn-sm" title="Соответствует" [ngClass]="(children?.answers?.answerType)== 2 ? 'btn-success':'btn-primary'"
+            [disabled]="(children?.answers?.answerType )== 2" (click)="showCheckDialog(2)">
+            <i class="fa fa-check"></i>
+          </button>
+          <button class="btn btn-sm" title="Не соответствует" [ngClass]="(children?.answers?.answerType) == 3 ? 'btn-success':'btn-danger'"
+            [disabled]="(children?.answers?.answerType )== 3" (click)="showCheckDialog(3)">
+            <i class="fa fa-minus"></i>
+          </button>
+          <button class="btn btn-sm" title="Не применяется" [ngClass]="(children?.answers?.answerType) == 1 ? 'btn-success':'btn-warning'"
+            [disabled]="(children?.answers?.answerType) == 1" (click)="checkAnswers(1)">
+            <i class="fa fa-close"></i>
+          </button>
+        </div>
+      </ng-container>
+    </div>
+
+    <app-rpm-check-more-info id="collapse_{{children?.answers?.id}}" class="panel-collapse collapse" [comment]="children?.answers?.comment"
+      [photos]="children?.answers?.images" [answerItemId]="children?.answers?.id" [nameCheckList]="children?.constructive.name"></app-rpm-check-more-info>
+
+
+  </div>
+</div>
+
+
+<app-qc-modal [visible]="displayCheck" [header]="children?.constructive?.name" (hide)="hideCheckDialog()">
+  <h5>Файлы</h5>
+  <app-files [(ngModel)]="checkModel.files" name="files"></app-files>
+  <h5>Комментарий</h5>
+  <textarea class="check-comment" [(ngModel)]="checkModel.comment"></textarea>
+  <br/>
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" class="btn btn-primary" (click)="checkAnswer()">
+      <i class="fa fa-check"></i>
+      Подтвердить</button>
+    <button type="button" class="btn btn-success" (click)="displayCheck=false">
+      <i class="fa fa-close"></i>
+      Отменить</button>
+  </div>
+</app-qc-modal>

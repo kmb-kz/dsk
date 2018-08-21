@@ -1,0 +1,41 @@
+<div class="left" data-scrollbar="true" data-height="100%">
+  <br/>
+  <div class="btn-group-vertical btn-group-ppo">
+    <button type="button" class="btn btn-white btn-ppo" *ngFor="let c of constructives; let i = index" (click)="selectedInfo(c.id, i)">
+      {{c.name}}
+    </button>
+    <button type="button" class="btn btn-sm btn-warning" (click)="areaPartPause()">Приостановить инспецию в данной комнате</button>
+  </div>
+  <br/>
+  <div class="alert alert-success">
+    Статусы:
+    <i class="fa fa-circle-o"></i> - Соответствует ,
+    <i class="fa fa-remove"></i> - Не применяется ,
+    <i class="fa fa-pause"></i> - Приостановлено,
+    <i class="fa fa-plus"></i> - Не соответствует
+  </div>
+</div>
+<div class="right">
+  <ng-container>
+    <div class="panel panel-primary overflow-hidden" *ngFor="let standard of standards">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#t_collapse_{{standard?.id}}">
+            <i class="fa fa-plus-circle pull-right"></i>
+            {{standard?.title}}
+            <span *ngIf="standard?.number != ''"> ({{standard?.number}}) </span>
+            <span class="badge" *ngIf="standard?.parameters?.length > 0"> {{standard?.parameters?.length}}</span>
+          </a>
+        </h3>
+      </div>
+      <div id="t_collapse_{{standard?.id}}" class="panel-collapse collapse in">
+        <div class="panel-body">
+          <div *ngFor="let parameter of standard?.parameters;let itemI=index" [attr.data-index]="itemI">
+            <app-okk-part-check-reamrk-child [parameter]="parameter"></app-okk-part-check-reamrk-child>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

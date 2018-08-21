@@ -1,0 +1,63 @@
+<div class="content-section implementation">
+  <p-multiSelect [options]="areas" [(ngModel)]="selectedArea" optionLabel="name" (onChange)="areaSelect($event)"></p-multiSelect>
+  <button class="btn btn-primary btn-sm pull-right" (click)="shapeReport()">Сформировать</button>
+</div>
+<div class="col-md-12 col-sm-12">
+  <div class="row">
+    <table class="table table-bordered " style="font-size:9px;">
+      <thead>
+        <tr>
+          <th rowspan="3">Название</th>
+          <th rowspan="3">Всего</th>
+          <th colspan="3">В архиве</th>
+          <th colspan="12">Активные</th>
+        </tr>
+        <tr>
+          <th rowspan="2">Всего</th>
+          <th rowspan="2">Подтверждено ИК</th>
+          <th rowspan="2">Снято</th>
+          <th rowspan="2">Всего</th>
+          <th rowspan="2">Выявлено инспектором</th>
+          <th colspan="6">У менеджера объекта</th>
+          <th colspan="2">Застройщик</th>
+          <th rowspan="2">На проверке у ИК</th>
+          <th rowspan="2">Отклонено (Спор)</th>
+        </tr>
+        <tr>
+          <th>Всего</th>
+          <th>Критичные</th>
+          <th>Новые</th>
+          <th>В работе</th>
+          <th>Отклонено</th>
+          <th>Перенаправлен</th>
+          <th>Принять в работу</th>
+          <th>Исполнен Застройщиком</th>          
+        </tr>
+        
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of data">
+          <td>{{d.name}}</td>
+          <td>{{d.cnt}}</td>
+          <td>{{d.cntArhive}}</td>
+          <td>{{d.fixedInspector}}</td>
+          <td></td>
+          <td>{{d.cntActive}}</td>
+          <td>{{d.inInspector}}</td>
+          <td>{{d.cntPM}}</td>
+          <td>{{d.criticales}}</td>
+          <td>{{d.newRemark}}</td>
+          <td>{{d.inWorkPM}}</td>
+          <td>{{d.cntDeniedPM}}</td>
+          <td>{{d.cntPerenap}}</td>
+
+          <td>{{d.cntDeveloper}}</td>
+          <td>{{d.fixedDeveloper}}</td>
+
+          <td>{{d.checkingInspector}}</td>
+          <td>{{d.denied}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

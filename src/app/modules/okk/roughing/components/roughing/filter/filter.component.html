@@ -1,0 +1,11 @@
+<form class='flex' #form='ngForm' (ngSubmit)='onSubmit()'>
+  <select [(ngModel)]='apartmentId' (change)='onApartmentChange()' name="apartmentId">
+    <option [value]='item.id' *ngFor="let item of apartments$ | async">{{item.name}}</option>
+  </select>
+  <select [(ngModel)]='model.roomId' name="roomId">
+    <option [value]='item.id' *ngFor="let item of rooms">{{item.name}}</option>
+  </select>
+  <button class="btn btn-danger">Приостановка</button>
+  <button class="btn btn-primary">Рабочая схема</button>
+  <button class="btn btn-white">Завершить проверку</button>
+</form>

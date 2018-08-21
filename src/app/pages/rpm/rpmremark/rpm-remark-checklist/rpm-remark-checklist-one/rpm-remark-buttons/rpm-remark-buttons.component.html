@@ -1,0 +1,119 @@
+<ng-container *ngIf="auth.isInRole('InspectorRpm')">  
+  <button class="btn btn-sm btn-warning" (click)="check('rework')" *ngIf="item?.status.id == 2 || item?.status.id == 5">
+    <i class="fa fa-mail-reply" title="Отправить на дороботку"></i>
+    <span *ngIf="withLabels">Отправить на дороботку</span>
+  </button>
+  <button class="btn btn-sm btn-success" (click)="check('corrected')" *ngIf="item?.status.id == 2">
+    <i class="fa fa-check" title="Исправлено"></i>
+    <span *ngIf="withLabels">Исправлено</span>
+  </button>
+</ng-container>
+<ng-container *ngIf="auth.isInRole('RpmGM') && item?.answers[item?.answers.length-1].isReview != true">
+  <a class="btn btn-sm btn-primary" (click)="check('review')" *ngIf="(item?.status.id == 6)">
+    <i class="fa fa-edit" title="Пересмотр срока"></i>
+    <span *ngIf="withLabels">Пересмотр срока</span>
+  </a>
+  <!--span class="fa-2x"><i class="fa fa-spinner fa-pulse"></i></span-->
+</ng-container>
+<ng-container *ngIf="auth.isInRole('ManagerRpm,RpmProjectManager')">
+  <a class="btn btn-sm btn-primary" (click)="check('accept')" *ngIf="(item?.status.id == 1 || item?.status.id == 4)">
+    <i class="fa fa-wrench" title="Принять в работу"></i>
+    <span *ngIf="withLabels">Принять в работу</span>
+  </a>
+  <a class="btn btn-sm btn-danger" (click)="check('cancel')" *ngIf="(item?.status.id == 1 || item?.status.id == 4) && (item?.cntDeniedMO < 2)">
+    <i class="fa fa-remove" title="Отклонить"></i>
+    <span *ngIf="withLabels">Отклонить</span>
+  </a>
+  <a class="btn btn-sm btn-success" (click)="check('done')" *ngIf="(item?.status.id == 6 || item?.status.id == 4)">
+    <i class="fa fa-check" title="Выполнено"></i>
+    <span *ngIf="withLabels">Выполнено</span>
+  </a>
+  <a class="btn btn-sm btn-warning" (click)="check('redirect')" *ngIf="(item?.status.id == 6  || item?.status.id == 4) && (item?.cntDeniedMO < 2)">
+    <i class="fa fa-mail-forward" title="Перенаправить на другую организацию"></i>
+    <span *ngIf="withLabels">Перенаправить на другую организацию</span>
+  </a>
+</ng-container>
+<ng-container *ngIf="auth.isInRole('DeveloperEmployee')  && auth.userId()==item?.answers[item?.answers.length-1].userReceiver.id">
+  <a class="btn btn-sm btn-primary" (click)="check('acceptDev')" *ngIf="(item?.status.id == 7)">
+    <i class="fa fa-wrench" title="Принять в работу"></i>
+    <span *ngIf="withLabels">Принять в работу</span>
+  </a>
+  <a class="btn btn-sm btn-danger" (click)="check('cancelDev')" *ngIf="(item?.status.id == 7)">
+    <i class="fa fa-remove" title="Отклонить"></i>
+    <span *ngIf="withLabels">Отклонить</span>
+  </a>
+  <a class="btn btn-sm btn-success" (click)="check('doneDev')" *ngIf="(item?.status.id == 8)">
+    <i class="fa fa-check" title="Выполнено"></i>
+    <span *ngIf="withLabels">Выполнено</span>
+  </a>
+  <a class="btn btn-sm btn-warning" (click)="check('redirect')" *ngIf="item?.status.id == 7">
+    <i class="fa fa-mail-forward" title="Перенаправить на другую организацию"></i>
+    <span *ngIf="withLabels">Перенаправить на другую организацию</span>
+  </a>
+</ng-container>
+<ng-container *ngIf="auth.isInRole('Admin,RpmAdmin') && (item?.status.id != 3 && item?.status.id != 11) && (item?.cntDeniedMO >=2)">
+  {{item?.status.id}}
+  <button class="btn btn-sm btn-warning" (click)="withdrawRemark(item?.id)">
+    <i class="fa fa-history" title="Отозвать замечание"></i>
+    <span *ngIf="withLabels">Отозвать замечание</span>
+  </button>
+</ng-container>
+<app-qc-modal [visible]="displayCheck" [header]="item?.remarkType.name" (hide)="hideCheckDialog()">
+  <div class="modal-body">
+    <div class="form-group" *ngIf="action == 'redirect'">
+      <app-search (selectedUser)="onSelectedUser($event,1)"></app-search>
+    </div>
+    <div class="form-group" *ngIf="action == 'accept' || action=='acceptDev' || action == 'review' ">
+      <label for="date1">Указать начальную дату исправления </label>
+      <br/>
+      <p-calendar [(ngModel)]="date1" [locale]="calendar.rus" name="date1" showButtonBar="true" dateFormat="dd.mm.yy" [minDate]="calendar.minDate"
+        [maxDate]="calendar.maxDate"></p-calendar>
+    </div>
+    <div class="form-group" *ngIf="action == 'accept' || action=='acceptDev' || action == 'review' ">
+      <label for="date2">Указать конечную дату исправления </label>
+      <br/>
+      <p-calendar [(ngModel)]="date2" [locale]="calendar.rus" name="date2" showButtonBar="true" dateFormat="dd.mm.yy" [minDate]="calendar.minDate"></p-calendar>
+    </div>
+    <div class="form-group" *ngIf="action == 'accept' || action=='acceptDev' || action == 'review'">
+      <ng-container *ngIf="isEditVisable == true">
+        <label class="control-label">Наименование варианта</label>
+        <div class="input-group">
+          <input type="text" [(ngModel)]="breakdownModel.name" name="name" class="form-control">
+          <div class="input-group-btn">
+            <button class="btn btn-success" title="Сохранить" (click)="saveBreakdown()">
+              <i class="fa fa-save"></i>
+            </button>
+            <button class="btn btn-danger" title="Назад" (click)="showEditVisable(false)">
+              <i class="fa fa-mail-reply"></i>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="isEditVisable == false">
+        <label>Предполагаемая причина срыва срока</label>
+        <span *ngIf="action != 'review'">Не нашли вариант?
+          <a class="insertVariant" (click)="showEditVisable(true)">Предложить вариант</a>
+        </span>
+        <select class="form-control" [(ngModel)]="answer.breakdownId" name="breakdownId">
+          <option [value]="">Выбрать причину срыва</option>
+          <ng-container *ngFor="let b of breakdownList">
+            <option [value]="b.id">{{b.name}}</option>
+          </ng-container>
+        </select>
+      </ng-container>
+    </div>
+    <div class="form-group" *ngIf="action == 'done' || action == 'doneDev' || action == 'corrected'">
+      <label>Фото</label>
+      <app-files [(ngModel)]="answer.photos" name="photos" required></app-files>
+    </div>
+    <div class="form-group" *ngIf="action == 'accept' || action == 'review' ||  action == 'cancel' || action == 'cancelDev' || action==='rework' || action==='done'  || action == 'doneDev'  || action == 'corrected'  || action=='acceptDev'">
+      <label *ngIf="action != 'cancel' && action != 'cancelDev' && action != 'review'">Комментарий</label>
+      <label *ngIf="action == 'cancel' || action == 'cancelDev' || action == 'review'">Укажите причину</label>
+      <textarea class="form-control" row="5" [(ngModel)]="answer.comment" name="comment"></textarea>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-sm btn-white" data-dismiss="modal" (click)="hideCheckDialog()">Отменить</button>
+    <button class="btn btn-sm btn-success" (click)="save()" [disabled]="">Сохранить</button>
+  </div>
+</app-qc-modal>

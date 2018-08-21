@@ -1,0 +1,19 @@
+
+  <div class="m-b-10 " *ngIf='auth.isInRole("cnsAdmin")'>
+    <ng-container *ngIf='!action'>
+      <a *ngIf='auth.isInRole("cnsAdmin")' [routerLink]="['/okk',this.pathValue,'area', model.Id, model.PartId, 'scheme', id]" class='btn btn-sm btn-primary'>
+        <i class="fa fa-pencil"></i> Редактировать
+      </a>      
+     
+    </ng-container>
+   
+    <ng-container *ngIf='action'>
+      <button class='m-b-10 btn btn-default btn-sm pull-right' (click)='end()'>
+        <i class='fa fa-check'></i>
+      </button>
+    </ng-container>
+  </div>
+  <canvas #myCanvas style="width: 100%; background-size: cover; cursor: pointer"></canvas>
+  
+  
+  

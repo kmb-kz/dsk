@@ -1,0 +1,64 @@
+<div class="raw" *ngIf="showFilter">
+  <div class="col-md-4" *ngIf="!auth.isInRole('Partner')">
+    <select name="partner" id="partner" class='form-control' [(ngModel)]='partnerId' (change)='Get()'>
+      <option [value]="''" selected>Все партнеры</option>
+      <option *ngFor="let item of (partners|async)" [value]='item.id'>{{item.name}}</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <select name="part" id="part" class='form-control' [(ngModel)]='partId' (change)='Get()'>
+      <option [value]="''" selected>Все блоки</option>
+      <option *ngFor="let item of (parts|async)" [value]='item.id'>{{item.name}}</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+      <button class="btn btn-primary"  (click)="printToCart('answerCards')">Печать</button>
+      <button class="btn btn-primary" *ngIf="showMessagesFlag == true" (click)="showMessages()">Скрыть комментарий</button>
+      <button class="btn btn-primary" *ngIf="showMessagesFlag == false"  (click)="showMessages()">Показать комментарий</button>
+    </div>
+</div>
+<div class="raw">
+  <div class="col-md-12" id="answerCards">
+    <table class="table table-striped m-t-10">
+      <tr>
+        <th>Блок</th>
+        <th>Партнер</th>
+        <th>Конструктив</th>
+        <th>Номер точки</th>
+      </tr>
+      <ng-container *ngFor="let item of answers">
+        <tr>
+          <td>
+            <b>{{item.areaPart}}</b>
+          </td>
+          <td>
+            <b>{{item.partner}}</b>
+          </td>
+          <td>
+            <b>{{item.name}}</b>
+          </td>
+          <td>
+              <b>{{item.number}}</b>
+            </td>
+         
+        </tr>
+        <tr>
+          <td colspan="4">
+            {{item.standard}}
+            <br>{{item.parameter}}
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="4">
+            <div>
+                <b>Коментарий:</b>
+            </div>
+            <ng-container *ngIf="showMessagesFlag == true">
+              <app-cns-parameter-chat [id]='item.id' [messages]='item.messages' [readOnly]="true"></app-cns-parameter-chat>
+            </ng-container>
+          </td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+</div>

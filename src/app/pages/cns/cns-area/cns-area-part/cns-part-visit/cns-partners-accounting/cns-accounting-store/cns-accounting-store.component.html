@@ -1,0 +1,67 @@
+
+
+<button (click)="printToCart('printSectionId')" class="btn btn-primary">Печать</button>
+<div id="printSectionId">
+  <table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Наименование работ</th>
+      <th>Объем по договору</th>
+      <th>
+        <a *ngIf="monthsDisplay" (click)='monthsDisplay = false' class="btn btn-warning btn-icon btn-circle btn-xs">
+          <i class="fa fa-minus"></i>
+        </a>
+        <a *ngIf="!monthsDisplay" (click)='monthsDisplay = true' class="btn btn-warning btn-icon btn-circle btn-xs">
+          <i class="fa fa-plus"></i>
+        </a>
+        Всего (факт)
+      </th>
+      <ng-container *ngFor="let m of months">
+        <th class='vert' *ngIf="monthsDisplay" >{{m.monthName}} {{m.year}}</th>
+      </ng-container>
+      <th>Остаток</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let item of result">
+      <tr>
+        <td>
+          <b style="cursor: pointer" (click)='openCloseDetails(item)'>
+            <i class="fa fa-angle-down" *ngIf='!item.detailStatus'></i>
+            <i class="fa fa-ellipsis-h" *ngIf='item.detailStatus == "downloading"'></i>
+            <i class="fa fa-angle-up" *ngIf='item.detailStatus == "downloaded"'></i>
+            Этап - {{item.number}} {{item.name}}</b>
+        </td>
+        <td>{{item.planTotal}}</td>
+        <td>{{item.factTotal}}</td>
+        <ng-container  *ngFor="let m of months; let i = index;">
+          <td *ngIf="monthsDisplay"> {{find(item?.months,m)?.factVolume  | number : '1.2'}}</td>
+        </ng-container>
+        <td>{{item.planTotal - item.factTotal | number}}</td>
+      </tr>
+      <ng-container *ngIf='item.detailStatus == "downloaded"'>
+        <tr *ngFor="let detail of item.details">
+          <td>{{detail.name}}</td>
+          <td>{{detail.planTotal}}</td>
+          <td>{{detail.factTotal}}</td>
+          <ng-container *ngFor="let m of months; let i = index;">
+              <td *ngIf="monthsDisplay">{{find(detail?.months,m)?.factVolume  | number : '1.2'}}</td>
+          </ng-container>
+          <td>{{detail.planTotal - detail.factTotal | number}}</td>
+        </tr>
+      </ng-container>
+    </ng-container>
+  </tbody>
+  <tr>
+      <td>
+        <b>ВСЕГО</b>
+      </td>
+      <td>{{ planTotal | number : '1.2'}}</td>
+      <td>{{ factTotal | number : '1.2'}}</td>
+      <ng-container  *ngFor="let m of result[0]?.months">
+        <td *ngIf="monthsDisplay">{{m.factVolume}}</td>
+      </ng-container>
+      <td>{{ (planTotal - factTotal) | number : '1.2' }}</td>
+    </tr>
+</table>
+</div>

@@ -1,0 +1,66 @@
+<p-dataTable [value]="cntConstructives" selectionMode="single" [(selection)]="selected" [paginator]="true" rows="20" [responsive]="true">
+    <p-header>
+      <div class="ui-helper-clearfix" style="width:100%">
+        <button type="button" pButton icon="fa-plus" style="float:left" (click)="showAddDiialog()" label="Добавить"></button>
+        <button type="button" pButton icon="fa-pencil" style="float:left" (click)="showEditDiialog()" label="Редактировать"></button>
+      </div>
+  
+    </p-header>
+  
+   <p-column field="constructive.name" header="Конструктив" [sortable]="true"></p-column>
+   <p-column field="contract.name" header="Договор" [sortable]="true"></p-column>
+   <p-column field="volume" header="Объем (м^2)" [sortable]="true"></p-column>
+   <p-column field="cost" header="Стоимость (тг)" [sortable]="true"></p-column>
+  
+  </p-dataTable>
+
+
+  <p-dialog header="Добавление/редактирование конструктива в договор" [(visible)]="showAddDialogFlag" [responsive]="true"
+    showEffect="fade" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid">
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-12" padding="2">
+        </div>
+        <div class="ui-grid-col-4" padding="2" data-width="200">
+        </div>
+  
+      </div>
+  
+    </div>
+  
+    <br/>
+    <br/>
+    <div class="ui-grid ui-grid-responsive ui-fluid">
+     
+     
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-4"><label >Конструктив</label></div>
+        <div class="ui-grid-col-8">
+          <select class="form-control" [(ngModel)]="newConstructive.constructiveId">
+            <ng-container *ngFor="let c of (constructives | async)">
+                <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+                <ng-container *ngFor="let child of c.children">
+                    <option [value]="child.id">-   {{child.name}}</option>    
+                </ng-container>
+            </ng-container>
+          </select>
+        </div>
+      </div>
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-4"><label>Объем (м^2)</label></div>
+        <div class="ui-grid-col-8"><input type="number" pInputText [(ngModel)]="newConstructive.volume"/></div>
+      </div>
+      <div class="ui-grid-row">
+          <div class="ui-grid-col-4"><label>Стоимость (тг)</label></div>
+          <div class="ui-grid-col-8"><input type="number" pInputText [(ngModel)]="newConstructive.cost"/></div>
+        </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa-close" (click)="hideAddDialog()" label="Закрыть"></button>
+        <button type="button" pButton icon="fa-check" (click)="add()" label="Сохранить"></button>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  

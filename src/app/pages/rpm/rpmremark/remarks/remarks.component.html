@@ -1,0 +1,189 @@
+<div class="clearfix visible-xs-block"></div>
+<div class="col-md-12">
+  <div class="row">
+    <div style="background: #C7CFD8; ">
+      <div class="col-md-1 col-xs-12 col-md-offset-0">
+        <div class="row">
+          <button class="btn btn-sm btn-primary hidden-xs" (click)="loadAll()">Все</button>
+          <button class="btn btn-block btn-primary visible-xs-block" (click)="loadAll()">Все</button>
+        </div>
+      </div>
+      <div class="form-group col-md-1 col-md-offset-0">
+        <div class="row">
+          <label class="m-t-5">
+            <b>Фильтр:</b>
+          </label>
+        </div>
+      </div>
+      <div class="form-group col-md-3 col-md-offset-0">
+        <div class="row">
+          <select class="form-control" [(ngModel)]="selectedConstructiveId" (click)="getRemarks()">
+            <option value="null">Конструктив</option>
+            <option *ngFor="let constructive of constructives" [value]="constructive.id">{{constructive.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group col-md-2 col-md-offset-0">
+        <div class="row">
+          <select class="form-control" [(ngModel)]="selectedCriticalityId" (click)="getRemarks()">
+            <option value="null">Степень</option>
+            <option *ngFor="let criticality of criticalites" [value]="criticality.id">{{criticality.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group col-md-3 col-md-offset-0">
+        <div class="row">
+          <select class="form-control" [(ngModel)]="selectedStatusId" (click)="getRemarks()">
+            <option value="null">Статус</option>
+            <option *ngFor="let status of statuses" [value]="status.id">{{status.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group col-md-2 col-md-offset-0">
+        <div class="row">
+          <button class="btn form-control btn-success" (click)="reset()">Сбросить фильтр</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<div class="clearfix visible-xs-block"></div>
+<div class="col-md-12">
+  
+  <div class="row">
+    <ng-container *ngIf='auth.isInRole("InspectorRpm,RpmAdmin,Admin") && (infoSelectInfo != undefined) && (infoSelectInfo?.parent != undefined || isInPartsTrue(infoSelectInfo?.name))'>
+      <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAddReamrk" style="margin-bottom: 5px;">
+        <i class="fa fa-plus"></i> Создать замечание
+      </button>
+    </ng-container>
+    <app-rpm-remark-checklist [areaId]="areaId" [areaPartId]="areaPartId" [answerListId]="answerListId" [remarks]="remarkList"></app-rpm-remark-checklist>
+  </div>
+
+</div>
+
+
+
+<div class="modal inmodal" id="modalAddReamrk" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Создать замечание</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #myForm="ngForm">
+          <input type="hidden" [(ngModel)]="modalRpm.checkListId" name="modalRpm.CheckListId">
+          <input type="hidden" [(ngModel)]="modalRpm.answerListId" name="modalRpm.answerListId">
+          <div class="form-group">
+            <label for="constructive" class="control-label">Выбрать конструктив</label>
+            <select #constructiveId="ngModel" class="form-control" id="constructive" required [(ngModel)]="modalRpm.constructiveId" name="modalRpm.constructiveId"
+              (change)="loadTypeRemark(modalRpm.constructiveId,1,null)">
+              <option value="">Выбрать конструктив</option>
+              <option *ngFor="let c of constructives" [value]="c.id">{{c.name}}</option>
+            </select>
+            <div *ngIf="(constructiveId.invalid && (constructiveId.dirty || constructiveId.touched))" class="alert alert-danger">
+              <div *ngIf="constructiveId.errors.required">
+                Не выбран Конструктив
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="typeRemark1 != null">
+            <label for="remark1" class="control-label">Требуется уточнить</label>
+            <select #remark1Model="ngModel" class="form-control" id="remark1" required [(ngModel)]="modalRpm.remark1Model" name="modalRpm.remark1Model"
+              (change)="loadTypeRemark(modalRpm.constructiveId,2,modalRpm.remark1Model)">
+              <option value="">Требуется уточнить</option>
+              <option *ngFor="let tr1 of typeRemark1" [value]="tr1.id">{{tr1.name}}</option>
+            </select>
+            <div *ngIf="(remark1Model.invalid && (remark1Model.dirty || remark1Model.touched))" class="alert alert-danger">
+              <div *ngIf="remark1Model.errors.required">
+                Не выбрано Уточнение
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="typeRemark2 != null">
+            <div *ngIf="isEditVisable == true">
+              <label class="control-label">Наименование варианта</label>
+              <div class="input-group">
+                <input type="text" [(ngModel)]="newVariantRemark" name="newVariantRemark" class="form-control">
+                <div class="input-group-btn">
+                  <button class="btn btn-primary" title="Сохранить" (click)="saveRemarkType()">
+                    <i class="fa fa-save"></i>
+                  </button>
+                  <button class="btn btn-primary" title="Назад" (click)="showEditVisable(false)">
+                    <i class="fa fa-mail-reply"></i>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <div *ngIf="isEditVisable == false">
+              <label for="remark2" class="control-label">Выбор уточнения неисправности</label>
+              <!-- <span>Не нашли вариант?
+                <a (click)="showEditVisable(true)" class="insertVariant">Предложить вариант</a>
+              </span> -->
+              <select class="form-control" id="remark2" [(ngModel)]="modalRpm.remarkTypeId" name="modalRpm.RemarkTypeId">
+                <option value="">Выбор уточнения неисправности</option>
+                <option *ngFor="let tr2 of typeRemark2" [value]="tr2.id">{{tr2.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="photos" class="control-label">Фото</label>
+            <app-files [(ngModel)]="modalRpm.photos" name="modalRpm.photos"></app-files>
+            <div *ngIf="modalRpm.photos==null" class="alert alert-danger">
+              Необходимо добавить фото
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Критичность</label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" [(ngModel)]="modalRpm.criticaled" name="criticaled"> Критично
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="critical" class="control-label">Степень сложности</label>
+            <select #criticalityId="ngModel" class="form-control" id="critical" required [(ngModel)]="modalRpm.criticalityId" name="modalRpm.criticalityId">
+              <option value="0">Выбрать степень</option>
+              <ng-container *ngFor="let crit of criticalites">
+                <option [value]="crit.id" *ngIf="crit?.id != 1">{{crit.name}}</option>
+              </ng-container>
+            </select>
+            <div *ngIf="(criticalityId.invalid && (criticalityId.dirty || criticalityId.touched))" class="alert alert-danger">
+              <div *ngIf="criticalityId.errors.required && modalRpm.criticaled===true">
+                Не выбран Степень критичности
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="commentRemark" class="control-label" required>Комментарий</label>
+            <textarea #comment="ngModel" class="form-control" name="modalRpm.comment" [(ngModel)]="modalRpm.comment" id="commentRemark"></textarea>
+            <!--div *ngIf="comment.invalid && (comment.dirty || comment.touched)" class="alert alert-danger">
+              <div *ngIf="comment.errors.required">
+                Не заполнен Коментарий
+              </div>
+            </div-->
+          </div>
+          <div class="form-group">
+            <label class="control-label">Уточнить местоположение</label>
+            <textarea #place="ngModel" class="form-control" name="modalRpm.place" [(ngModel)]="modalRpm.place"></textarea>
+            <div *ngIf="place.invalid && (place.dirty || place.touched)" class="alert alert-danger">
+              Вы должны уточнить местоположение
+            </div>
+          </div>
+          <button class="btn btn-primary" *ngIf="statusClick == false"
+           [disabled]="!myForm.form.valid || modalRpm.photos==null || modalRpm.place == null "
+            (click)="addRpmRemark()">Добавить замечание</button>
+          <button class="btn btn-primary" *ngIf="statusClick == true">Подождите пожалуйста</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

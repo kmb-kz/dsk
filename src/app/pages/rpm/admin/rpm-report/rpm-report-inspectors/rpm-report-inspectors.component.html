@@ -1,0 +1,43 @@
+<div class="col-md-12 col-sm-12">
+  <div class="form-inline">
+    <div class="form-group">
+      <select [(ngModel)]="statInspector" class="form-control m-t-10">
+        <option *ngFor="let i of inspectorsList" [value]="i.id">{{i.name}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <input type="date" [(ngModel)]="startDateValue" class="form-control m-t-10">
+      <!--p-calendar [(ngModel)]="startDateValue" dateFormat="dd.mm.yy" [locale]="ru"></p-calendar-->
+    </div>
+
+    <div class="form-group">
+      <input type="date" [(ngModel)]="endDateValue" class="form-control m-t-10">
+      <!--p-calendar [(ngModel)]="endDateValue" dateFormat="dd.mm.yy" [locale]="ru"></p-calendar-->
+    </div>
+    <button type="button" class="btn btn-primary btn-sm" (click)="getRemarkInspector()">Применить</button>
+  </div>
+  <br/>
+  <table class="table  table-stripped table-hover table-bordered" *ngIf="tableVisable == true;">
+    <thead>
+      <tr>
+        <th rowspan="2">Наименование объекта</th>
+        <th colspan="4">Дата с {{startDate}} по {{endDate}}</th>
+      </tr>
+      <tr>
+        <th>Выдано</th>
+        <th>На доработку</th>
+        <th>Закрыл</th>
+        <th>Откл. Менеджером объекта</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of data">
+        <td>{{d.name}}</td>
+        <td>{{d.cnt}}</td>
+        <td>{{d.reworkCnt}}</td>
+        <td>{{d.fixedCnt}}</td>
+        <td>{{d.deniedPM}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

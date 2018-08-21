@@ -1,0 +1,102 @@
+<h1 class="page-header">Сервисная служба</h1>
+<div class="row">
+    <p-dataTable #dt [value]="llc" [globalFilter]="gb" selectionMode="single" [(selection)]="selectedLLC" dataKey="id" [loading]="loading"
+        [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [scrollable]="true" scrollHeight="{{height}}">
+        <p-header>
+            <div class="ui-helper-clearfix" style="width:100%">
+                <button type="button" pButton icon="fa-plus" style="float:left" data-toggle="modal" data-target="#modalShowAddLLC" label="Добавить"></button>
+                <button type="button" pButton icon="fa-edit" style="float:left" data-toggle="modal" data-target="#modalShowEditLLC" label="Редактировать"
+                    [disabled]="selectedLLC == null"></button>
+                <button type="button" pButton icon="fa-remove" style="float:left" label="Удалить" (click)="remove(selectedLLC.id)" [disabled]="selectedLLC == null"></button>
+                <input type="text" class="form-control pull-right" #gb style="width: 300px" placeholder="Поиск" />
+            </div>
+        </p-header>
+        <p-column field="name" header="Наименование"></p-column>
+        <p-column field="director" header="Директор Сервисной службы"></p-column>
+        <p-column field="bin" header="БИН"></p-column>
+        <p-column field="description" header="Описание"></p-column>
+        <ng-template pTemplate="paginatorLeft">
+            <button type="button" pButton icon="fa-refresh"></button>
+        </ng-template>
+        <ng-template pTemplate="paginatorRight">
+            <button type="button" pButton icon="fa-cloud-upload"></button>
+        </ng-template>
+    </p-dataTable>
+</div>
+
+<div class="modal inmodal" id="modalShowAddLLC" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <h3 style="float:left">Добавление</h3>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="form-group">
+                        <label class="control-label">Наименование cервисной службы</label>
+                        <input type="text" class="form-control" [(ngModel)]="modelLLC.name" placeholder="Введите наименование cервисной службы">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Директор Сервисной службы</label>
+                        <input type="text" class="form-control" [(ngModel)]="modelLLC.director" placeholder="Введите директора сервисной службы">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">БИН</label>
+                        <input type="text" class="form-control" [(ngModel)]="modelLLC.bin" placeholder="Введите БИН">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Описание</label>
+                        <textarea class="form-control" rows="5" [(ngModel)]="modelLLC.description"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="saveLLC()" data-dismiss="modal">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal" id="modalShowEditLLC" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog"  *ngIf="selectedLLC">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <h3 style="float:left">Редактировать</h3>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">×</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="form-group">
+                            <label class="control-label">Наименование cервисной службы</label>
+                            <input type="text" class="form-control" [(ngModel)]="selectedLLC.name" placeholder="Введите наименование cервисной службы">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Директор Сервисной службы</label>
+                            <input type="text" class="form-control" [(ngModel)]="selectedLLC.director" placeholder="Введите директора сервисной службы">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">БИН</label>
+                            <input type="text" class="form-control" [(ngModel)]="selectedLLC.bin" placeholder="Введите БИН">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Описание</label>
+                            <textarea class="form-control" rows="5" [(ngModel)]="selectedLLC.description" ></textarea>
+                        </div>
+                        <input type="hidden" [(ngModel)]="selectedLLC.id">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" (click)="editLLC()" data-dismiss="modal">Сохранить</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

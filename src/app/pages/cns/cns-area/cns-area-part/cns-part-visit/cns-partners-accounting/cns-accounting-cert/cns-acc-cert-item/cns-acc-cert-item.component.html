@@ -1,0 +1,82 @@
+<h4 class="text-center">Справка</h4>
+<div class="form-horizontal">
+  
+  <div class="form-group">
+    <label class="col-md-3 control-label">С</label>
+    <div class="col-md-9">
+      <input type="date" class="form-control" [(ngModel)]='certificate.dateStart'>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-md-3 control-label">По</label>
+    <div class="col-md-9">
+      <input type="date" class="form-control" [(ngModel)]='certificate.dateEnd'>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-md-3 control-label">Наименование работ и материалов</label>
+    <div class="col-md-9">
+      <ng-container *ngFor="let item of parameters">
+        <label>{{item.name}}
+          <input type="checkbox" [checked]="item.selected" (change)="constuctiveChange(item, $event)" />
+        </label>
+        <ul>
+          <li *ngFor="let param of item.parameters">
+            <input type="checkbox" [checked]="param.selected" (change)="paramChange(param, $event)" /> {{param.name}}</li>
+          <li>
+        </ul>
+      </ng-container>
+    </div>
+  </div>
+  <h5>Сдал: </h5>
+  <div class="form-group">
+      <label class="col-md-3 control-label">Прораб от Подрядчика:</label>
+      <div class="col-md-9">
+        <select [(ngModel)]="partner">
+          <option value="{{partner.id}}" *ngFor="let partner of partners">{{partner.fullName}}</option>
+        </select>
+       
+      </div>
+   </div>
+   <h5>Принял: </h5>
+   <div class="form-group">
+       <label class="col-md-3 control-label">Мастер:</label>
+       <div class="col-md-9">
+         <app-search (selectedUser)="onSelectedUser($event, 2)"></app-search>
+       </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">Прораб:</label>
+        <div class="col-md-9">
+          <app-search (selectedUser)="onSelectedUser($event, 3)"></app-search>
+        </div>
+     </div>
+     <div class="form-group">
+        <label class="col-md-3 control-label">Начальник участка:</label>
+        <div class="col-md-9">
+          <app-search (selectedUser)="onSelectedUser($event, 4)"></app-search>
+        </div>
+     </div>
+     <div class="form-group">
+        <label class="col-md-3 control-label">Технадзор:</label>
+        <div class="col-md-9">
+          <app-search (selectedUser)="onSelectedUser($event, 5)"></app-search>
+        </div>
+     </div>
+     <div class="form-group">
+        <label class="col-md-3 control-label">Инженер ПТО:</label>
+        <div class="col-md-9">
+          <app-search (selectedUser)="onSelectedUser($event, 6)"></app-search>
+        </div>
+     </div>
+     <div class="form-group">
+        <label class="col-md-3 control-label">Экономист:</label>
+        <div class="col-md-9">
+          <app-search (selectedUser)="onSelectedUser($event, 7)"></app-search>
+        </div>
+     </div>
+</div>
+<div class="modal-footer">
+  <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal" (click)='onCancel()'>Отмена</a>
+  <button href="javascript:;" class="btn btn-sm btn-success" [disabled]="onSaveMoment==true" (click)='onSave()'>Сохранить</button>
+</div>

@@ -1,0 +1,8 @@
+<button class="btn btn-primary" (click)="onPressBack()">
+        <i class="fa fa-angle-left"></i> Назад</button>
+        
+<h4>Замечание от {{item?.dateCreated | date:'dd.MM.yyyy'}}</h4>
+<h4 class="capital">{{item?.remarkType.name}}</h4>
+<!--h5><strong>Путь:</strong> {{item?.constructive?.name}}  &#8658; {{item?.firstRemarkType.name}} &#8658; {{item?.remarkType.name}} </h5>
+<h5><strong>Конструктив:</strong> {{item?.remarkType.name}} </h5-->
+<app-remark-detail [item]="item" [dateDiff]="dateDiff" (refresh)="refresh()"></app-remark-detail>

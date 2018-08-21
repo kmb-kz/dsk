@@ -1,0 +1,21 @@
+<h1 class="page-header">Объекты</h1>
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">      
+        <input type="search" class="form-control m-b-10" placeholder="Поиск по названию..." name='search' [(ngModel)]='search' (keyup)="searchArea()" />      
+    </div>
+  </div>
+  <div class=col-md-3 *ngFor="let o of (areas|async)">
+    <a [routerLink]="['/std/area', o.id]" class="object-item-a">
+      <div class=object-item>
+        <i class="fa fa-2x fa-home"></i>
+        <div>
+          <b>{{o.name}}</b>
+          <div>Стандарты :
+            <span> {{o.standardCount}}</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+.insertVariant{
+    cursor: pointer;
+}
+
+.rpm-filter {
+    margin-bottom: 5px;
+    background: #C7CFD8; 
+    padding: 5px;
+}
+
+.alert-danger {
+    padding: 6px; 
+    margin-top: 4px;
+}
+.rpm-filter select{
+    height: 20px;
+}
+

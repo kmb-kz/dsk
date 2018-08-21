@@ -1,0 +1,115 @@
+<div class="row">
+
+  <div class="note  ppo-note col-md-12" [ngClass]="{
+    'text-success':parameter?.answers?.standardStatus?.id == 1,
+    'text-primary':parameter?.answers?.standardStatus.id == 5,
+    'text-danger':parameter?.answers?.standardStatus.id == 3,
+    'text-warning':parameter?.answers?.standardStatus.id == 4,
+    'text-default':parameter?.answers?.standardStatus == null
+  }">
+    <div class="col-md-8">
+      <p>{{parameter.type}} {{parameter.value}} {{parameter.measurement}}</p>
+      <b>Статус:</b>
+      <span *ngIf="parameter?.answers?.standardStatus == null">Не проверено</span>
+      <span *ngIf="parameter?.answers?.standardStatus['id'] == 1">Замечаний нет</span>
+      <span *ngIf="parameter?.answers?.standardStatus['id'] == 5">Не применяется</span>
+      <span *ngIf="parameter?.answers?.standardStatus['id'] == 3">Замечания есть</span>
+      <span *ngIf="parameter?.answers?.standardStatus['id'] == 4">Приостановлен пункт</span>
+      <!--div  *ngFor="let p of parameter?.answers?.photoUrl"  [ngStyle]="{'background-image': 'url(' + host+p + ')'}" style="
+      height: 150px;  
+      background-size: cover;">
+      </div-->
+    </div>
+    <div class="col-md-4">
+      <div style="padding-top: 7px;">
+        <button class="btn btn-sm btn-primary disabled" *ngIf="parameter?.answers?.standardStatus['id'] == 1 && parameter?.answers?.cntRemarkAnswers == 0 "
+          title="Кол-во замечаний">{{parameter?.answers?.cntRemarkAnswers}}</button>
+        <button class="btn btn-sm btn-primary" *ngIf="parameter?.answers?.standardStatus['id'] == 1 && parameter?.answers?.cntRemarkAnswers > 0 "
+          (click)="getReamrks(parameter.type, parameter?.answers?.id)" title="Кол-во замечаний">{{parameter?.answers?.cntRemarkAnswers}}</button>
+        <button class="btn btn-sm btn-primary disabled" *ngIf="parameter?.answers?.standardStatus['id'] == 5">-</button>
+        <button class="btn btn-sm btn-primary" (click)="getReamrks(parameter.type, parameter?.answers?.id)" *ngIf="parameter?.answers?.standardStatus['id'] == 3"
+          [disabled]="parameter?.answers?.standardStatus['id'] != 3" title="Кол-во замечаний">{{parameter?.answers?.cntRemarkAnswers}}</button>
+        <ng-container *ngIf="(!isPauseRoom || !(auth.isInRole('Master,Prorab,Guest'))) && !isFinishStagesStatus">
+          <button class="btn btn-sm btn-success" title="Соответствует" *ngIf="parameter?.answers?.standardStatus['id'] != 3" [disabled]="parameter?.answers?.standardStatus['id'] == 1 || parameter?.answers?.standardStatus['id'] == 4"
+            (click)="sendAnswer(parameter?.parameterId, parameter?.versionId,1, parameter?.answers)">
+            <i class="fa fa-circle-o"></i>
+          </button>
+          <button href="#modal-dialog" class="btn btn-sm btn-danger" title="Не соответствует" data-toggle="modal" [disabled]="parameter?.answers?.standardStatus['id'] == 4"
+            (click)="infoToCheck(parameter?.areaStandardId['id'], parameter?.parameterId, parameter?.versionId, parameter?.answers)">
+            <i class="fa fa-plus"></i>
+          </button>
+
+          <button href="#modal-dialog-play" class="btn btn-sm btn-warning" title="Приостановить пункт" *ngIf="parameter?.answers?.standardStatus['id'] != 3 && parameter?.answers?.standardStatus['id'] != 4"
+            data-toggle="modal" [disabled]="parameter?.answers?.standardStatus['id'] == 3" (click)="infoToCheck(parameter?.areaStandardId['id'], parameter?.parameterId, parameter?.versionId, parameter?.answers)">
+            <i class="fa fa-pause"></i>
+          </button>
+          <button class="btn btn-sm btn-warning" title="Снять пункт с приостановки" *ngIf="parameter?.answers?.standardStatus['id'] == 4"
+            (click)="stopPause(parameter?.areaStandardId['id'], parameter?.parameterId, parameter?.versionId, parameter?.answers)">
+            <i class="fa fa-play"></i>
+          </button>
+          <button class="btn btn-sm btn-primary" title="Не применяется" *ngIf="parameter?.answers?.standardStatus['id'] != 3" [disabled]="parameter?.answers?.standardStatus['id'] == 5 || parameter?.answers?.standardStatus['id'] == 4"
+            (click)="sendAnswer(parameter?.parameterId,parameter?.versionId,5,parameter?.answers)">
+            <i class="fa fa-remove"></i>
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modal-dialog" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Добавить замечание</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body">
+        <input [(ngModel)]="checkModel.areaStandardId" name="areaStandardId" id="areaStandardId" type="hidden">
+        <input [(ngModel)]="checkModel.parameterId" name="parameterId" id="parameterId" type="hidden">
+        <input [(ngModel)]="checkModel.areaPartid" name="areaPartid" id="areaPartid" type="hidden">
+        <input [(ngModel)]="checkModel.stageId" name="stageId" id="stageId" type="hidden">
+        <h5>Файлы</h5>
+        <app-files name="files" [(ngModel)]="checkModel.files"></app-files>
+        <h5>Комментарий</h5>
+        <textarea class="check-comment" [(ngModel)]="checkModel.comment"></textarea>
+        <br/>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Отменить</a>
+        <button class="btn btn-success" (click)="checkAnswer(3)">ОК</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal-dialog-pause" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Приостановление пункта</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      </div>
+      <div class="modal-body">
+        <h5>Дата начала работы</h5>
+        <p-calendar [locale]="calendar.rus" [(ngModel)]="checkModel.startDate" showButtonBar="true" dateFormat="dd.mm.yy" readonlyInput="true">
+        </p-calendar>
+        <h5>Комментарий</h5>
+        <textarea class="check-comment" [(ngModel)]="checkModel.comment"></textarea>
+        <br/>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Отменить</a>
+        <button class="btn btn-success" (click)="checkAnswer(4)">ОК</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<app-qc-modal-okk [visible]="displayListRemark" [header]="displayModalHeader" (hide)="hideListRemarkDialog()">
+  <ng-container *ngFor="let remark of remarks">
+    <app-remarks-list [isPauseRoom]="isPauseRoom" [remark]="remark" (checkAnswer)="checkAnswers()"></app-remarks-list>
+  </ng-container>
+</app-qc-modal-okk>

@@ -1,0 +1,76 @@
+<h1 class="page-header">
+    <i class="fa fa-home"></i> {{infoArea?.name}}</h1>
+<div class="row">
+  <div class="col-md-6 ui-sortable">
+    <div class="panel panel-default" data-sortable-id="ui-widget-1">
+      <div class="panel-heading">
+        <div class="panel-heading-btn">
+          <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand">
+            <i class="fa fa-expand"></i>
+          </a>
+          <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-success" data-click="panel-reload">
+            <i class="fa fa-repeat"></i>
+          </a>
+          <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse">
+            <i class="fa fa-minus"></i>
+          </a>
+
+        </div>
+        <h4 class="panel-title">Описание объекта</h4>
+      </div>
+      <div class="panel-body">        
+        <div class="m-t-10" *ngIf="infoArea?.photoUrl != null">
+          <img [src]="infoArea?.photoUrl" class="img-thumbnail"/>
+        </div>
+        <div class="m-t-10">
+          <a href="#modal-editArea" class="btn btn-warning btn-block btn-sm" data-toggle="modal">
+            <i class="fa fa-edit"></i> Редактировать</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-child-locations [areaId]="areaId"></app-child-locations>  
+  <app-area-detour [areaId]="areaId"></app-area-detour>
+  <app-location-constructives></app-location-constructives>
+  <app-rpm-statistics [areaId]="areaId"></app-rpm-statistics>
+  <app-rpm-statistics-critical [areaId]="areaId"></app-rpm-statistics-critical>
+  <app-rpm-responsible [areaId]="areaId"></app-rpm-responsible>  
+  
+</div>
+<div class="modal fade" id="modal-editArea" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title"> Форма редактирования</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="idArea" [(ngModel)]="modalEditArea.id">
+        <div class="form-group">
+          <label for="areaName">Наименование объекта</label>
+          <input id="areaName" type="text" class="form-control" [(ngModel)]="modalEditArea.name">
+        </div>
+        <div class="form-group">
+          <label for="areaDesc">Описание объекта</label>
+          <textarea id="areaName" class="form-control" rows="7" [(ngModel)]="modalEditArea.descr"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Сервисная служба</label>
+          <select class="form-control" [(ngModel)]="modalEditArea.llc" name="llc">
+            <ng-container *ngFor="let l of (llcList|async)">
+              <option [value]="l.id" [selected]="l.id == modalEditArea.llc?.id">{{l.name}}</option>
+            </ng-container>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="areaImg">Фото</label>
+          <app-file-one [(ngModel)]="modalEditArea.img"></app-file-one>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Отменить</a>
+        <a href="javascript:;" class="btn btn-sm btn-success" (click)="editArea()">Сохранить</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+﻿<h1 class="page-header">Объекты</h1>
+<div class="row">
+	<ng-container *ngFor="let o of (areas|async)">
+		<div class="col-md-4 ui-sortable" *ngIf='!search || o.name.toLowerCase().indexOf(search.toLowerCase()) > -1'>
+			<div class="panel panel-inverse" data-sortable-id="index-1" [routerLink]="['/tsu/areas', o.id]">
+				<div class="panel-heading">
+					<h4 class="panel-title" style="cursor:pointer">
+						<i class="fa fa-home"></i> {{o.name}}
+					</h4>
+				</div>
+				{{o.url}}
+				<div *ngIf="o.photoUrl!=null" [ngStyle]="{'background-image': 'url(' + host+o.photoUrl + ')'}" style="
+        height: 150px;
+        background-size: cover;">
+				</div>
+				<div *ngIf="o.photoUrl==null" style="background-image: url('/assets/img/no-photo.jpg');
+        height: 150px;
+        background-size: cover;">
+				</div>
+				<div class="list-group">
+					<a class="list-group-item list-group-item-inverse text-ellipsis">
+						<span class="badge badge-success">{{o.notMatches || 0}}</span>
+						1. Отмечено (Замечании)
+					</a>
+					<a class="list-group-item list-group-item-inverse text-ellipsis">
+						<span class="badge badge-primary">{{o.notMatches - o.fixed || 0}}</span>
+						2. В работе (Замечании)
+					</a>
+					<a class="list-group-item list-group-item-inverse text-ellipsis">
+						<span class="badge badge-inverse">{{o.fixed || 0}}</span>
+						3. Исполнено (Замечании)
+					</a>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+</div>

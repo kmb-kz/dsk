@@ -1,0 +1,6 @@
+<select class="form-control btn-xs" [(ngModel)]="stageId"  [attr.disabled]="editMode ==false?'':null" style="width:70px; float:left;">
+    <option *ngFor="let stage of stages" value="{{stage.id}}">{{stage.number}} этап: {{stage.name}}</option>
+</select>
+<button class="btn btn-primary btn-xs"  (click)="enableEditStage(true)" title="Сменить этап"  *ngIf="!editMode"><i class="fa fa-list-ol"></i></button>
+<button class="btn btn-success btn-xs" (click)="updateStage()" title="Сохранить" *ngIf="editMode"><i class="fa fa-check"></i></button>
+<button class="btn btn-danger btn-xs" (click)="enableEditStage(false)"  title="Отменить" *ngIf="editMode"><i class="fa fa-close"></i></button>

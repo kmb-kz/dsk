@@ -1,0 +1,15 @@
+
+<div class="form-group">
+  <label class="col-md-3 control-label">Имя</label>
+  <div class="col-md-9">
+    <input type="text" class="form-control" placeholder="Введите фамилию" [(ngModel)]="profile.name">
+  </div>
+</div>
+<div class="form-group">
+  <label class="col-md-3 control-label">Фамилия</label>
+  <div class="col-md-9">
+    <input type="text" class="form-control" placeholder="Введите имя" [(ngModel)]="profile.secondName">
+  </div>
+</div>
+
+<button (click)="changeProfile()" >Изменить</button>

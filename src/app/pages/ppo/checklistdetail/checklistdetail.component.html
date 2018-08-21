@@ -1,0 +1,358 @@
+<button class="btn btn-primary" *ngIf="checkListInfo?.object" [routerLink]="['/ppo/object/detail',checkListInfo?.object?.id]">
+  <i class="fa fa-angle-left"></i> Назад</button>
+<h1 class="page-header">{{checkListInfo?.title}}</h1>
+
+<div class="row">
+
+  <div class=col-md-3>
+    <div style="margin-bottom: 10px;">
+      <div style="overflow: hidden">
+        <button class="btn btn-primary btn-block btn-sm" *ngIf="(auth.isInRole('Inspector,PpoInspector') && checkListInfo?.status?.id == 1) 
+        || (auth.isInRole('ProjectManager,PpoManager') && checkListInfo?.status?.id == 2)" (click)="checkListFinish(checkListInfo?.answerListId)">
+          <i class="fa fa-send"></i>
+          <span *ngIf="checkListInfo?.constructives?.length  == 0">Замечаний нет</span>
+          <span *ngIf="checkListInfo?.constructives?.length  > 0">Отправить</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="filter-container">
+        <b>Объект</b>
+        <div>
+          <a *ngIf="checkListInfo?.object" [routerLink]="['/ppo/object/detail',checkListInfo?.object?.id]">{{checkListInfo?.object?.name}}</a>
+        </div>
+        <br>
+        <b>Статус</b>
+        <div>{{checkListInfo?.status?.name}}</div>
+        <br>
+        <b>Тип</b>
+        <div>{{checkListInfo?.auditType?.name}}</div>
+        <br>
+        <b>Дата создания</b>
+        <div>{{checkListInfo?.dateCreated | date:'dd.MM.yyyy'}}</div>
+        <br>
+        <b>Срок сдачи</b>
+        <div>{{checkListInfo?.dateExpired | date:'dd.MM.yyyy'}}
+          <!-- <span *ngIf="isExpired" style="color: red">(Просрочено)</span> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-success">Внимание! После заполнения чек листа необходимо нажать на кнопку
+      <b>Отправить</b>.
+
+    </div>
+  </div>
+  <div class="col-md-9 ui-sortable">
+    <div class="pull-left">
+      <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAddReamrk" *ngIf="auth.isInRole('Admin,Inspector,PpoInspector') && checkListInfo?.status?.id == 1"
+        (click)="openFormAddRemark()">
+        <i class="fa fa-plus"></i> Добавить</button>
+
+    </div>
+    <div class=pull-right>
+      Всего:
+      <span class="badge">{{statistic?.countAll}}</span>
+      <!-- Соответствует:
+      <span class="badge">{{statistic?.countSuccess}}</span> -->
+      <!--Не соответствует:
+      <span class="badge">{{statistic?.countError}}</span-->
+      Критичные:
+      <span class="badge">{{statistic?.countIsCritical}}</span>
+    </div>
+    <div style="clear: both;"></div>
+    <br/>
+    <div class="alert alert-success" *ngIf="checkListInfo?.constructives?.length  == 0">Замечаний нет</div>
+    <div *ngIf="checkListInfo?.constructives?.length > 0">
+      <div class="panel panel-primary" *ngFor="let constr of checkListInfo?.constructives; let constrIndex = index" [attr.data-index]="constrIndex">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{constr.id}}">
+              <i class="fa fa-plus-circle pull-right"></i>
+              {{constr.name}}
+              <span class="badge">{{constr.items.length}}</span>
+            </a>
+          </h4>
+        </div>
+        <div id="collapse_{{constr.id}}" class="panel-collapse collapse in">
+          <div class="panel-body ">
+            <div *ngFor="let item of constr?.items; let i = index" [attr.data-index]="i" class="row note  ppo-note" [ngClass]="{
+            'text-success':item.answers[0].isCorrected,                        
+            'text-danger':!item.answers[0].isCorrected
+          }">
+              <div class="col-md-6 col-xs-6 col-sm-6">
+                <div>
+                  <div class="remark-text">
+                    {{item.remark}}
+                    <br/> Дата заполнения чек листа : {{item.dateCreated | date:'dd.MM.yyyy'}}
+                  </div>
+                </div>
+                <span style="margin-top: 10px;" *ngIf="item.answers[0] != null">
+                  <a class="accordion-toggle accordion-toggle-styled collapsed a-more" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{item.id}}"
+                    (click)="getCommentAnsId(item.id)">Подробнее
+                    <i class="fa fa-angle-down"></i>
+                  </a>
+                </span>
+              </div>
+              <div class="col-md-4 col-xs-4 col-sm-4">
+                <span class="label label-success" *ngIf="item?.answers[0]?.isCorrected">Отозван</span>
+                <span class="label label-danger" *ngIf="!item?.answers[0]?.isCorrected">Не соответствует</span>
+                <span class="label label-info" *ngIf="item?.answers == null">Не отмечено</span>
+                <span class="label label-warning" *ngIf="item.isCritical">Критично</span>
+                <span class="label label-primary" *ngIf="!item.isCritical">Не критично</span>
+                <span *ngIf="item.answers[0]?.dateCorrected != null">
+                  <br/>
+                  <b>Дата исправления: </b>
+                  <br/> {{item.answers[0]?.dateCorrected | date: 'dd.MM.yyyy'}}
+                </span>
+              </div>
+              <div class="col-md-2 col-xs-2 col-sm-2">
+                <div class="pull-right">
+
+                  <ng-container div *ngIf="(auth.isInRole('Inspector,PpoInspector') && checkListInfo?.status?.id == 1) || (auth.isInRole('Admin,PpoAdmin') && checkListInfo?.status?.id == 2)">
+                    <button class="btn  btn-zakon btn-sm" *ngIf="!item.answers[0]?.isCorrected" [ngClass]="item.answers[0]?.isCorrected ? 'btn-success':'btn-primary'"
+                      title="Отозвать" (click)="showModal(item.answers[0]?.id, true, i, constrIndex)">
+                      <i class="fa fa-share"></i> Отозвать
+                    </button>
+                    <button class="btn  btn-zakon btn-sm" *ngIf="item.answers[0]?.isCorrected" [ngClass]="!item.answers[0]?.isCorrected ? 'btn-success':'btn-danger'"
+                      title="Не соответствует" (click)="showModal(item.answers[0]?.id, false, i,constrIndex)">
+                      <i class="fa fa-close"></i> Не соответствует
+                    </button>
+                  </ng-container>
+                  <!--  && item.isCritical == false-->
+                  
+                  <ng-container *ngIf="auth.isInRole('ProjectManager,PpoManager') && checkListInfo?.status?.id == 2">
+                    <div *ngIf="item.answers[0]?.grLetterUrl != '' && item.answers[0]?.grLetterUrl != null ">
+                      <a href="{{item.answers[0]?.grLetterUrl}}" title="" target="_blank">
+                        <i class="fa fa-download"></i> Скачать гарантийное письмо
+                      </a>
+                    </div>
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalDateCorrected" title="Назначить дату исправления"
+                      (click)="showModalDateCorrected(item.answers[0]?.id, i, constrIndex)">
+                      <i class="fa fa-calendar"></i> Отметить дату исправления
+                    </button>
+
+                  </ng-container>
+                  <div *ngIf="item.answers?.photos?.length > 0">
+                    <div style="clear:both">
+                      <div class="checklist-photo-item" style="clear:both; position: relative">
+                        <a href="#" data-lightbox="roadtrip">
+                          <div *ngIf="item.answers?.photos?.length > 1">
+                            <span style="position:absolute; display:inline-block; right: 2px; bottom: 0px; color: white; background: black">+ Еще {{item.answers?.photos?.length}}</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <i class="fa fa-history fa-2x text-primary" style='cursor: pointer' data-toggle="modal" data-target="#modalHistories" title="История"
+                    (click)="loadHistories(item.id)"></i>
+                </div>
+              </div>
+              <app-check-info [photos]="item.answers[0].photos" [commentText]="item.answers[0].comment" id="collapse_{{item.id}}" class="panel-collapse collapse"
+                [typeCheckList]="1" [statusId]="checkListInfo?.status?.id" (delPhoto)="OnDelPhoto($event)"></app-check-info>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="modalDateCorrected" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Дата исправления</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="selDateCorrectedAnsId" id="selDateCorrectedAnsId" ([ngModel])="selDateCorrectedAnsId" #selDateCorrectedAnsId>
+        <input type="hidden" name="indexDateCorrected" id="indexDateCorrected" ([ngModel])="indexDateCorrected" #indexDateCorrected/>
+        <input type="hidden" name="constrIndexDateCorrected" id="constrIndexDateCorrected" ([ngModel])="constrIndexDateCorrected"
+          #constrIndexDateCorrected/>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-5" *ngIf="(dateValue1 == null)">
+                  <div class="form-group">
+                    <label>Загрузить файл (Гарантийное письмо) &nbsp;&nbsp;&nbsp;
+                      <a href="javascript:;" (click)="clearFileLetter()">Очистить</a>
+                    </label>
+                    <app-file-one [(ngModel)]="fileLetter" name="fileLetter"></app-file-one>
+                  </div>
+                  <div class="form-group">
+                    <label>Дата исправления</label>
+                    <br/>
+                    <p-calendar [(ngModel)]="dateValue" [locale]="rus" showButtonBar="true" dateFormat="dd.mm.yy" [minDate]="minDate" [maxDate]="maxDate"
+                      readonlyInput="true" [disabled]="(dateValue1 != null)">
+                    </p-calendar>
+                  </div>
+                </div>
+                <div class="col-md-2 forms-or" *ngIf="(dateValue == null) || (fileLetter.size == null) || (fileLetter.size == null || dateValue == null) && dateValue1 == null">
+                  <div class="bor visible-sm visible-xs"></div>
+                  <span class="form-or"> ИЛИ </span>
+                  <div class="bor visible-sm visible-xs"></div>
+                </div>
+                <ng-container *ngIf="fileLetter.size == null">
+                  <div class="col-md-5" *ngIf="dateValue == null ">
+                    <div class="form-group">
+                      <label for="dateCorrected">Указать срок исполнения</label>
+                      <br/>
+                      <p-calendar [(ngModel)]="dateValue1" [locale]="calendar.rus" showButtonBar="true" dateFormat="dd.mm.yy" [minDate]="calendar.minDate"
+                        [maxDate]="calendar.maxDate" readonlyInput="true" [disabled]="(dateValue != null)">
+                      </p-calendar>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" (click)="setDateCorrectedFree(selDateCorrectedAnsId.value, dateValue, dateValue1, indexDateCorrected.value,constrIndexDateCorrected.index)">
+          <i clas="fa fa-check"></i> Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="modalHistories" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">История</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ng-container *ngIf="histories">
+          <ng-container *ngIf="histories.length > 0">
+            <div *ngFor="let item of histories">
+              <b>{{item.userName}}</b>
+              <span *ngIf="item.actionId == 1"> подтвердил соответствие стандарту</span>
+              <span *ngIf="item.actionId == 2"> подтвердил несоответствие стандарту</span>
+              <span *ngIf="item.actionId == 3"> указал дату исправления</span>
+              <br/>
+              <small>{{item.dateCreated | date : 'dd.MM.yyyy HH:mm:ss'}}</small>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="histories.length == 0">
+            <b>Записи не найдены</b>
+          </ng-container>
+
+        </ng-container>
+        <ng-container *ngIf="!histories">
+          <div class="text-center">
+            <i class="fa fa-ellipsis-h fa-3x"></i>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal inmodal" id="modalСompliesCheck" tabindex="-1" [hidden]="display">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Подтверждение статуса</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <input type="hidden" name="index" id="index" ([ngModel])="index" #index/>
+          <input type="hidden" name="constrIndex" id="constrIndex" ([ngModel])="index" #constrIndex/>
+          <input type="hidden" name="answerItemId" id="answerItemId" ([ngModel])="answerItemId" #answerItemId/>
+          <input type="hidden" name="isCorrected" id="isCorrected" ([ngModel])="isCorrected" #isCorrected/>
+          <div class=form-group>
+            <app-files [(ngModel)]="photos" name="photos"></app-files>
+          </div>
+          <div class="form-group">
+            <label for="textCompliesCheck">Ваш коментарий</label>
+            <div class="compliesCheckText">
+              <textarea placeholder="Ваш коментарий" id="textCompliesCheck" name="textCompliesCheck" ([ngModel])="textCompliesCheck" #textCompliesCheck></textarea>
+            </div>
+          </div>
+          <button type="button" aria-hidden="true" class="btn btn-primary" (click)="compliesCheck(answerItemId.value, isCorrected.value, textCompliesCheck.value, index.value,constrIndex.value)">
+            <i class="fa fa-check"></i> Подтвердить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal inmodal" id="modalAddReamrk" tabindex="-1" [hidden]="display">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Добавление замечания</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="addRemark" id="addRemark" [formGroup]="addRemarkForm" novalidate>
+          <input type="hidden" name="AnswerListId" class="answer-list-id" value="{{checkListInfo?.answerListId}}" />
+          <input type="hidden" name="FreeCLId" class="free-cl-id" value="{{checkListInfo?.id}}" />
+          <!--div class="checkbox">
+            <label>
+              <input type="checkbox" ([ngModel])="IsCritical" #IsCritical name="IsCritical" id="IsCriticalChecked" formControlName="IsCriticalChecked"> Критичное замечание
+            </label>
+          </div-->
+          <div class="form-group">
+            <label>Критичность</label>
+            <div class="form-check">
+
+              <input class="form-check-input" type="radio" id="IsCriticalChecked" [value]="true" formControlName="IsCriticalChecked" [(ngModel)]="IsCritical"
+              />
+              <label class="form-check-label" for="defaultRadio">Критичное замечание</label>
+              <input class="form-check-input" type="radio" id="IsCriticalChecked" [value]="false" formControlName="IsCriticalChecked" [(ngModel)]="IsCritical"
+              />
+              <label class="form-check-label" for="defaultRadio">Некритичное замечание</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Выберите конструктив</label>
+            <br/>
+            <select class="pm-dropdown form-control" name="constructiveId" ([ngModel])="constructiveId" #constructiveId id="constructiveIdSelected"
+              formControlName="constructiveSelected">
+              <ng-container *ngFor="let c of constructiveInfo">
+                <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+                <ng-container *ngFor="let child of c.children">
+                  <option [value]="child.id">- {{child.name}}</option>
+                </ng-container>
+              </ng-container>
+            </select>
+          </div>
+          <div class=for-group>
+            <label>Текст замечания</label>
+            <br/>
+            <textarea name="Remark" class="form-control" style="width: 70%; height: 70px;" placeholder="Текст замечания" ([ngModel])="textRemark"
+              #textRemark id="textRemarkValue" formControlName="textRemark"></textarea>
+          </div>
+          <div class="form-group">
+            <app-files [(ngModel)]="photos" name="photos" formControlName="inPhotos"></app-files>
+          </div>
+          <div class=for-group>
+            <label>Комментарий</label>
+            <br/>
+            <textarea name="Comment" class="form-control" style="width: 70%; height: 50px;" placeholder="Комментарий" ([ngModel])="comment"
+              #comment id="comment"></textarea>
+          </div>
+          <br/>
+          <button type="button" aria-hidden="true" class="btn btn-primary" [disabled]="!addRemarkForm.valid" (click)="addRemark(checkListInfo?.answerListId,checkListInfo?.id, textRemark.value, constructiveId.value,IsCritical,comment.value)">Добавить</button>
+        </form>
+      </div>
+    </div>
+  </div>

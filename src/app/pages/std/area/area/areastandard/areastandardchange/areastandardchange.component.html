@@ -1,0 +1,140 @@
+<div class="row">
+  <div class="col-md-6">
+    <h5>Укажите стандарт</h5>
+    <input type="radio" name="standard" id="thisStandard" (change)='refreshVersionType();' [value]='1' [(ngModel)]="standardType">
+    <label for="thisStandard">Этот стандарт</label>
+    <input type="radio" name="standard" id="otherStandard" (change)='refreshVersionType();' [value]='2' [(ngModel)]="standardType">
+    <label for="otherStandard">Другой стандарт</label>
+    <input type="radio" name="standard" id="newStandard" (change)='refreshVersionType();' [value]='3' [(ngModel)]="standardType">
+    <label for="newStandard">Новый стандарт</label>
+    <div *ngIf='standardType == 2'>
+      <hr>
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label for="constructiveId" class="col-md-3 control-label">Конструктив</label>
+          <div class="col-md-9">
+            <select class="form-control" id="constructiveId" [(ngModel)]="otherStandard.constructiveId" (change)="constructiveChange()">
+              <option *ngFor="let c of (constuctives | async)" [value]="c.id">{{c.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="standardId" class="col-md-3 control-label">Стандарт</label>
+          <div class="col-md-9">
+            <select class="form-control" id="standardId" [(ngModel)]="otherStandard.standardId" (change)='initVersions()'>
+              <option *ngFor="let c of (standards | async)" [value]="c.id">{{c.name}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf='standardType == 3'>
+      <hr>
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label for="groupId" class="col-md-3 control-label">Группа</label>
+          <div class="col-md-9">
+            <select class="form-control" [(ngModel)]="newStandard.groupId">
+              <option *ngFor="let c of (groups | async)" [selected]='index == 0' [value]="c.id">{{c.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="constructiveId" class="col-md-3 control-label">Конструктив</label>
+          <div class="col-md-9">
+            <select class="form-control" id="constructiveId" [(ngModel)]="newStandard.constructiveId">
+              <option *ngFor="let c of (nsi.constructives() | async)" [value]="c.id">{{c.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="title" class="col-md-3 control-label">Наименование</label>
+          <div class="col-md-9">
+            <input type="text" id="title" [(ngModel)]="newStandard.title" class="form-control" placeholder="Title...">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description" class="col-md-3 control-label">Описание</label>
+          <div class="col-md-9">
+            <textarea id="description" [(ngModel)]="newStandard.description" class="form-control" placeholder="Description..." rows="5"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <h5>Укажите версию стандарта</h5>
+    <input [disabled]='standardType == 3' type="radio" name="version" id="standardVersion" [value]='1' [(ngModel)]="versionType">
+    <label for="standardVersion">Из списка</label>
+    <input type="radio" name="version" id="newVersion" [value]='2' [(ngModel)]="versionType">
+    <label for="newVersion">Новая версия</label>
+    <div *ngIf='versionType == 1'>
+      <hr>
+      <select class="form-control" id="versionId" [(ngModel)]="versionId">
+        <option [disabled]='c.id == (model.Standard|async)?.versionId' *ngFor="let c of (versions | async)" [ngValue]="c.id">{{c.name}}</option>
+      </select>
+    </div>
+    <div *ngIf='versionType == 2'>
+      <hr>
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label for="validImages" class="col-md-3 control-label">Примеры корректной работы</label>
+          <div class="col-md-9">
+            <app-files [(ngModel)]="newVersion.validImages"></app-files>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="invalidImages" class="col-md-3 control-label">Примеры некорректной работы</label>
+          <div class="col-md-9">
+            <app-files [(ngModel)]="newVersion.invalidImages"></app-files>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="parameters" class="col-md-3 control-label">Показатели</label>
+          <div class="col-md-9">
+            <table class="table table-responsive">
+              <tr>
+                <th>Показатель</th>
+                <th>Значение</th>
+                <th>Ед.измерения</th>
+                <th></th>
+              </tr>
+              <tr *ngFor="let parameter of newVersion.parameters; let i = index">
+                <td>
+                  <select class="col-md-6 form-control" [(ngModel)]="parameter.type.id">
+                    <option *ngFor="let c of (nsi.stdParameterTypes() | async)" [ngValue]="c.id">{{c.name}}</option>
+                  </select>
+                </td>
+                <td>
+                  <input type="text" class="col-md-6 form-control" [(ngModel)]="parameter.value">
+                </td>
+                <td>
+                  <input type="text" class="col-md-6 form-control" [(ngModel)]="parameter.measurement">
+                </td>
+                <td>
+                  <a (click)='deleteParameter(i)' class="btn btn-danger btn-icon btn-circle">
+                    <i class="fa fa-times"></i>
+                  </a>
+                </td>
+              </tr>
+            </table>
+            <a (click)='addParameter()' class="btn btn-primary btn-icon btn-circle">
+              <i class="fa fa-plus"></i>
+            </a>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="description" class="col-md-3 control-label">Комментарий</label>
+          <div class="col-md-9">
+            <textarea id="description" [(ngModel)]="newVersion.description" class="form-control" placeholder="Комментарий..." rows="5"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center">
+    <button class="btn btn-success m-t-10" (click)='send()'>
+      <i class="fa fa-upload"></i> Отправить запрос</button>
+  </div>
+</div>

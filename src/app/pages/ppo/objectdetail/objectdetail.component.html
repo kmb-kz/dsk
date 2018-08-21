@@ -1,0 +1,691 @@
+<h1 class="page-header">{{areaInfo?.name}}</h1>
+<div class="row">
+  <div class="alert alert-danger" *ngIf="errorMessage.length > 0">
+    {{errorMessage}} -
+    <a [routerLink]='["/std/area/"+areaInfo?.id+"/importGroup"]' class="toPage"> Перейти на страницу</a>
+  </div>
+  <div class=col-md-3>
+    <div class="panel">
+      <div class="filter-container">
+        <h4>{{areaInfo?.name}}</h4>
+        <div>
+          <b>Акт приемки</b>
+          <span *ngIf="areaInfo?.ppoReport !='' ">
+            <a href="{{apiUrl}}{{areaInfo?.ppoReport}}" target="_blank">
+              <i class="fa fa-download"></i> Скачать</a>
+          </span>
+          <span *ngIf="areaInfo?.ppoReport == ''">Не загружен;</span>
+          <br/>
+        </div>
+        <div>
+          <b>Прикрепленный чек лист</b>
+          <span *ngIf="areaInfo?.ppoReportCheckList !='' ">
+            <a href="{{apiUrl}}{{areaInfo?.ppoReportCheckList}}" target="_blank">
+              <i class="fa fa-download"></i> Скачать</a>
+          </span>
+          <span *ngIf="areaInfo?.ppoReportCheckList == ''">Не загружен;</span>
+          <br/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9">
+    <div class="button-container">
+      <button class="btn  btn-sm btn-primary pull-right" (click)="onPressBack()">
+        <i class="fa fa-angle-left"></i> Назад
+      </button>
+      <a [routerLink]='["/ppo/object/grletters/"+areaInfo?.id]' class="btn btn-primary btn-sm">
+        <i class="fa fa-files-o pull-left"></i> Гарантийные письма</a>
+      <div class="m-b-5 visible-xs-block"></div>
+      <ng-container *ngIf="auth.isInRole('Admin,PpoAdmin,Okk')">
+        <button data-toggle="modal" data-target="#modalAct" class="btn  btn-sm" *ngIf="auth.isInRole('Admin,PpoAdmin')" [ngClass]="areaInfo?.rkAudits != null  ? 'btn-primary' : ''">
+          <i class="fa fa-paperclip pull-left"></i> Прикрепить акт приёмки
+        </button>
+        <button data-toggle="modal" data-target="#modalCheckList" class="btn  btn-sm" *ngIf="auth.isInRole('Admin,PpoAdmin')">
+          <i class="fa fa-paperclip pull-left"></i> Прикрепить чек лист
+        </button>
+        <!-- <button class="btn  btn-sm" [ngClass]="areaInfo?.isCanCreateRk == true  ? 'btn-primary' : ''" (click)="addAuditRK()">
+          <i class="fa fa-check-square pull-left"></i> Создать рабочую комиссию</button>
+        <button href="#" class="btn  btn-sm" (click)="addAuditPK()" [ngClass]="areaInfo?.isCanCreatePk == true  ? 'btn-primary' : ''">
+          <i class="fa fa-check-square pull-left"></i> Создать приёмочную комиссию
+        </button> -->
+        <!--button class="btn btn-sm btn-primary">
+          <i class="fa fa-thumbs-o-up pull-left"></i> Сдать объект
+        </button-->
+      </ng-container>
+    </div>
+    <div class="panel-group" id="accordion">
+      <div class="panel panel-primary overflow-hidden" *ngIf="auth.isInRole('ProjectManager,Admin,PpoAdmin,Okk')">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#collapseInvitation">
+              <i class="fa fa-plus-circle pull-right"></i>
+              Приглашения
+            </a>
+          </h3>
+        </div>
+        <div id="collapseInvitation" class="panel-collapse collapse">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row">
+                  <button data-toggle="modal" data-target="#modalInvitation" class="btn btn-primary btn-sm" *ngIf="auth.isInRole('ProjectManager')">
+                    <i class="fa fa-send pull-left"></i> Отправить приглашение</button>
+                  <br *ngIf="auth.isInRole('ProjectManager')" />
+                  <br *ngIf="auth.isInRole('ProjectManager')" />
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Дата приглашения</th>
+                          <th>Тип комиссии</th>
+                          <th>Прикрепленный файл</th>
+                          <th>Ссылка на КХД</th>
+                          <th>Текст</th>
+                          <th>Ответ</th>
+                          <th>Статус</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let invI of invitationInfo">
+                          <td>{{invI.invitationDateTime | date: 'dd.MM.yyyy HH:mm:ss'}}</td>
+                          <td>{{invI.auditType?.name}}</td>
+                          <td>
+                            <a *ngIf="invI.fileUrl!=null && invI.fileUrl!=''" href="{{invI.fileUrl}}">Скачать</a>
+                          </td>
+                          <td>
+                            <a href="{{invI.linkKHD}}">Ссылка на файл</a>
+                          </td>
+                          <td>
+                            <div *ngIf="invI.text != null">
+                              <!-- <span *ngIf="invI.text.length > 30">{{invI.text.substring(0, 30)}} ... </span> -->
+                              <span>{{invI.text}}</span>
+                            </div>
+                          </td>
+                          <td>
+                            <div *ngIf="invI.validDate != null">
+                              <b>Рекомендуемое время: {{invI.validDate}}</b>
+                            </div>
+                            <div *ngIf="invI.notes != null">
+                              <span>{{invI.notes}}</span>
+                            </div>
+                          </td>
+                          <td>
+
+                            <div>{{invI.status}}
+                              <i *ngIf="!invI.isApproved" data-toggle="modal" data-target="#modalApprovedResult" (click)="selectAppr(invI)" style='cursor: pointer;color:#ff5b57'
+                                class="fa fa-ban"></i>
+                            </div>
+                            <div *ngIf="(auth.isInRole('Admin,PpoAdmin,Okk') && (invI.isApproved == null)) ">
+
+                              <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalApprovedFile" (click)="infoApproved(invI.id)">
+                                <i class="fa fa-check"></i> Принять</button>
+                              <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalApprovedFalse" (click)="infoApproved(invI.id)">
+                                <i class="fa fa-ban"></i> Отклонить</button>
+                            </div>
+
+                          </td>
+                        </tr>
+                        <tr class="alert-info" *ngIf="invitationInfo?.length==0">
+                          <td colspan="5">На данный момент нет приглашения</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="areaInfo?.pcAudit != null">
+        <div class="panel panel-primary overflow-hidden">
+          <div class="panel-heading">
+            <h3 class="panel-title">
+              <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                <i class="fa fa-plus-circle pull-right"></i>
+                Предварительная комиссия от {{areaInfo?.pcAudit?.dateCreated | date:'dd.MM.yyyy'}}
+                <label class="label label-success" *ngIf="areaInfo?.pcAudit.isFinish">Завершена</label>
+                <label class="label label-danger" *ngIf="!areaInfo?.pcAudit.isFinish">Не завершена</label>
+              </a>
+            </h3>
+          </div>
+          <div id="collapseTwo" class="panel-collapse collapse" [ngClass]="areaInfo?.pcAudit != null  ? 'in':''">
+            <div class="panel-body">
+              <div>
+                <a class="btn btn-primary btn-sm" target="_blank" *ngIf="areaInfo?.pcAudit.isFinish" href="{{apiUrl}}Report/ConsalidateReportPdf?auditId={{areaInfo?.pcAudit?.id}}">
+                  <i class="fa fa-book pull-left"></i> Сводный отчет
+                </a>
+                <span class="pull-right">
+                  <i class="fa fa-circle text-warning"></i>
+                  Всего замечании
+                  <i class="fa fa-circle text-info"></i>
+                  Отмечены даты исправления
+                </span>
+                <br *ngIf="areaInfo?.pcAudit.isFinish" />
+                <br *ngIf="areaInfo?.pcAudit.isFinish" />
+              </div>
+              <br/>
+              <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th width="30%">Должность</th>
+                      <th>ФИО</th>
+                      <th>Контакты</th>
+                      <th style="width: 83px;">Чек лист</th>
+                      <th>Статус чек листа</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let pc of areaInfo?.pcAudit?.auditors; let indexPca = index;">
+                      <tr [ngClass]="{
+                          'success':pc.status?.id == 2,                    
+                          'danger':pc.status?.id == 1                    
+                        }">
+                        <td>{{pc.position?.name}}</td>
+                        <td>
+                          <span *ngIf="pc?.user">{{pc.user?.fullName}}</span>
+                          <span *ngIf="pc.status?.id == 1 && pc?.user && auth.isInRole('Admin,PpoAdmin')">
+                            <a href="javascript:" (click)="appointUser(pc?.id)" data-toggle="modal" data-target="#modalLeaderCheckList">
+                              Переназначить
+                            </a>
+                          </span>
+                          <span *ngIf="!pc?.user && auth.isInRole('Admin,PpoAdmin')">
+                            <a href="javascript:" (click)="appointUser(pc?.id)" data-toggle="modal" data-target="#modalLeaderCheckList">Назначить</a>
+                          </span>
+                        </td>
+                        <td>{{pc.user?.phoneNumber}}</td>
+                        <td>
+                          <span *ngIf="pc.checklistId == null">
+                            Не сформирован
+                            <a href="javascript:;" *ngIf="auth.isInRole('Admin,PpoAdmin,OKK')" (click)="generateFixCheckList(pc.id)"> Сформировать</a>
+                          </span>
+                          <span *ngIf="pc.checklistId != null && (pc.isAvailable || !auth.isInRole('PpoInspector,Inspector'))">
+                            <a [routerLink]="['/ppo/object/checklistf/detail', pc?.checklistId]" *ngIf="pc?.user != null && pc?.checklistType == 1 ">Чек лист</a>
+                            <a [routerLink]="['/ppo/object/checklist/detail', pc?.checklistId]" *ngIf="pc?.user != null && pc?.checklistType != 1">Чек лист</a>
+                          </span>
+                          <div *ngIf="(pc.checklistId != null) && (pc.status?.id != 1)">
+                            <a href="{{apiUrl}}Report/InspectorReportPdf?auditInspectorId={{pc.id}}" target="_blank">Печать</a>
+                          </div>
+                        </td>
+                        <td>
+                          {{pc.status?.name}}
+                          <span class="badge badge-warning" *ngIf="pc.status?.id == 2 && pc.countWarning > 0" title="Всего замечании">{{pc.countWarning}}</span>
+                          <span class="badge badge-info" *ngIf="pc.countFilledByPm > 0" title="Отмечены даты исправления">{{pc.countFilledByPm}}</span>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+
+      <div class="panel panel-primary overflow-hidden" *ngIf="areaInfo?.rkAudit != null">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+              <i class="fa fa-plus-circle pull-right"></i>
+              Рабочая коммиссия от {{areaInfo?.rkAudit?.dateCreated | date:'dd.MM.yyyy'}}
+              <label class="label label-success" *ngIf="areaInfo?.rkAudit.isFinish">Завершена</label>
+              <label class="label label-danger" *ngIf="!areaInfo?.rkAudit.isFinish">Не завершена</label>
+              <label *ngIf="!areaInfo?.rkAudit.isActive">Рабочая комиссия отменена</label>
+            </a>
+
+          </h3>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse" [ngClass]="areaInfo?.rkAudit != null && areaInfo?.pkAudits.length===0 ? 'in':''">
+          <div class="panel-body">
+            <div style="padding-bottom: 5px;">
+              <a class="btn btn-primary btn-sm" target="_blank" *ngIf="areaInfo?.rkAudit.isFinish" href="{{apiUrl}}/Report/ConsalidateReportPdf?auditId={{areaInfo?.rkAudit?.id}}">
+                <i class="fa fa-book pull-left"></i> Сводный отчет
+              </a>
+
+              <button class="btn btn-primary btn-sm" *ngIf="auth.isInRole('Admin,PpoAdmin') && areaInfo?.rkAudit.isActive == true" data-toggle="modal"
+                data-target="#cancelRK">Отменить рабочую комиссию</button>
+              <span class="pull-right">
+                <i class="fa fa-circle text-warning"></i>
+                Всего замечании
+                <i class="fa fa-circle text-info"></i>
+                Отмечены даты исправления
+              </span>
+              <br *ngIf="areaInfo?.rkAudit.isFinish" />
+              <br *ngIf="areaInfo?.rkAudit.isFinish" />
+              <div style="clear:both"></div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th width="30%">Должность</th>
+                    <th>ФИО</th>
+                    <th>Контакты</th>
+                    <th style="width: 83px;">Чек лист</th>
+                    <th>Статус чек листа</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let rk of areaInfo?.rkAudit?.auditors">
+                    <tr [ngClass]="{
+                    'success':rk.status?.id == 2,                    
+                    'danger':rk.status?.id == 1                    
+                  }">
+                      <td>{{rk.position?.name}}</td>
+                      <td>
+                        <span *ngIf="rk?.user">{{rk.user?.fullName}}</span>
+                        <ng-container *ngIf="areaInfo?.rkAudit.isActive">
+                          <span *ngIf="rk.status?.id == 1 && rk?.user && auth.isInRole('Admin,PpoAdmin')">
+                            <a href="javascript:" (click)="appointUser(rk?.id)" data-toggle="modal" data-target="#modalLeaderCheckList">
+                              Переназначить
+                            </a>
+                          </span>
+                          <span *ngIf="!rk?.user && auth.isInRole('Admin,PpoAdmin')">
+                            <a href="javascript:" (click)="appointUser(rk?.id)" data-toggle="modal" data-target="#modalLeaderCheckList">Назначить</a>
+                          </span>
+                        </ng-container>
+                      </td>
+                      <td>{{rk.user?.phoneNumber}}</td>
+                      <td>
+                        <ng-container *ngIf="areaInfo?.rkAudit.isActive">
+                          <span *ngIf="rk.checklistId == null">
+                            Не сформирован
+                            <a href="javascript:;" *ngIf="auth.isInRole('Admin,PpoAdmin,OKK')" (click)="generateFixCheckList(rk.id)"> Сформировать</a>
+                          </span>
+
+                          <span *ngIf="rk.checklistId != null && (rk.isAvailable || !auth.isInRole('PpoInspector,Inspector'))">
+                            <a [routerLink]="['/ppo/object/checklistf/detail', rk.checklistId]" *ngIf="rk?.user != null && rk?.checklistType == 1 ">Чек лист</a>
+                            <a [routerLink]="['/ppo/object/checklist/detail', rk.checklistId]" *ngIf="rk?.user != null && rk?.checklistType != 1">Чек лист</a>
+                          </span>
+                          <div *ngIf="(rk.checklistId != null) && (rk.status?.id != 1)">
+                            <a href="{{apiUrl}}Report/InspectorReportPdf?auditInspectorId={{rk.id}}" target="_blank">Печать</a>
+                          </div>
+                        </ng-container>
+                      </td>
+                      <td>
+                        {{rk.status?.name}}
+                        <span class="badge badge-warning" *ngIf="rk.status?.id == 2 && rk.countWarning > 0" title="Всего замечании">{{rk.countWarning}}</span>
+                        <span class="badge badge-info" *ngIf="rk.countFilledByPm > 0" title="Отмечены даты исправления">{{rk.countFilledByPm}}</span>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-primary overflow-hidden" *ngFor="let pka of areaInfo?.pkAudits; let indexPka = index;">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{pka.id}}">
+              <i class="fa fa-plus-circle pull-right"></i>
+              {{indexPka+1}}. Приемочная комиссия от {{pka.dateCreated | date:'dd.MM.yyyy'}}
+              <label class="label label-success" *ngIf="pka.isFinish">Завершена</label>
+              <label class="label label-danger" *ngIf="!pka.isFinish">Не завершена</label>
+            </a>
+          </h3>
+        </div>
+        <div id="collapse_{{pka.id}}" class="panel-collapse collapse" [ngClass]="areaInfo?.pkAudits.length===indexPka+1 ? 'in':''">
+          <div class="panel-body">
+            <div>
+              <a class="btn btn-primary btn-sm" target="_blank" *ngIf="pka.isFinish" href="{{apiUrl}}Report/ConsalidateReportPdf?auditId={{pka.id}}">
+                <i class="fa fa-book pull-left"></i> Сводный отчет
+              </a>
+              <br/>
+              <br/>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th width="30%">Должность</th>
+                    <th>ФИО</th>
+                    <th>Контакты</th>
+                    <th>Чек лист</th>
+                    <th>Статус чек листа</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngFor="let pk of pka?.auditors">
+                    <tr [ngClass]="{
+                    'success':pk.status?.id == 2,                    
+                    'danger':pk.status?.id == 1     
+                  }">
+                      <td>{{pk.position?.name}}</td>
+                      <td>
+                        <span *ngIf="pk?.user">{{pk.user?.fullName}}</span>
+                        <span *ngIf="pk.status?.id == 1 && pk?.user && auth.isInRole('Admin,PpoAdmin')">
+                          <a href="javascript:" (click)="appointUser(pk?.id)" data-toggle="modal" data-target="#modalLeaderCheckList">
+                            Переназначить
+                          </a>
+                        </span>
+                        <span *ngIf="!pk?.user && auth.isInRole('Admin,PpoAdmin')">
+                          <a href="javascript:" (click)="appointUser(pk?.id)" data-toggle="modal" data-target="#modalLeaderCheckList">Назначить</a>
+                          <!--button class="btn btn-primary btn-sm" *ngIf="!appeointVisable" (click)="appeointUserAdd(optionSelected,pk.id)">
+                        <i class="fa fa-check"></i>
+                      </button-->
+                        </span>
+
+                      </td>
+                      <td>{{pk.user?.phoneNumber}}</td>
+                      <td>
+                        <span *ngIf="pk?.user != null  && (pk?.isAvailable || !auth.isInRole('PpoInspector,Inspector'))">
+                          <a [routerLink]="['/ppo/object/checklistf/detail', pk.checklistId]" *ngIf="pk.checklistType == 1">Чек лист</a>
+                          <a [routerLink]="['/ppo/object/checklist/detail', pk.checklistId]" *ngIf="pk.checklistType != 1">Чек лист</a>
+                        </span>
+                        <div *ngIf="(pk.checklistId != null) && (pk.status?.id != 1)">
+                          <a href="{{apiUrl}}Report/InspectorReportPdf?auditInspectorId={{pk.id}}" target="_blank">Печать</a>
+                        </div>
+                      </td>
+                      <td>{{pk.status?.name}}
+                        <span class="badge badge-warning" *ngIf="pk.status?.id == 2 && pk.countWarning > 0" title="Кол-во замечание">{{pk.countWarning}}</span>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-primary overflow-hidden">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+              <i class="fa fa-plus-circle pull-right"></i>
+              Представитель проекта
+            </a>
+          </h3>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse">
+          <div class="panel-body">
+            <div *ngIf="auth.isInRole('Admin,PpoAdmin,Okk')">
+              <!--<button data-toggle="modal" data-target="#modalAddLeader" class="btn btn-primary btn-sm" (click)="loadUserList('ProjectManager,PpoManager')">
+                <i class="fa fa-plus-circle pull-left"></i> Добавить</button>
+              <br/>
+              <br/>-->
+            </div>
+            <div class=table-responsive>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>ФИО должность</th>
+                    <th>Контакты</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let f of areaInfo?.leaders">
+                    <td>{{f.fullName}}
+                      <br />
+                      <strong>{{f.position}}</strong>
+                    </td>
+                    <td>{{f.phoneNumber}}
+                      <br *ngIf="f.phoneNumber !=null" />
+                      <strong>{{f.email}}</strong>
+                    </td>
+                  </tr>
+                  <tr class="alert-info" *ngIf="areaInfo?.leaders?.length == 0">
+                    <td colspan="2">Представитель не назначен</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="cancelRK" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated bouceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Отменить рабочую комиссию</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Закрыть</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Комментарии</label>
+          <textarea class="form-control" rows="7" [(ngModel)]="cancelAuditModel.comment" name="textComent"></textarea>
+        </div>
+        <button class="btn btn-primary btn-sm" (click)="cancelRKComent()">
+          <i class="fa fa-check pull-left"></i> Отменить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal inmodal" id="modalInvitation" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated bouceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Приглашение</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Закрыть</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form>
+          <input type="hidden" [(ngModel)]="modelInvitation.areaId" [ngModelOptions]="{standalone: true}">
+          <div class="form-group">
+            <label>Указать дату и время</label>
+            <br/>
+            <p-calendar [(ngModel)]="modelInvitation.invitationDateTime" name="invitationDateTime" [locale]="calendar.rus" dateFormat="dd.mm.yy"
+              readonlyInput="true" [showTime]="true">
+            </p-calendar>
+          </div>
+          <div class="form-group">
+            <label>Тип комиссии</label>
+            <br/>
+            <select [(ngModel)]="modelInvitation.auditTypeId" class="form-control" name="auditTypeId">
+              <option value="{{auditType.id}}" *ngFor="let auditType of auditTypes">{{auditType.name}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Файл</label>
+            <br/>
+            <app-file-one [(ngModel)]="modelInvitation.file" name="file"></app-file-one>
+          </div>
+          <div class="form-group">
+            <label>Ссылка на КХД</label>
+            <br/>
+            <input type="text" class="form-control" [(ngModel)]="modelInvitation.linkKHD" name="linkKHD">
+          </div>
+          <div class="form-group">
+            <label>Текст приглашения</label>
+            <textarea class="form-control" rows="7" [(ngModel)]="modelInvitation.text" name="text"></textarea>
+          </div>
+          <button class="btn btn-primary btn-sm" (click)="setInvitation()">Отправить приглашение</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="modalBypassDate" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated bouceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Дата обхода</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="dateCorrected">Дата</label>
+          <br/>
+          <p-calendar [(ngModel)]="dateValue" name="dateValue" [locale]="calendar.rus" showButtonBar="true" dateFormat="dd.mm.yy" readonlyInput="true">
+          </p-calendar>
+        </div>
+        <button class="btn btn-primary" (click)="addAuditRK(dateValue)">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="modalLeaderCheckList" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Назначить</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <input type="hidden" name="pkId" id="pkId" ([ngModel])="pkId" #pkId>
+            <label>Выбрать пользователя</label>
+            <select class="form-control" ([ngModel])="selectedUserId" #selectedUserId name="selectedUser">
+              <option value="">Выбрать пользователя</option>
+              <option *ngFor="let u of users" [value]="u.id">{{u.fullName}}</option>
+            </select>
+          </div>
+          <button class="btn btn-success" (click)="appeointUserAdd(selectedUserId.value,pkId.value)">
+            <i class="fa fa-check"></i>
+            Назначить</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal inmodal" id="modalApprovedFile" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 class="pull-left">Принять приглашение</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Закрыть</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form>
+          <!--b>Документ (приказ)</b-->
+          <!--app-file [(ngModel)]="approvedFile" name="approvedFile"></app-file-->
+          <br/>
+          <button (click)="approved(true)" class="btn btn-success btn-zakon">
+            <i class="fa fa-upload"></i> Принять приглашение</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="modalApprovedFalse" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 class="pull-left">Отклонить приглашение</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Закрыть</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="appFalseData">Рекомендуемая дата</label>
+          <div style="font-size: 10px">Укажите дату если причина отказа в неподходящей дате приглашения</div>
+          <p-calendar [(ngModel)]="apprDate" [locale]="calendar.rus" name="apprDate" dateFormat="dd.mm.yy" readonlyInput="true" [showTime]="true">
+          </p-calendar>
+
+        </div>
+        <div class="form-group">
+          <label for="appFalseNotes">Причина</label>
+          <textarea [(ngModel)]='apprNotes' class="form-control" id="appFalseNotes" placeholder="Укажите причину" name="apprNotes">
+
+          </textarea>
+        </div>
+        <br/>
+        <button data-dismiss="modal" (click)="approved(false)" class="btn btn-danger btn-zakon">
+          <i class="fa fa-ban"></i> Отклонить приглашение</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal inmodal" id="modalApprovedResult" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 class="pull-left">Причина отказа</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Закрыть</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group" *ngIf="appr?.validDate">
+          <label>Рекомендуемая дата : </label>
+          {{appr?.validDate | date:'dd.MM.yyyy'}}
+        </div>
+        <div class="form-group">
+          <label for="appFalseNotes">Причина : </label>
+          {{appr?.notes}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="modalAct" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Прикрепление акта приемки</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-file [(ngModel)]="act" name="act"></app-file>
+        <br/>
+        <button (click)="uploadAct()" class="btn btn-success btn-zakon">
+          <i class="fa fa-upload"></i> Загрузить</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal inmodal" id="modalCheckList" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left">Прикрепление чек листа</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-file [(ngModel)]="fileCheckList" name="fileCheckList"></app-file>
+        <br/>
+        <button (click)="uploadCheckList()" class="btn btn-success btn-zakon">
+          <i class="fa fa-upload"></i> Загрузить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-toaster></app-toaster>

@@ -1,0 +1,9 @@
+<b> Расположение :
+    <ng-container *ngFor='let parent of breadcrumbs.reverse(), let i = index;'>
+      <a [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }" [routerLink]='["/rpm/admin/locations/child",model.Id, parent.id]'>
+        {{parent.name}}
+      </a>
+      <i class="fa fa-angle-right" *ngIf='breadcrumbs.length != i+1'></i>
+    </ng-container>
+  </b>
+  <router-outlet></router-outlet>

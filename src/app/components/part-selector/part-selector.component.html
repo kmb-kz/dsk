@@ -1,0 +1,7 @@
+{{_parent.label}}
+<ng-container *ngIf="children && children.length > 0">
+  
+  <p-menu appendTo="body" #menu popup="popup" [model]="children"></p-menu>
+  <button type="button" pButton icon="fa fa-list" (click)="menu.toggle($event)"></button>
+  <app-part-selector *ngIf="part" [parent]='part' ></app-part-selector>
+</ng-container>

@@ -1,0 +1,20 @@
+<div class="row" style='margin: 2px;padding: 3px;background-color: #e7e7e7;'>
+  <div class="col-md-3">
+    <img *ngIf='file64?.base64String' src="{{(file64?.base64String.indexOf('data') == 0 || file64?.base64String.indexOf('http') == 0 ? '' : 'data:image/jpeg;base64,') + file64?.base64String}}"
+      height=50 alt="">
+  </div>
+  <div class="col-md-7">
+    {{file64?.fileName}}
+    <br>
+    <span *ngIf='file64?.size'>{{(file64?.size / 1024) | number: '1.2-2'}}KB</span>
+  </div>
+  <div class="col-md-2">
+    <label [attr.for]="element" class="btn btn-primary btn-icon btn-circle">
+      <i class="fa fa-folder-open"></i>
+    </label>
+    <a (click)='click()' class="btn btn-danger btn-icon btn-circle">
+      <i class="fa fa-times"></i>
+    </a>
+    <input name="file64" #file style="display: none" [attr.id]="element" type="file" accept="image/*" (change)="change($event)">
+  </div>
+</div>

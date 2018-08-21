@@ -1,0 +1,26 @@
+<h4 class="text-center">Импортировать из группы</h4>
+<div class="form-horizontal">
+  <div class="form-group">
+    <label class="col-md-3 control-label">Модуль</label>
+    <div class="col-md-9">
+      <select class="form-control" [(ngModel)]='moduleId'>
+        <option *ngFor="let m of (modules)" [value]="m.id">{{ m.name }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-md-3 control-label">Шаблон</label>
+    <div class="col-md-9">
+      <select class="form-control" [(ngModel)]='id'>
+        <option *ngFor="let c of (nsi.groups() | async)" [value]="c.id">{{ c.name }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-md-9 col-md-offset-3">
+      <button class="btn btn-primary" (click)='import()' *ngIf="statusImport == false">Импортировать</button>
+      <button class="btn btn-primary" *ngIf="statusImport == true">Импортировать</button>
+      <button class="btn btn-default" [routerLink]='["../standards"]'>Отмена</button>
+    </div>
+  </div>
+</div>

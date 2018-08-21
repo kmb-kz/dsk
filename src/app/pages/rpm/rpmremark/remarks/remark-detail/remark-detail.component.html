@@ -1,0 +1,85 @@
+<div class="row note  ppo-note col-md-12 text-default">
+  <div class="col-md-12">
+    <ng-container *ngIf="this.auth.isInRole('RpmGM')">
+      <app-rpm-remark-buttons [item]="item" [answerListId]="answerListId" (refresh)="refresh()" [withLabels]="true"></app-rpm-remark-buttons>
+    </ng-container>
+  </div>
+  <div class="col-md-12">
+    <h5>
+      <b>Текст замечания:</b>{{item?.remarkType.name}}</h5>
+    <div>
+      <b>Расположение:</b>
+      <span>{{item?.areaParts}} {{item?.answers[0]?.place}}</span>
+    </div>
+    <div>
+      <b> Степень критичности:</b>
+      <span>{{item?.criticality.name}}</span>
+    </div>
+    <div>
+      <b>Статус:</b>
+      <span>{{item?.status.name}}</span>
+      <ng-container *ngIf="item?.isReview == true">
+        <span>(с корректировкой даты от Главного менеджера)</span>
+      </ng-container>
+    </div>
+
+  </div>
+  <div class="row"></div>
+  <ul class="timeline">
+    <li *ngFor="let a of item?.answers; let i = index" [attr.data-index]="i">
+      <div class="timeline-time">
+        <span class="date">{{a?.dateCreated | slice:0:10}}</span>
+        <span class="time">{{a?.dateCreated | slice:11:16}}</span>
+        <!--div class="cntDay" style="padding-top:17px;">
+          <span class="date" *ngIf="dateDiff[i] !=0">
+            {{dateDiff[i]}} дня
+          </span>
+        </div-->
+        <!--div class="cntDay" *ngIf="diffDate(a?.dateCreated, item?.answers[i+1]?.dateCreated)>0" style="padding-top:5px;">
+
+          <span class="date" *ngIf="item?.answers.length > i+1">
+            {{diffDate(a?.dateCreated, item?.answers[i+1].dateCreated)}}
+            <span>дн.</span>
+          </span>
+        </div-->
+      </div>
+      <!--div class="timeline-icon">
+        <a href="javascript:;">
+          <i class="fa fa-send"></i>
+        </a>
+      </div-->
+      <div class="timeline-body">
+        <div class="timeline-header">
+          <b>Статус:</b> {{a?.status.name}}
+          <span class="pull-right text-muted">
+            <span class="username">
+              <ng-container *ngIf="a.isReview == true">Главный менеджер:</ng-container>
+              <b>{{a?.userCreated.fullName}}</b>
+            </span>
+            <ng-container *ngIf="a?.isReview == true">
+              <span>(с корректировкой даты от Главного менеджера)</span>
+            </ng-container>
+            <span *ngIf="a.status.id == 7">{{a?.userReceiver.fullName}}</span>
+            <span *ngIf="a.status.id == 7 && a.userReceiver.phoneNumber != null">Тел:{{a?.userReceiver.phoneNumber}}</span>
+            <span *ngIf="a.status.id == 7 && a.userReceiver.email != null">Email:{{a?.userReceiver.email}}</span>
+          </span>
+        </div>
+        <div class="timeline-content">
+          <ng-container *ngIf="a?.breakdown?.id != null">
+            <b>Предполагаемая причина срыва срока:</b> {{a?.breakdown?.name}}
+          </ng-container>
+          <p class="capital">{{a?.comment}}</p>
+          <div style="padding: 7px 7px;" *ngIf="a.photos.length > 0">
+            <div class="row">
+              <div class="col-xs-3" *ngFor="let p of a.photos; let i=index" id="p_{{p.id}}">
+                <div class="thumbnail" style="margin-bottom:0px;">
+                  <img src="{{p.url}}" alt="" class="img-responsive" style="min-height: 100px" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

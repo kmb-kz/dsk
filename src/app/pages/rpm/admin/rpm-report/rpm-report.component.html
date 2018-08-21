@@ -1,0 +1,25 @@
+<h1 class="page-header">Отчет BI-Service</h1>
+<div class="row">
+  <div class="col-md-3 col-xs-3">
+    <div class="row">
+      <div class="btn-group-vertical btn-sm reportBtn">
+
+        <a [routerLink]="['/rpm/admin/report/global']" class="btn btn-white reportBtn">Общий</a>
+        <a [routerLink]="['/rpm/admin/report/selective']" class="btn btn-white reportBtn">Выборочная выгрузка</a>
+        <a [routerLink]="['/rpm/admin/report/statistics']" class="btn btn-white reportBtn">Статистика</a>
+        <a [routerLink]="['/rpm/admin/report/active']" class="btn btn-white reportBtn">Количество активных</a>
+        <a [routerLink]="['/rpm/admin/report/month']" class="btn btn-white reportBtn">Кол-во замечаний в месяц (по инспекторам)</a>
+        <a [routerLink]="['/rpm/admin/report/inspectors']" class="btn btn-white reportBtn">Статистика по инспекторам</a>
+        <ng-container *ngIf="auth.isInRole('RpmAdmin')">
+          <a [routerLink]="['/rpm/admin/report/critical']" class="btn btn-white reportBtn">Отчёты критичных замечаний для А.Г</a>
+        </ng-container>
+        <ng-container *ngIf="auth.isInRole('RpmGM')">
+          <a [routerLink]="['/rpm/admin/report/gm']" class="btn btn-white reportBtn">Сводный отчет</a>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9 col-xs-9">
+    <router-outlet></router-outlet>
+  </div>
+</div>

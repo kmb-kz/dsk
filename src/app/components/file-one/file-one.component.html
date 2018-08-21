@@ -1,0 +1,15 @@
+<div class="row" style='margin: 2px;padding: 3px;background-color: #e7e7e7;'>
+  <div class="col-md-9">
+    <div class="info-file">
+      {{model?.fileName}}
+      <span *ngIf='model?.size'> Размер: {{(model?.size / 1024) | number: '1.2-2'}}KB</span>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <label for="element" class="btn btn-primary btn-icon btn-circle"  [class.disabled]="disFile">
+      <i class="fa fa-folder-open"></i>
+    </label>
+  </div>
+  <input name="file64" #file type="file" id="element" style="display: none" accept="application/msword, application/vnd.ms-excel,application/pdf"
+    (change)="change($event)">
+</div>

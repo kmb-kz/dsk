@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-md-12">
+    <p>
+      {{(model.Standard | async)?.description}}
+    </p>
+  </div>
+  <div class="col-md-12">
+    <h4>Версии</h4>
+    <a [ngClass]="{'btn-primary':version.byDefault}" class="btn m-r-5 m-b-5" [routerLink]='[version.id]' *ngFor='let version of (model.Standard | async)?.versions, let i = index;'>
+      <i class="fa fa-check" *ngIf='version.byDefault'></i> Версия {{i + 1}}
+    </a>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+<div class="form-inline m-b-10">
+    <label for="stage">Этап:</label>
+    <div class="form-group m-r-10">
+        <select class="form-control input-sm" [(ngModel)]="stageId" (change)='stageIdChange()' placeholder='Выбрать этап'>
+            <option value="0">Выбрать этап</option>
+            <ng-container *ngFor="let s of stages; let y = index ">
+                <ng-container *ngIf="y != 3">
+                    <option style="font-weight:bold" [value]="s.number">{{s.number}}-этап</option>
+                </ng-container>
+            </ng-container>
+        </select>
+    </div>
+
+    <button class="btn btn-sm btn-primary" (click)="finishStage()" [disabled]="isFinishStagesStatus">
+        <i class="fa fa-check"></i> Завершить этап
+    </button>
+    <button class="btn btn-sm btn-success" [disabled]="isFinishStagesStatus == false">
+        <i class="fa fa-print"></i> Печать
+    </button>
+</div>
+<ng-container *ngIf="stageId != '0' && rooms.length > 0 ">
+    <label>Список комнат</label>
+    <ng-container *ngFor="let r of rooms">
+        <button class="btn btn-sm btn-success m-r-5" (click)="saveRoomId(r.id,r.name)" [ngClass]="{'active':r.id == roomId}">{{r.name}}</button>
+    </ng-container>
+    <div class="row" *ngIf="stageId != '0'">
+        <ng-container *ngIf="selectRoomName != null">
+            <div class="left" data-scrollbar="true" data-height="100%">
+                <br/>
+                <p style="font-size: 14px;"> Вы выбрали комнату:
+                    <b>{{selectRoomName}}</b>
+                </p>
+                <div class="btn-group-vertical btn-group-ppo">
+                    <ng-container *ngIf="isPauseRoom">
+                        <div class="alert alert-info">
+                            Данная комната находится в инспекции до {{areaPartPause.endDatePause| date : "dd.MM.y" }}
+                        </div>
+                    </ng-container>
+                    <button type="button" class="btn btn-white btn-ppo" *ngFor="let c of constructives; let i = index" (click)="selectedInfo(c.id, i)"
+                        [ngClass]="{'active':c.id == selectConstructiveId}">
+                        {{c.name}}
+                    </button>
+                    <ng-container *ngIf="!isPauseRoom">
+                        <ng-container *ngIf="constructives != []">
+                            <button href="#modal-dialog-pausePart" data-toggle="modal" [disabled]="isFinishStagesStatus" class="btn btn-sm btn-warning">
+                                Приостановить инспецию в данной комнате</button>
+                        </ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="isPauseRoom">
+                        <button class="btn btn-primary" (click)="removePauseAreaPart()">Снять инспецию в даннной комнате</button>
+                    </ng-container>
+                </div>
+                <br/>
+                <div class="alert alert-success">
+                    Статусы:
+                    <i class="fa fa-circle-o"></i> - Соответствует ,
+                    <i class="fa fa-remove"></i> - Не применяется ,
+                    <i class="fa fa-pause"></i> - Приостановлено,
+                    <i class="fa fa-plus"></i> - Не соответствует
+                </div>
+            </div>
+            <div class="right">
+                <ng-container *ngFor="let standard of standards">
+                    <div class="panel panel-primary overflow-hidden">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#t_collapse_{{standard?.id}}">
+                                    <i class="fa fa-plus-circle pull-right"></i>
+                                    {{standard?.title}}
+                                    <span *ngIf="standard?.number != ''"> ({{standard?.number}}) </span>
+                                    <span class="badge" *ngIf="standard?.parameters?.length > 0"> {{standard?.parameters?.length}}</span>
+                                </a>
+                            </h3>
+                        </div>
+                        <div id="t_collapse_{{standard?.id}}" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div *ngFor="let parameter of standard?.parameters;let itemI=index" [attr.data-index]="itemI">
+                                    <app-okk-part-check-reamrk-child [parameter]="parameter" [isPauseRoom]="isPauseRoom" [areaPartId]="areaPartId" [stageId]="standard?.stageId"
+                                        [isFinishStagesStatus]="isFinishStagesStatus" (check)="checking($event)"></app-okk-part-check-reamrk-child>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
+</ng-container>
+<div class="modal fade" id="modal-dialog-pausePart" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Приостановить инспецию в комнате {{selectRoomName}}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <h5>Дата начала работы</h5>
+                <p-calendar [locale]="calendars.rus" [(ngModel)]="areaPartPauseModel.endDatePause" name="endDatePause" showButtonBar="true"
+                    dateFormat="dd.mm.yy" readonlyInput="true">
+                </p-calendar>
+                <h5>Комментарий</h5>
+                <textarea class="check-comment" [(ngModel)]="areaPartPauseModel.comment" name="comment"></textarea>
+                <br/>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-white" data-dismiss="modal">Отменить</a>
+                <button class="btn btn-success" (click)="savePartPause()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>

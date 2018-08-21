@@ -1,0 +1,5 @@
+<div *ngFor="let r of remarks?.constructive">
+  <ng-container *ngIf="r.items.length > 0">
+    <app-rpm-remark-checklist-constructive [breakdown]="breakdownList" [remark]="r" [answerListId]="answerListId"></app-rpm-remark-checklist-constructive>
+  </ng-container>
+</div>

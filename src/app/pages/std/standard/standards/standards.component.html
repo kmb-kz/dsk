@@ -1,0 +1,120 @@
+<h1 class="page-header">Корпоративные стандарты</h1>
+<div class="panel panel-primary" data-sortable-id="ui-widget-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+                <i class="fa fa-minus"></i>
+            </a>
+        </div>
+        <h4 class="panel-title">Панель поиска</h4>
+    </div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="form-group col-md-6">
+                <label for="id" class="col-md-3 control-label">Номер</label>
+                <div class="col-md-9">
+                    <input type="text" id="id" [(ngModel)]='filter.id' class="form-control" placeholder="Номер стандарта">
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="title" class="col-md-3 control-label">Наименование</label>
+                <div class="col-md-9">
+                    <input type="text" id="title" [(ngModel)]='filter.title' class="form-control" placeholder="Наименование">
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="constructiveId" class="col-md-3 control-label">Конструктив</label>
+                <div class="col-md-9">
+                    <select class="form-control" id="constructiveId" [(ngModel)]="filter.constructiveId">
+                        <option></option>
+                        <option *ngFor="let c of (constructives | async)" [value]="c.id">{{c.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="classId" class="col-md-3 control-label">Класс</label>
+                <div class="col-md-9">
+                    <select class="form-control" id="classId" [(ngModel)]="filter.classId">
+                        <option></option>
+                        <option *ngFor="let c of (nsi.classes() | async)" [value]="c.id">{{c.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="groupId" class="col-md-3 control-label">Группа</label>
+                <div class="col-md-9">
+                    <select class="form-control" id="groupId" [(ngModel)]="filter.groupId">
+                        <option></option>
+                        <option *ngFor="let c of (nsi.groups() | async)" [value]="c.id">{{c.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="areaId" class="col-md-3 control-label">Объекты</label>
+                <div class="col-md-9">
+                    <select class="form-control" id="areaId" [(ngModel)]="filter.areaId">
+                        <option></option>
+                        <option *ngFor="let c of (areas | async)" [value]="c.id">{{c.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="isDeleted" class="col-md-3 control-label">Удаленные</label>
+                <div class="col-md-9">
+                    <select class="form-control" id="isDeleted" [(ngModel)]="filter.isDeleted">
+                        <option></option>
+                        <option [value]='true'>Да</option>
+                        <option [value]='false'>Нет</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="isConfirmed" class="col-md-3 control-label">Подтвержденные</label>
+                <div class="col-md-9">
+                    <select class="form-control" id="isConfirmed" [(ngModel)]="filter.isConfirmed">
+                        <option></option>
+                        <option [value]='true'>Да</option>
+                        <option [value]='false'>Нет</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-success" (click)="search()">Поиск</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <span class="label label-success m-r-10 pull-left">{{(standards | async)?.total}}</span> Резултаты поиска</h4>
+    </div>
+    <div class="panel-body">
+        <a [routerLink]="['/std/standard/edit/0']" class="btn btn-success m-b-5">
+            <i class="fa fa-plus"></i> Добавить</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Наименование</th>
+                    <th>Дата добавления</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr [ngClass]='{"danger":standard.isDeleted}' *ngFor="let standard of (standards | async)?.results">
+                    <td>{{standard.number}}</td>
+                    <td>{{standard.title}}</td>
+                    <td>{{standard.dateCreated | date: 'dd.MM.yyyy HH:mm:ss'}}</td>
+                    <td>
+                        <a [routerLink]="['/std/standard/', standard.id]" class="btn btn-primary m-r-5">
+                            <i class="fa fa-info-circle"></i> Детализация</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <app-pagination (change)="loadPage($event)" [page]="lastFilter.page" [size]="lastFilter.size" [total]="lastFilter.total"></app-pagination>
+    </div>
+</div>

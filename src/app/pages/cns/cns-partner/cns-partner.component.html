@@ -1,0 +1,85 @@
+<p-dataTable [value]="partners" selectionMode="single" [(selection)]="selected" [paginator]="true" rows="20" [responsive]="true">
+  <p-header>
+    <div class="ui-helper-clearfix" style="width:100%">
+      <button type="button" pButton icon="fa-plus" style="float:left" (click)="showAddDialog()" label="Добавить"></button>
+      <button type="button" pButton icon="fa-edit" style="float:left" *ngIf="selected" (click)="showEditDialog()" label="Редактировать"></button>
+      <button type="button" pButton icon="fa-edit" style="float:left" *ngIf="selected"  [routerLink]="['/cns/contract', selected.id]" label="Договоры"></button>
+      <button type="button" pButton icon="fa-remove" style="float:left" *ngIf="selected" (click)="showRemoveDialog()" label="Удалить"></button>
+    </div>
+  </p-header>
+
+  <p-column field="bin" header="БИН" [sortable]="true"></p-column>
+  <p-column field="name" header="Наименование" [sortable]="true"></p-column>
+ 
+</p-dataTable>
+
+<p-dialog header="Добавление партнера" [(visible)]="showAddDialogFlag" [responsive]="true" showEffect="fade" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12" padding="2">
+      </div>
+      <div class="ui-grid-col-4" padding="2" data-width="200">
+      </div>
+
+    </div>
+
+  </div>
+
+  <br/>
+  <br/>
+  <div class="ui-grid ui-grid-responsive ui-fluid" style='min-width: 550px;'>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label for="firstName">БИН</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input class="form-control" pInputText id="firstName" [(ngModel)]="newPartner.bin"  />
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label for="lastName">Наименование</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input class="form-control" pInputText id="lastName" [(ngModel)]="newPartner.name" (focus)="search()" />
+      </div>
+    </div>
+
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="hideAddDialog()" label="Закрыть"></button>
+      <button type="button" pButton icon="fa-check" (click)="add()" label="Сохранить"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog header="Удалить партнера" [(visible)]="showRemoveDialogFlag" [responsive]="true" showEffect="fade" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12" padding="2">
+      </div>
+      <div class="ui-grid-col-4" padding="2" data-width="200">
+      </div>
+
+    </div>
+
+  </div>
+
+  <br/>
+  <br/>
+  <div class="ui-grid ui-grid-responsive ui-fluid" style='min-width: 550px;'>
+    <div class="ui-grid-row">
+      Вы точно хотите удалить партнера {{newPartner.name}}?
+    </div>
+
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+        <button type="button" pButton icon="fa-check" class="btn-danger" (click)="remove()" 
+        style="background-color: #d9534f; border-color: #d43f3a;" label="Удалить"></button>
+      <button type="button" pButton icon="fa-close" (click)="hideRemoveDialog()"  label="Закрыть"></button>
+      
+    </div>
+  </p-footer>
+</p-dialog>

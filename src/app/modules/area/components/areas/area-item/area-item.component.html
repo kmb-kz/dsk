@@ -1,0 +1,22 @@
+<div class="panel panel-inverse" data-sortable-id="index-1" [routerLink]="[area.id]">
+  <div class="panel-heading">
+    <h4 class="panel-title" style="cursor:pointer">
+      <i class="fa fa-home"></i> {{area.name}}
+    </h4>
+  </div>
+  {{area.url}}
+  <div *ngIf="area.photoUrl!=null" [ngStyle]="{'background-image': 'url(' + host+area.photoUrl + ')'}" style="
+    height: 150px;  
+    background-size: cover;">
+  </div>
+  <div *ngIf="area.photoUrl==null" style="background-image: url('/assets/img/no-photarea.jpg');
+    height: 150px;  
+    background-size: cover;">
+  </div>
+  <div class="list-group">
+    <a class="list-group-item list-group-item-inverse text-ellipsis" *ngFor="let stat of area.stats; let i = index">
+      <span class="badge badge-success">{{stat.value || 0}}</span>
+      {{i}}. {{stat.label}}
+    </a>
+  </div>
+</div>

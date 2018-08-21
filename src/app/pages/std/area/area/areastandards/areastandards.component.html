@@ -1,0 +1,27 @@
+<table class="table table-bordered">
+    <tbody>
+      <ng-container *ngFor="let group of (model.Standards | async)">
+        <tr class="active">
+          <td colspan="2">
+            Конструктив : {{group.constructiveName}}
+          </td>
+        </tr>
+        <ng-container *ngFor="let standard of group.standards">
+          <tr [class.danger]='standard.deleted'>
+            <td>
+              <b>{{standard.standardNumber}} - {{standard.title}}</b>
+              <p>{{standard.description}}</p>
+            </td>
+            <td>
+              <a [routerLink]="['../standard', standard.id]" class="btn btn-primary btn-sm">
+                <i class="fa fa-info-circle"></i> Подробно</a>
+              <button *ngIf="!standard.deleted && auth.isInRole('Admin,PpoAdmin,CnsAdmin')" (click)="delete(standard)" class="btn btn-danger btn-sm">
+                <i class="fa fa-remove"></i> Удалить</button>
+              <button *ngIf="standard.deleted && auth.isInRole('Admin,PpoAdmin,CnsAdmin')" (click)="restore(standard)" class="btn btn-info btn-sm">
+                <i class="fa fa-mail-reply "></i> Восстановить</button>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </table>

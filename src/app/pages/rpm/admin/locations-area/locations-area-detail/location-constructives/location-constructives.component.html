@@ -1,0 +1,36 @@
+<div class="col-md-6 ui-sortable">
+  <div class="panel panel-default" ddata-sortable-id="ui-widget-4">
+    <div class="panel-heading">
+      <div class="btn-group pull-right">
+        <a href="#modal-dialog-snap" class="btn btn-primary btn-xs" data-toggle="modal">
+          <i class="fa fa-exchange"></i> Привязать конструктивы</a>
+      </div>
+      <h4 class="panel-title">Сформировать чек лист</h4>
+    </div>
+    <div class="panel-body">
+      <ng-container *ngFor="let ac of areaConstructive">
+        <div class="input-group-btn m-r-10 chGButton">
+          <button type="button" class="btn btn-primary btn-xs">{{ac.name}}</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modal-dialog-snap" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title"> Привязать конструктивы</h4>
+      </div>
+      <div class="modal-body">
+        <dual-list [sort]="keepSorted" [source]="constructives" [key]="key" [display]="display" [(destination)]="confirmed" height="265px"
+          [disabled]="disabled" [filter]="filter"></dual-list>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Отменить</a>
+        <a href="javascript:;" class="btn btn-sm btn-success" (click)="snapConstructiveArea()">Сохранить</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+.form-group { margin-bottom: 16px; }
+.checkbox { margin-top: inherit }
+.filter select, 
+.filter input,
+.filter .btn {
+    height: 27px;
+    padding: 3px;
+    max-width: 100%;
+}  

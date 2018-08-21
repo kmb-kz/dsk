@@ -1,0 +1,48 @@
+<h4>Журнал посещений</h4>
+<div class="panel-body" style="background:#C7CFD8">
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-4"><label >Конструктив</label></div>
+    <div class="ui-grid-col-8">
+      <select class="form-control" [(ngModel)]="constructiveId" (change)="getToday()">
+        <ng-container *ngFor="let c of (constructives | async)">
+            <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+            <ng-container *ngFor="let child of c.childs">
+                <option [value]="child.id">-   {{child.name}}</option>    
+            </ng-container>
+        </ng-container>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="table table-hover">
+  <div *ngFor="let log of visitLogs; let i = index">
+    <div class="col-sm-4"><a href="javascript:;" [routerLink]='[log.partner?.id]'>{{log.partner?.bin}} - {{log.partner?.name}}</a>
+    </div>
+      <div  class="col-sm-8">
+      <div class="col-sm-12">
+      <div class="col-sm-6">
+        Договор - {{log.contract.number}} от {{log.contract.dateStart | date: 'dd.MM.yyyy'}}
+      </div>
+      <div class="btn-group col-sm-6" *ngIf="auth.isInRole('CnsAdmin,CnsInspector')">
+        <input type="text" [(ngModel)]="log.countBuilders" class="form-control" [attr.disabled]="editMode ==false?'':null" style="max-width:100px; float:left;"/>
+        <button class="btn btn-primary" (click)="enableEdit(true)" title="Редактировать" *ngIf="editMode == false"><i class="fa fa-pencil"></i></button>
+        <button class="btn btn-success" (click)="setLogToday(i,false, false)" title="Сохранить" *ngIf="editMode == true"><i class="fa fa-check"></i></button>
+        <button class="btn btn-danger"  (click)="cancelEdit()"  title="Отменить" *ngIf="editMode == true"><i class="fa fa-close"></i></button>
+        <button class="btn "   (click)="setLogToday(i,true, false)"  title="Выходной день" [ngClass]="log.isHoliday ? 'btn-success' : 'btn-primary'"><i class="fa fa-calendar-times-o"></i></button>
+        <button class="btn "  (click)="setLogToday(i,false, true)" title="В связи с погодными условиям" [ngClass]="log.isWeatherReason ? 'btn-success' : 'btn-primary'"><i class="fa fa-cloud"></i></button>
+      </div>
+      <div class="btn-group col-sm-6" *ngIf="!auth.isInRole('CnsAdmin,CnsInspector')">
+          <div>
+            <span *ngIf="!log.isHoliday && !log.isWeatherReason"> {{log.countBuilders}} </span>
+            <span *ngIf="log.isHoliday">Выходной</span>
+            <span *ngIf="log.isWeatherReason">Выходной</span>
+          </div>
+        </div>
+    </div>
+    </div>
+  </div>
+</div>
+ 

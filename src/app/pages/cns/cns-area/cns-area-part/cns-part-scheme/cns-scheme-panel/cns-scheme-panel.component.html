@@ -1,0 +1,47 @@
+<div class="form-inline m-b-10">
+  <div class="form-group m-r-10">
+    <label for="radius">Размер точки :</label>
+  </div>
+  <div class="form-group m-r-10">
+    <input id="radius" class="form-control" type="number" [(ngModel)]='radius' (change)='radiusChange()' />
+  </div>
+  <div class="form-group m-r-10">
+    <select class="form-control" [(ngModel)]="constructiveId" (change)='constructiveIdChange()' placeholder='Все конструктивы'>
+      <option style="font-weight:bold" value="">Все</option>
+      <ng-container *ngFor="let c of (nsi.constructivesTree() | async)">
+        <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+        <ng-container *ngFor="let child of c.children">
+          <option [value]="child.id">- {{child.name}}</option>
+        </ng-container>
+      </ng-container>
+    </select>
+  </div>
+</div>
+
+<div class="m-b-10 " *ngIf='auth.isInRole("cnsAdmin,partner,cnsinspector,projectmanager")'>
+  <ng-container *ngIf='!action && auth.isInRole("cnsAdmin")' >
+    <a *ngIf='auth.isInRole("cnsAdmin")' [routerLink]="['/cns/area/', model.Id, model.PartId, 'scheme', this.schemeModel.Id]" class='btn btn-sm btn-primary'>
+      <i class="fa fa-pencil"></i>
+    </a>
+    <button *ngIf='!action' class='btn btn-primary btn-sm' (click)='addClick()'>
+      <i class="fa fa-circle"></i> Добавить точку инспекции</button>
+    <button *ngIf='!action' class='btn btn-danger btn-sm' (click)='action = "remove"'>
+      <i class="fa fa-remove"></i> Удалить точку инспекции</button>
+    <button *ngIf='!action' class='btn btn-white btn-sm' (click)='restoreClick()'>
+      <i class="fa fa-mail-reply"></i> Восстановить точку инспекции</button>
+   
+  </ng-container>
+  <button  *ngIf='!action && auth.isInRole("cnsAdmin,partner,cnsinspector,projectmanager")' class='btn btn-primary btn-sm' (click)="answersClick()"> <i class="fa fa-check"></i> Разнарядка</button>
+  <br/>
+  <div style="padding-top: 10px;">
+  <app-cns-area-answers [schemeId]='schemeModel.Id' [showFilter]="true" *ngIf="showScheme === true"></app-cns-area-answers>
+  </div>
+  <ng-container *ngIf='action && auth.isInRole("cnsAdmin")'>
+    <button class='m-b-10 btn btn-default btn-sm pull-right' (click)='end()'>
+      <i class='fa fa-check'></i>
+    </button>
+  </ng-container>
+</div>
+<canvas #myCanvas style="width: 100%; background-size: cover; cursor: pointer"></canvas>
+<app-cns-scheme-panel-new-point (init)='action = "add"' (close)='end()' *ngIf='action == "init"' [newPoint]='newPoint'></app-cns-scheme-panel-new-point>
+

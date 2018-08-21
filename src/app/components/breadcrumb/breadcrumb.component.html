@@ -1,0 +1,7 @@
+<ol class="breadcrumb pull-right" *ngIf="!this.page_without_header">
+
+  <li *ngFor="let breadcrumb of breadcrumbs;let i=index" [ngClass]="breadcrumbs.length == i+1 ? 'active':''">
+    <a [routerLink]="[breadcrumb.url]" *ngIf="breadcrumbs.length != i+1">{{breadcrumb.label}}</a>
+    <span *ngIf="breadcrumbs.length == i+1">{{breadcrumb.label}}</span>
+  </li>
+</ol>

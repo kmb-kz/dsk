@@ -1,0 +1,84 @@
+<h1 class="page-header">Объекты</h1>
+<div class="row">
+  <div class="col-md-12">
+    <div class="result-container">
+      <div class="panel panel-primary" data-sortable-id="ui-widget-1">
+        <div class="panel-heading">
+          <div class="panel-heading-btn">
+            <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+              <i class="fa fa-minus"></i>
+            </a>
+          </div>
+          <h4 class="panel-title">Панель поиска</h4>
+        </div>
+        <div class="panel-body">
+          <div class="col-md-12">
+            <div class="form-group col-md-9">
+              <input type="text" class="form-control" [(ngModel)]="searchTxt" placeholder="Введите наименование объекта" (keyup)="getObject()">
+            </div>
+            <div class="form-group col-md-3">
+
+              <select class="form-control" [(ngModel)]="statusModel" name="status" (change)="getObject()">
+                <option *ngFor="let a of (areaStatus|async)" [value]="a.id">{{a.name}}</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-primary" data-sortable-id="ui-widget-1">
+        <div class="panel-heading">
+          <div class="panel-heading-btn">
+            <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+              <i class="fa fa-minus"></i>
+            </a>
+          </div>
+          <h4 class="panel-title">Результат поиска</h4>
+        </div>
+        <div class="panel-body">
+          <div class="">
+            <ul class="result-list">
+
+              <ng-container *ngFor="let o of objectList">
+                <div class="col-md-4 ui-sortable" style="padding:0px;padding-right: 3px;">
+                  <div class="panel panel-primary" data-sortable-id="index-1">
+                    <div class="panel-heading">
+                      <h4 class="panel-title" style="cursor:pointer" [routerLink]="['/objects/detail', o?.id]">
+                        <i class="fa fa-home"></i> {{o.name}}
+                      </h4>
+                    </div>
+                    <div *ngIf="o.photoUrl==null"  class="panel-area-image" >
+                      <img src="/assets/img/no-photo.jpg"  class="img-thumbnail" />
+                    </div>
+                    <div *ngIf="o.photoUrl!=null" class="panel-area-image" >
+                      <img src="{{o.photoUrl}}" class="img-thumbnail"/>
+                    </div>
+                    <div class="list-group">
+                      <a class="list-group-item list-group-item-primary text-ellipsis">
+                        <div class="btn-row">
+                          <a href="javascript:;" title="Модуль Корп. стандарты" [routerLink]="['/std/area', o?.id]">
+                            <i class="fa fa-fw fa-cubes"></i>
+                          </a>
+                          <a href="javascript:;" title="Модуль строительство" [routerLink]="['/cns/area', o?.id]">
+                            <i class="fa fa-fw fa-puzzle-piece"></i>
+                          </a>
+                          <a href="javascript:;" title="Модуль ППО" [routerLink]="['/ppo/object/detail', o?.id]">
+                            <i class="fa fa-fw fa-arrows-h"></i>
+                          </a>
+                          <a href="javascript:;" title="Модуль УЖН" [routerLink]="['/rpm/object/detail', o?.id]">
+                            <i class="fa fa-fw fa-cogs"></i>
+                          </a>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

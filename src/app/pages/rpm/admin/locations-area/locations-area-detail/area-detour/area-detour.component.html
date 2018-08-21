@@ -1,0 +1,27 @@
+<div class="col-md-6 ui-sortable">
+    <div class="panel panel-default" ddata-sortable-id="ui-widget-4">
+        <div class="panel-heading">
+            <!--div class="btn-group pull-right">
+                <button class="btn btn-primary btn-xs" (click)="addDetour()">
+                    <i class="fas fa-calendar-plus"></i>Назначить обход проекта</button>
+            </div-->
+            <h4 class="panel-title">Обход проекта <span class="label label-inverse">{{detourArea?.length}}</span></h4>
+        </div>
+        <div class="panel-body">
+            <ng-container *ngIf="detourArea?.length == 0">
+                Для проекта не назначен ни одного обхода
+            </ng-container>
+            <ng-container *ngFor="let d of detourArea">
+                <div class="input-group-btn m-r-10 chGButton">
+                    <button type="button" class="btn btn-primary btn-xs">Обход №{{d.numDetour}} 
+                      <span *ngIf="d.statusDetour == 0">(Назначен обход)</span>
+                      <span *ngIf="d.statusDetour == 1">(Идет обход) {{d.dateDetourStart | date :  "dd.MM.y"}}-{{d.dateDetourEnd | date :  "dd.MM.y" }}</span>
+                      <span *ngIf="d.statusDetour == 2">(Обход завершен) {{d.dateDetourStart | date :  "dd.MM.y"}}-{{d.dateDetourEnd | date :  "dd.MM.y"}}</span>
+                    </button>                    
+                </div>
+                <br/>
+                
+            </ng-container>
+        </div>
+    </div>
+</div>

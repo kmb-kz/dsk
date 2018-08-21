@@ -1,0 +1,17 @@
+<div class="row" *ngIf='pageCount > 0'>
+  <div class="col-sm-12">
+    <div class="dataTables_paginate paging_simple_numbers" id="data-table_paginate">
+      <ul class="pagination">
+        <li class="paginate_button previous disabled" id="data-table_previous" (click)="setPage(page - 1)" [ngClass]="{'disabled': page == 1 || disabled}">
+          <a aria-controls="data-table" data-dt-idx="0" tabindex="0"><<</a>
+        </li>
+        <li class="paginate_button" *ngFor="let pageNum of pages()" (click)="setPage(pageNum)" [ngClass]="{'active': pageNum == page}">
+          <a aria-controls="data-table" [attr.data-dt-idx]="pageNum" tabindex="0">{{pageNum}}</a>
+        </li>
+        <li class="paginate_button next" id="data-table_next" (click)="setPage(page + 1)" [ngClass]="{'disabled': pageCount == page || disabled}">
+          <a aria-controls="data-table" [attr.data-dt-idx]="pageCount + 1" tabindex="0">>></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

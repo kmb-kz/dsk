@@ -1,0 +1,76 @@
+<div class="row">
+  <!-- <div class="form-group">
+    <div class="col-sm-12">
+      <div class="input-group">
+        <input type="search" class="form-control input" [(ngModel)]="searchText" placeholder="Идентификатор замечания">
+        <span class="input-group-btn">
+          
+        </span>
+      </div>
+    </div>
+  </div> -->
+  <div class="form-group">
+    <div class="col-sm-12 m-t-10">
+      <!--Все
+      <p-menu appendTo="body" #menu popup="popup" [model]="areas"></p-menu>
+      <button type="button" pButton icon="fa fa-list" (click)="menu.toggle($event)"></button>
+      -->
+      <p-multiSelect [options]="areas" [(ngModel)]="selectedArea" optionLabel="name" (onChange)="areaSelect($event)"></p-multiSelect>
+      <ng-container *ngIf="area">
+        {{area.label}}
+        <p-menu appendTo="body" #areaMenu popup="popup" [model]="parts"></p-menu>
+        <button type="button" pButton icon="fa fa-list" (click)="areaMenu.toggle($event)"></button>
+      </ng-container>
+      <app-part-selector *ngIf="part" [parent]="part"></app-part-selector>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-3">
+      <input type="date" [(ngModel)]="from" class="form-control m-t-10">
+    </div>
+    <div class="col-sm-3">
+      <input type="date" [(ngModel)]="to" class="form-control m-t-10">
+    </div>
+    <div class="col-sm-6">
+      <button class="btn btn-outline-info btn-success m-t-10" title="Поиск" type="submit" (click)="search()">
+            <span class="fa fa-search"></span>
+      </button>
+      <button class="btn  m-t-10" [ngClass]="{'btn-primary':listStyle=='image'}" (click)='listStyle = "image"'>Было-Стало</button>
+      <button class="btn  m-t-10" [ngClass]="{'btn-primary':listStyle=='flat'}" (click)='listStyle = "flat"'>Плоским списком</button>
+      <!-- <button class="btn btn-white m-t-10">
+        <i class="fa fa-file"></i> Скачать PDF</button> -->
+    </div>
+  </div>
+</div>
+<table class="table table-stripped m-t-10" *ngIf="listStyle =='flat'">
+  <tr>
+    <th>Ссылка</th>
+    <th>Объект</th>
+    <th>Расположение</th>
+    <th>Тип замечания</th>
+  </tr>
+  <tr *ngFor="let item of results">
+    <td><a [routerLink]="['/rpm/object/remark/', item.id]">Перейти на замечание</a></td>
+    <td>{{item.areaName}}</td>
+    <td>{{item.areaPartName}}</td>
+    <td>{{item.constructiveName}} > {{item.remarkName}}</td>
+  </tr>
+</table>
+<table class="table table-stripped m-t-10" *ngIf="listStyle =='image'">
+  <tr>
+    <th style="width: 20%">Ссылка</th>
+    <th style="width: 40%">Было</th>
+    <th style="width: 40%">Стало</th>
+  </tr>
+  <tr *ngFor="let item of results">
+      <td style="padding: 10px;">
+          <a [routerLink]="['/rpm/object/remark/', item.id]">Перейти на замечание</a>
+        </td>
+    <td style="padding: 10px;">
+      <img src="{{host+item.firstPhoto}}" alt="До" style="width: 50%">
+    </td>
+    <td style="padding: 10px;">
+        <img src="{{host+item.lastPhoto}}" alt="После" style="width: 50%">      
+    </td>
+  </tr>
+</table>

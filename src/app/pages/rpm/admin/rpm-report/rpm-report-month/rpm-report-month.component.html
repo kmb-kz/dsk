@@ -1,0 +1,59 @@
+<div class="col-md-4 col-sm-3">
+  <select class="form-control" [(ngModel)]="yearSelect" (change)="getYearRemark($event.target.value)">
+    <option value="2015">2015</option>
+    <option value="2016">2016</option>
+    <option value="2017">2017</option>
+    <option value="2018">2018</option>
+    <option value="2019">2019</option>
+    <option value="2020">2020</option>
+  </select>
+</div>
+<div class="btn-group">
+  <button class="btn btn-white" [ngClass]="{'active':tableVisable}" (click)="visableElement(1)">
+    <i class="fa fa-list" title="Табличный вид"></i>
+  </button>
+  <button class="btn btn-white" [ngClass]="{'active':grafVisable}" (click)="visableElement(2)">
+    <i class="fa fa-bar-chart-o" title="Графический вид"></i>
+  </button>
+</div>
+<div class="col-md-12 col-sm-12">
+  <br/>
+  
+    <table class="table  table-stripped table-hover table-bordered" *ngIf="tableVisable == true;">
+      <thead>
+        <tr>
+          <th>Инспектор качества</th>
+          <th>Январь</th>
+          <th>Февраль</th>
+          <th>Март</th>
+          <th>Апрель</th>
+          <th>Май</th>
+          <th>Июнь</th>
+          <th>Июль</th>
+          <th>Август</th>
+          <th>Сентябрь</th>
+          <th>Октябрь</th>
+          <th>Ноябрь</th>
+          <th>Декабрь</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of data">
+          <td>{{d.lastName}} {{d.firstName}}</td>
+          <td>{{d.m1}}</td>
+          <td>{{d.m2}}</td>
+          <td>{{d.m3}}</td>
+          <td>{{d.m4}}</td>
+          <td>{{d.m5}}</td>
+          <td>{{d.m6}}</td>
+          <td>{{d.m7}}</td>
+          <td>{{d.m8}}</td>
+          <td>{{d.m9}}</td>
+          <td>{{d.m10}}</td>
+          <td>{{d.m11}}</td>
+          <td>{{d.m12}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p-chart type="horizontalBar" [data]="dataGraf" [options]='options' *ngIf="grafVisable == true;"></p-chart>
+</div>

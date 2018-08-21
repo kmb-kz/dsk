@@ -1,0 +1,14 @@
+<div class="standard-item {{selectedId === item.id ? 'standard-item-active' : ''}}" [ngClass]='{"danger":item.isDeleted}'  >
+  <div (click)="select(item.id)" >
+      <div class="standard-item-number" >{{item.number}} | {{item.dateCreated | date: 'dd.MM.yyyy'}}</div>
+      <div class="standard-item-title">{{item.title}}</div>
+      <div class="standard-item-constructive">
+              <span class=""><i class="fa fa-puzzle-piece"></i> {{ item.constructive.name }}</span>
+          </div>
+      <div class="standard-item-labels">
+          
+          <span><i class="fa fa-refresh" title="Запросов на замену"></i> Запросов на замену: <span class="label label-success">{{item.requestsCount}}</span></span>
+          <span><i class="fa fa-files-o" title="Версии"></i> Версии: <span class="label label-success">{{item.versionsCount}}</span></span>
+      </div>
+  </div>
+</div>

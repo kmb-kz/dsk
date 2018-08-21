@@ -1,0 +1,125 @@
+<div class="col-md-6 ui-sortable">
+  <div class="panel panel-default" ddata-sortable-id="ui-widget-2">
+    <div class="panel-heading">
+      <div class="panel-heading-btn">
+        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand">
+          <i class="fa fa-expand"></i>
+        </a>
+      </div>
+      <!--div class="btn-group pull-right" *ngIf="childLocationModel.length > 0">
+        <a href="#modalAddAreaPart" class="btn btn-primary btn-xs" data-toggle="modal">
+          <i class="fa fa-plus"></i> Добавить блок</a>
+      </div-->
+      <ng-container >
+        <div class="btn-group pull-right" style="padding-left:7px;">
+          <a href="#modal-dialog" class="btn btn-primary btn-xs" data-toggle="modal">
+            <i class="fa fa-plus"></i> Добавить расположение</a>
+        </div>
+      </ng-container>
+
+      <h4 class="panel-title">Дочерние блоки</h4>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-lg-12" *ngIf="visableButtonAddLocation != true">
+          <ng-container *ngFor="let cl of childLocationModel">
+            <div class="input-group-btn m-r-10 chGButton">
+              <a [routerLink]="['/rpm/admin/locations/child',areaId, cl?.id]" class="btn btn-primary btn-xs">{{cl.name}}</a>
+              <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" style="margin: 10px 0 0;">
+                <li>
+                  <a href="#modal-dialog-edit" data-toggle="modal" (click)="editPartsInfo(cl.name,cl.id)">
+                    <i class="fa fa-edit"></i> Переименовать</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a>
+                    <i class="fa fa-remove"></i> Удалить</a>
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modal-dialog" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Добавить расположение</h4>
+      </div>
+      <div class="modal-body">
+        <!--div class="form-group">
+          <label for="issetBlocks">Имеется ли блоки в объекте?</label>
+          <select id="issetBlocks" class="form-control" [(ngModel)]="issetBlock">
+            <option [value]="1">Да</option>
+            <option [value]="2">Нет</option>
+          </select>
+        </div-->
+        <div class="form-group" *ngIf="issetBlock == 1">
+          <label for="cntBlocks">Кол-во (блоков)</label>
+          <input id="cntBlocks" type="number" [value]="0" class="form-control" [(ngModel)]="modalAddParts.cntBlocks">
+        </div>
+        <div class="form-group">
+          <label for="cntBlocks">Кол-во (подъездов)</label>
+          <input id="cntBlocks" type="number" [value]="0" class="form-control" [(ngModel)]="modalAddParts.cntEntrance">
+        </div>
+        <div class="form-group">
+          <label for="cntFloor">Кол-во (этажей)</label>
+          <input id="cntFloor" type="number" [value]="0" class="form-control" [(ngModel)]="modalAddParts.cntFloor">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Отменить</a>
+        <a href="javascript:;" class="btn btn-sm btn-success" (click)="addAreaPart()">Добавить</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalAddAreaPart" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title"> Добавление блока</h4>
+      </div>
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label for="name">Наименование</label>
+          <input id="name" class="form-control" [(ngModel)]="modalAddPart.name">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Отменить</a>
+        <a href="javascript:;" class="btn btn-sm btn-success" (click)="addAreaPartOne()">Добавить</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modal-dialog-edit" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title"> Переименовать расположение</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="areaParts">Наименование расположения</label>
+          <input id="areaParts" type="text" class="form-control" [(ngModel)]="modalEditPart.nameParts">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Отменить</a>
+        <a href="javascript:;" class="btn btn-sm btn-success" (click)="editAreaPart()">Сохранить</a>
+      </div>
+    </div>
+  </div>
+</div>

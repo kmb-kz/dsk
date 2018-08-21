@@ -1,0 +1,210 @@
+<div class="row">
+  <div class="note  ppo-note col-md-12" [ngClass]="{
+          'text-success':children?.userAnswer?.id==2,                        
+          'text-danger':children?.userAnswer?.id==3,
+          'text-warning':children?.userAnswer?.id==1,
+          'text-default':children?.userAnswer == null
+        }">
+    <div class="col-md-7">
+      <h5>{{children?.name}}
+        <br/> Дата заполнения чек листа : {{children.dateChecked | date:'dd.MM.yyyy'}}</h5>
+      <b>Статус:</b>
+      <span *ngIf="children?.userAnswer?.name != null">{{children?.userAnswer?.name}}</span>
+      <span *ngIf="children?.userAnswer == null">Не отмечено</span>
+      &nbsp;&nbsp;&nbsp;
+      <span *ngIf="children?.answerItemId != null">
+        <a data-toggle="modal" style="cursor:pointer" title="История" (click)="loadHistories(children?.answerItemId)">
+          <i class="fa fa-history"></i> История изменений
+        </a>
+      </span>
+      <span *ngIf="children?.dateCorrected != null">
+        <b>Дата исправления</b>
+        {{children?.dateCorrected | date:'dd.MM.yyyy'}}
+      </span>
+      <span style="padding-left: 17px;" *ngIf="children?.userAnswer != null">
+        <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{children?.id}}">Подробнее
+          <i class="fa fa-angle-down"></i>
+        </a>
+
+      </span>
+    </div>
+    <div class="col-md-2">
+      <div class="thumbnail" style="text-align: center;" *ngIf="standardPictureUrl != null" #container>
+        <a href="{{standardPictureUrl}}" fancyboxable target="_blank">
+          <img bg-src="/assets/img/logo.png" lazy-load="{{standardPictureUrl}}" style="min-height: 70px;" [container]="container">
+        </a>
+      </div>
+    </div>
+
+    <div class="col-md-3" *ngIf="isInRole('Inspector,PpoInspector') && answerListStatusId == '1'">
+      <div style="padding-top: 7px;">
+        <button class="btn" title="Соответствует" [ngClass]="(children?.userAnswer?.id)== 2 ? 'btn-success':'btn-primary'" [disabled]="(children?.userAnswer?.id )== 2"
+          (click)="showCheckDialog(2)">
+          <i class="fa fa-plus"></i>
+        </button>
+        <button class="btn" title="Не соответствует" [ngClass]="(children?.userAnswer)?.id == 3 ? 'btn-success':'btn-danger'" [disabled]="(children?.userAnswer )?.id == 3"
+          (click)="showCheckDialog(3)">
+          <i class="fa fa-minus"></i>
+        </button>
+        <button class="btn" title="Не применяется" [ngClass]="(children?.userAnswer)?.id == 1 ? 'btn-success':'btn-warning'" [disabled]="(children?.userAnswer)?.id == 1"
+          (click)="showCheckDialog(1)">
+          <i class="fa fa-close"></i>
+        </button>
+      </div>
+    </div>
+    <ng-container *ngIf="isInRole('Admin,PpoAdmin') && answerListStatusId == '2' && ((children?.userAnswer)?.id == 3 || (children?.userAnswer)?.id == 1 )">
+      <div class="col-md-3" style="padding-top: 7px;">
+        <button class="btn btn-primary btn-sm" (click)="showCheckDialog(2)">
+          <i class="fa fa-history"></i> Отозвать
+        </button>
+      </div>
+    </ng-container>
+    <!--  && checkListInfo?.status?.id == 2 && item.isCritical == false не забыть -->
+    <div class="col-md-3">
+      <div style="margin-top:10px;">
+
+        <div *ngIf="children?.grLetterUrl != '' && children?.grLetterUrl != null " target="_blank" style="font-size: 12px;">
+          <a href="{{children?.grLetterUrl}}" title="" target="_blank">
+            <i class="fa fa-download"></i> Скачать
+            <br/>гарантийное письмо
+          </a>
+        </div>
+        <button class="btn btn-primary" data-toggle="modal" title="Отметить дату исправления" *ngIf="isInRole('ProjectManager,PpoManager') && children?.userAnswer?.id == '3' && answerListStatusId == '2'"
+          (click)="displayGrLetter=true" style="font-size: 12px;">
+          <i class="fa fa-calendar"></i> Отметить дату
+          <br/> исправления
+        </button>
+
+        <!--button class="btn btn-primary" data-toggle="modal" title="Указать срок исправления" data-target="#modalDate" *ngIf="children?.userAnswer?.id === 3"
+            (click)="selDate(children?.answerItemId,itemI,accordionIndex)">
+            <i class="fa fa-calendar"></i>
+          </button-->
+
+      </div>
+    </div>
+
+    <app-check-info [photos]="children?.pictures" [commentText]="children?.comment" id="collapse_{{children?.id}}" class="panel-collapse collapse"
+      [typeCheckList]="2" [groupFancy]="children?.id" [nameCheckList]="children?.name" [statusId]="answerListStatusId" (delPhoto)="onDelPhoto($event)"></app-check-info>
+  </div>
+</div>
+
+
+<app-qc-modal [visible]="displayHistories" [header]="'История'" (hide)="displayHistories = false">
+  <ng-container *ngIf="histories">
+    <ng-container *ngIf="histories.length > 0">
+      <div *ngFor="let item of histories">
+        <b>{{item.userName}}</b>
+        <span *ngIf="item.actionId == 1"> : не применяется</span>
+        <span *ngIf="item.actionId == 2"> подтвердил соответствие стандарту</span>
+        <span *ngIf="item.actionId == 3"> подтвердил несоответствие стандарту</span>
+        <span *ngIf="item.actionId == 4"> указал дату исправления</span>
+        <br/>
+        <small>{{item.dateCreated | date : 'dd.MM.yyyy HH:mm:ss'}}</small>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="histories.length == 0">
+      <b>Записи не найдены</b>
+    </ng-container>
+
+  </ng-container>
+  <ng-container *ngIf="!histories">
+    <div class="text-center">
+      <i class="fa fa-ellipsis-h fa-3x"></i>
+    </div>
+  </ng-container>
+</app-qc-modal>
+
+<app-qc-modal [visible]="displayCheck" [header]="standardName" (hide)="hideCheckDialog()">
+  <h5>Файлы</h5>
+  <app-files [(ngModel)]="checkModel.files" name="files"></app-files>
+
+  <div class="form-group" *ngIf="this.checkModel.answerTypeId == '1'">
+    <ng-container *ngIf="isEditVisable == true">
+      <label class="control-label">Наименование варианта</label>
+      <div class="input-group">
+        <input type="text" [(ngModel)]="breakdownName" name="name" class="form-control">
+        <div class="input-group-btn">
+          <button class="btn btn-success" title="Сохранить" (click)="saveBreakdown()">
+            <i class="fa fa-save"></i>
+          </button>
+          <button class="btn btn-danger" title="Назад" (click)="showEditVisable(false)">
+            <i class="fa fa-mail-reply"></i>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isEditVisable == false">
+      <label>Выбрать из списка</label>
+      <span>Не нашли вариант?
+        <a class="insertVariant" (click)="showEditVisable(true)">Предложить вариант</a>
+      </span>
+      <select class="form-control" [(ngModel)]="checkModel.breakdownId" name="breakdownId">
+        <option [value]=""></option>
+        <ng-container *ngFor="let b of breakdown">
+          <option [value]="b.id">{{b.name}}</option>
+        </ng-container>
+      </select>
+    </ng-container>
+  </div>
+
+  <h5>Комментарий</h5>
+  <textarea class="check-comment"></textarea>
+  <br/>
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" class="btn btn-primary" (click)="checkAnswersId()">
+      <i class="fa fa-check"></i>
+      Подтвердить</button>
+    <button type="button" class="btn btn-success" (click)="displayCheck=false">
+      <i class="fa fa-close"></i>
+      Отменить</button>
+  </div>
+</app-qc-modal>
+
+<app-qc-modal [visible]="displayGrLetter" [header]="standardName" (hide)="hideGrLetterDialog()">
+
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-5" *ngIf="(this.modalDateCorrected.dateValue1 == null)">
+        <div class="row">
+          <div class="form-group">
+            <label for="loadFile">Прикрепить гарантийное письмо</label>
+            <app-file-one [(ngModel)]="modalDateCorrected.grLetter" name="modalDateCorrected.grLetter"></app-file-one>
+          </div>
+          <div class="form-group">
+            <label for="dateCorrected">Указать срок исполнения</label>
+            <br/>
+            <p-calendar [(ngModel)]="modalDateCorrected.dateValue" [locale]="calendar.rus" showButtonBar="true" dateFormat="dd.mm.yy"
+              [minDate]="calendar.minDate" [maxDate]="calendar.maxDate" (onSelect)="onSelecteDate(0)" readonlyInput="true">
+            </p-calendar>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 forms-or" *ngIf="(modalDateCorrected.dateValue == null) || (modalDateCorrected.grLetter == null) || (modalDateCorrected.grLetter == null || modalDateCorrected.dateValue == null) && modalDateCorrected.dateValue1 == null">
+        <div class="bor visible-sm visible-xs"></div>
+        <span class="form-or">ИЛИ</span>
+        <div class="bor visible-sm visible-xs"></div>
+      </div>
+      <ng-container *ngIf="modalDateCorrected.grLetter == null">
+        <div class="col-md-5" *ngIf="modalDateCorrected.dateValue == null">
+          <div class="row">
+            <div class="form-group">
+              <label for="dateCorrected">Указать срок исполнения</label>
+              <br/>
+              <p-calendar [(ngModel)]="modalDateCorrected.dateValue1" [locale]="calendar.rus" showButtonBar="true" dateFormat="dd.mm.yy"
+                [minDate]="calendar.minDate" [maxDate]="calendar.maxDate" (onSelect)="onSelecteDate(1)" readonlyInput="true">
+              </p-calendar>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" (click)="setDateCorrected()">
+    <i class="fa fa-save"></i> Сохранить</button>
+  <button type="button" class="btn btn-primary" (click)="displayGrLetter=false">
+    <i class="fa fa-close"></i>
+    Отменить
+  </button>
+</app-qc-modal>

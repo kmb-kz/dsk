@@ -1,0 +1,127 @@
+<div class="parent">
+  <div class="left" data-scrollbar="true" data-height="100%">
+    <button class="btn btn-primary" [routerLink]="['/ppo/object/detail',checkListInfo?.object?.id]">
+      <i class="fa fa-angle-left"></i> Назад</button>
+    <h1 class="page-header">{{checkListInfo?.object?.name}}</h1>
+    <span>
+      <b>Статус:</b> {{checkListInfo?.status?.name}}
+      <br/>
+    </span>
+    <span>
+      <b>Тип:</b> {{checkListInfo?.auditType?.name}}
+      <br/>
+    </span>
+    <span>
+      <b>Срок:</b> {{checkListInfo?.dateExpired | date:'dd.MM.yyyy'}}
+      <!-- <span *ngIf="isExpired" style="color: red">(Просрочено)</span> -->
+    </span>
+    
+    <!-- <button class="btn btn-primary btn-block" (click)="generateAnswers()" *ngIf="(auth.isInRole('Inspector,PpoInspector') && checkListInfo?.status?.id == 1)">
+          <i class="fa fa-random"></i>
+          Генерация ответов</button> -->
+
+    <br/>
+    <div class="btn-group-vertical btn-group-ppo">
+      <button type="button" class="col-md-3 btn btn-white btn-ppo" *ngFor="let i of itemsList; let in = index" (click)="selectedInfo(i.id, in)"
+        [ngClass]="{'active':i.id == selectedParent.id}">
+
+        {{i.name}}
+        <span class="pull-right" *ngIf="checkListInfo?.status?.id > 1 && i.statistics.countError>0">
+          <span class="label label-danger">{{i.statistics.countError}}</span> /
+          <span class="label label-info">{{i.statistics.countAll}}</span>
+        </span>
+        <span class="pull-right" *ngIf="checkListInfo?.status?.id > 1 && i.statistics.countError==0">
+          <i class="fa fa-check"> </i>
+        </span>
+        <span class="pull-right" *ngIf="checkListInfo?.status?.id === 1 && i.statistics.countChecked!=i.statistics.countAll">
+          <span class="label label-danger">{{i.statistics.countNotChecked}}</span> /
+          <span class="label label-info">{{i.statistics.countAll}}</span>
+        </span>
+        <span class="pull-right" *ngIf="checkListInfo?.status?.id === 1 && i.statistics.countChecked==i.statistics.countAll">
+          <i class="fa fa-check"> </i>
+        </span>
+      </button>
+      <div style="padding: 5px; background: #CDD3D6;">
+        <div style="margin-bottom: 5px">
+          <b>Обозначения:</b>
+          <br/>
+          <span *ngIf="checkListInfo?.status?.id > 1">
+            <span class="label label-danger">1</span> - Кол-во не соответствующих
+            <br/>
+            <span class="label label-info">2</span> - Всего
+            <br/>
+          </span>
+          <span *ngIf="checkListInfo?.status?.id > 1">
+            <i class="fa fa-check"> </i> - Нет замечании
+            <br/>
+          </span>
+          <span *ngIf="checkListInfo?.status?.id === 1">
+            <span class="label label-danger">1</span> Не отмеченные
+            <br/>
+            <span class="label label-info">2</span> Всего
+            <br/>
+          </span>
+          <span *ngIf="checkListInfo?.status?.id === 1">
+            <i class="fa fa-check"> </i> - Все пункты заполнены
+            <br/>
+          </span>
+        </div>
+        <b>Всего:</b>
+        <span class="badge">{{statisticInfo?.countAll}}</span>
+        <br/> Всего стандартов:
+        <span class="badge">{{statisticInfo?.countAllStandards}} </span>
+        <br/> Соответствущие стандарты:
+        <span class="badge">{{statisticInfo?.countSuccessStandards}} ({{(100*statisticInfo?.countSuccessStandards)/statisticInfo?.countAllStandards
+          | number:0}}%)</span>
+        <br/> Не отмечено:
+        <span class="badge">{{statisticInfo?.countNotChecked}}</span>
+        <br/> Соответствует:
+        <span class="badge">{{statisticInfo?.countSuccess}}</span>
+        <br/> Не соответствует:
+        <span class="badge">{{statisticInfo?.countError}}</span>
+        <br/> Не применяется:
+        <span class="badge">{{statisticInfo?.countNotApplicable}}</span>
+      </div>
+    </div>
+    <br/>
+    <button class="btn btn-primary btn-lg btn-block" (click)="checkListFinish()" *ngIf="(auth.isInRole('Inspector,PpoInspector') && checkListInfo?.status?.id == 1) || (auth.isInRole('ProjectManager,PpoManager') && checkListInfo?.status?.id == 2)">
+      <i class="fa fa-check"></i>
+      Отправить</button>
+    <div class="alert alert-success" *ngIf="auth.isInRole('Admin,PpoAdmin')">Внимание! После заполнения чек листа необходимо нажать на кнопку Отправить.
+      <br> Статусы:
+      <i class="fa fa-circle"></i> - Не применяется ,
+      <i class="fa fa-check"></i> - Соответствует ,
+      <i class="fa fa-close"></i> - Не соответствует
+    </div>
+  </div>
+  <div class="right">
+    <div class="alert alert-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+    <div id="infoCheck">
+      <div class="btn-group">
+        <button class="btn btn-white btn-sm" (click)="filterAnswerId(1)" [ngClass]="{'active':filterIdAns === 1}">
+          <i class="fa fa-outdent"></i> Все ({{selectedParent.statistic?.countAll}})</button>
+        <button class="btn btn-white btn-sm" (click)="filterAnswerId(2)" [ngClass]="{'active':filterIdAns === 2}" *ngIf="checkListInfo?.status?.id===1">
+          <i class="fa fa-check"></i> Отмеченные ({{selectedParent.statistic?.countChecked}})</button>
+        <button class="btn btn-white btn-sm" (click)="filterAnswerId(3)" [ngClass]="{'active':filterIdAns === 3}" *ngIf="checkListInfo?.status?.id===1">
+          <i class="fa fa-remove"></i> Не отмеченные ({{selectedParent.statistic?.countNotChecked}})</button>
+        <button class="btn btn-white btn-sm" (click)="filterAnswerId(4)" [ngClass]="{'active':filterIdAns === 4}" *ngIf="checkListInfo?.status?.id>1">
+          <i class="fa fa-check"></i> Соответствует ({{selectedParent.statistic?.countSuccess}})</button>
+        <button class="btn btn-white btn-sm" (click)="filterAnswerId(5)" [ngClass]="{'active':filterIdAns === 5}" *ngIf="checkListInfo?.status?.id>1">
+          <i class="fa fa-remove"></i> Не соответствует ({{selectedParent.statistic?.countError}})</button>
+        <button class="btn btn-white btn-sm" (click)="filterAnswerId(6)" [ngClass]="{'active':filterIdAns === 6}" *ngIf="checkListInfo?.status?.id>1">
+          <i class="fa fa-circle"></i> Не применяется ({{selectedParent.statistic?.countNotApplicable}})</button>
+      </div>
+      <br/>
+    </div>
+    <div class="alert alert-info" *ngIf="checkListInfo?.items?.length == 0">
+      В чек листе нету таких статусов
+    </div>
+    <div *ngIf="checkListInfo?.items?.length > 0 " style="clear:both;">
+      <div *ngFor="let cli of checkListInfo?.items; let accordionIndex=index" [attr.data-index]="accordionIndex">
+        <!--component-->
+        <app-ppo-clf-item [cli]="cli" [breakdown]="remarkBreakdown" [answerListId]="answerListId" [answerListStatusId]="checkListInfo?.status?.id" [claims]="claims"
+          (refresh)="refresh()"></app-ppo-clf-item>
+      </div>
+    </div>
+  </div>
+</div>

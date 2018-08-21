@@ -1,0 +1,31 @@
+<div class="col-md-6 ui-sortable">
+  <div class="panel panel-default" ddata-sortable-id="ui-widget-4">
+    <div class="panel-heading">
+      <h4 class="panel-title">Список прикрепленных к объекту
+        <span class="label label-inverse"></span>
+      </h4>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ФИО</th>
+            <th>Email</th>
+            <th>Тел</th>
+            <th>Роль</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of userList">
+            <td>{{u.fullName}}</td>
+            <td>{{u.email}}</td>
+            <td>{{u.phoneNumber}}</td>
+            <td>
+              <p *ngFor="let r of u.roles">{{r.name}}</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

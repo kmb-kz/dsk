@@ -1,0 +1,51 @@
+<h1 class="page-header">
+  <a [routerLink]='["/std/area/",model.AreaId]'>
+    <i class="fa fa-home"></i> {{(model.Model|async)?.name}}
+  </a>
+</h1>
+<ul class="nav nav-pills">
+  <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }">
+    <a [routerLink]='["/std/area/",model.AreaId]'>
+      <span class="visible-xs">Детализация</span>
+      <span class="hidden-xs">Детализация</span>
+    </a>
+  </li>
+  <li [routerLinkActive]="['active']">
+    <a [routerLink]="['standard']">
+      <span class="visible-xs">Стандарты</span>
+      <span class="hidden-xs">Стандарты</span>
+    </a>
+  </li>
+  <ng-container *ngIf='auth.isInRole("admin,cnsadmin")'>
+    <li [routerLinkActive]="['active']">
+      <a [routerLink]='["addStandard"]'>
+        <span class="visible-xs">
+          <i class="fa fa-plus"></i>
+        </span>
+        <span class="hidden-xs">
+          <i class="fa fa-plus"></i> Добавить стандарт</span>
+      </a>
+    </li>
+    <!--li [routerLinkActive]="['active']">
+      <a [routerLink]='["importTemplate"]'>
+        <span class="visible-xs">
+          <i class="fa fa-files-o"></i>
+        </span>
+        <span class="hidden-xs">
+          <i class="fa fa-files-o"></i> Импортировать из шаблона</span>
+      </a>
+    </li-->
+    <li [routerLinkActive]="['active']">
+      <a [routerLink]='["importGroup"]'>
+        <span class="visible-xs">
+          <i class="fa fa-files-o"></i>
+        </span>
+        <span class="hidden-xs">
+          <i class="fa fa-files-o"></i> Импортировать из группы</span>
+      </a>
+    </li>
+  </ng-container>
+</ul>
+<div>
+  <router-outlet></router-outlet>
+</div>

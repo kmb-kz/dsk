@@ -1,0 +1,53 @@
+<div class="col-md-6 ui-sortable">
+  <div class="panel panel-default" ddata-sortable-id="ui-widget-4">
+    <div class="panel-heading">
+      <div class="panel-heading-btn">
+        <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand">
+          <i class="fa fa-expand"></i>
+        </a>
+      </div>
+      <div class="btn-group pull-right">
+        <a href="#modal-dialogUsers" class="btn btn-primary btn-xs" data-toggle="modal">
+          <i class="fa fa-plus"></i> Добавить пользователя</a>
+      </div>
+      <h4 class="panel-title">Список получателей письма (по ПРОСРОЧЕННЫМ замечаниям)</h4>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-lg-12">
+          <ng-container *ngFor="let a of areaUsers">
+            <div class="input-group-btn m-r-10 chGButton">
+              <button class="btn btn-primary btn-xs">{{a.name}}</button>
+              <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" style="margin: 10px 0 0;">
+                <li>
+                  <a  (click)="remove(a?.id)">
+                    <i class="fa fa-remove"></i> Удалить</a>
+                </li>
+              </ul>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modal-dialogUsers" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title"> Привязать пользователя</h4>
+        </div>
+        <div class="modal-body">
+          <dual-list [sort]="keepSorted" [source]="userList" [key]="key" [display]="display" [(destination)]="confirmed" height="265px"
+            [disabled]="disabled" [filter]="filter"></dual-list>
+        </div>
+        <div class="modal-footer">
+          <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal">Отменить</a>
+          <a href="javascript:;" class="btn btn-sm btn-success" (click)="saveUserList()">Сохранить</a>
+        </div>
+      </div>
+    </div>
+  </div>

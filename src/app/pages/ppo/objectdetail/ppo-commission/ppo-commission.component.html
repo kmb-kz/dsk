@@ -1,0 +1,80 @@
+<div class="panel panel-primary overflow-hidden">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          <i class="fa fa-plus-circle pull-right"></i>
+          Рабочая коммиссия от {{pcAudit?.dateCreated | date:'dd.MM.yyyy'}}
+          <label class="label label-success" *ngIf="pcAudit.isFinish">Завершена</label>
+          <label class="label label-danger" *ngIf="!pcAudit.isFinish">Не завершена</label>
+        </a>
+      </h3>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse" [ngClass]="pcAudit != null && pcAudit?.length===0 ? 'in':''">
+      <div class="panel-body">
+        <div>
+          <a class="btn btn-primary btn-sm" target="_blank" *ngIf="pcAudit?.isFinish" href="{{apiUrl}}/Report/ConsalidateReportPdf?auditId={{pcAudit?.id}}">
+            <i class="fa fa-book pull-left"></i> Сводный отчет
+          </a>
+          <span class="pull-right">
+            <i class="fa fa-circle text-warning"></i>
+            Всего замечании
+            <i class="fa fa-circle text-info"></i>
+            Отмечены даты исправления
+          </span>
+          <br *ngIf="pcAudit?.isFinish" />
+          <br *ngIf="pcAudit?.isFinish" />
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th width="30%">Должность</th>
+              <th>ФИО</th>
+              <th>Контакты</th>
+              <th style="width: 83px;">Чек лист</th>
+              <th>Статус чек листа</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let pc of pcAudit?.auditors">
+              <tr [ngClass]="{
+                'success':pc.status?.id == 2,                    
+                'danger':pc.status?.id == 1                    
+              }">
+                <td>{{pc.position?.name}}</td>
+                <td>
+                  <span *ngIf="pc?.user">{{pc.user?.fullName}}</span>
+                  <span *ngIf="pc.status?.id == 1 && pc?.user && auth.isInRole('Admin,PpoAdmin')">
+                    <a href="javascript:" (click)="appointUser(pc?.id)" data-toggle="modal" data-target="#modalLeaderCheckList">
+                      Переназначить
+                    </a>
+                  </span>
+                  <span *ngIf="!pc?.user && auth.isInRole('Admin,PpoAdmin')">
+                    <a href="javascript:" (click)="appointUser(pc?.id)" data-toggle="modal" data-target="#modalLeaderCheckList">Назначить</a>
+                  </span>
+                </td>
+                <td>{{pc.user?.phoneNumber}}</td>
+                <td>
+                  <span *ngIf="pc.checklistId == null">
+                    Не сформирован
+                    <a href="javascript:;" *ngIf="auth.isInRole('Admin,PpoAdmin,OKK')" (click)="generateFixCheckList(pc.id)"> Сформировать</a>
+                  </span>
+                  <span *ngIf="pc.checklistId != null && (pc.isAvailable || !auth.isInRole('PpoInspector,Inspector'))">
+                    <a [routerLink]="['/ppo/object/checklistf/detail', pc.checklistId]" *ngIf="pc?.user != null && pc?.checklistType == 1 ">Чек лист</a>
+                    <a [routerLink]="['/ppo/object/checklist/detail', pc.checklistId]" *ngIf="pc?.user != null && pc?.checklistType != 1">Чек лист</a>
+                  </span>
+                  <div *ngIf="(pc.checklistId != null) && (pc.status?.id != 1)">
+                    <a href="{{apiUrl}}Report/InspectorReportPdf?auditInspectorId={{pc.id}}" target="_blank">Печать</a>
+                  </div>
+                </td>
+                <td>
+                  {{pc.status?.name}}
+                  <span class="badge badge-warning" *ngIf="pc.status?.id == 2 && pc.countWarning > 0" title="Всего замечании">{{pc.countWarning}}</span>
+                  <span class="badge badge-info" *ngIf="pc.countFilledByPm > 0" title="Отмечены даты исправления">{{pc.countFilledByPm}}</span>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

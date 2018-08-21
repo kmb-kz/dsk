@@ -1,0 +1,12 @@
+<div class="qc-modal" *ngIf="visible">
+    <div class="qc-modal-header">
+      {{header}}
+    </div>
+    <div class="qc-modal-body">
+        <ng-content></ng-content>
+    </div>
+
+  </div>
+  <div class="qc-modal-background" *ngIf="visible" (click)="_hide()">
+    
+  </div>

@@ -1,0 +1,133 @@
+<h1 class="page-header">Фиксированные конструктивы</h1>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="row">
+      <input type="hidden" ([ngModel])="constructiveRootId" name="constructiveRootId">
+      <div class="col-md-4 col-sm-4 col-lg-4">
+        <button class="btn btn-primary btn-sm btn-block" (click)="toggleFormConstructive(1)">Добавить конструктив</button>
+        <ng-container *ngIf="selectedAddConstructive">
+          <div class="input-group">
+            <input type="text" class="form-control" ([ngModel])="constructiveName" #constructiveName>
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-success" (click)="addConstructive(constructiveName.value)">Сохранить</button>
+            </div>
+          </div>
+        </ng-container>
+        <div class="list-group-sm">
+          <ng-container *ngFor="let c of constructives">
+            <button class="list-group-item" style="padding:3px" (click)="loadTypeRemark(c.id,1,null)">{{c.name}}
+              <button class="btn btn-sm btn-danger pull-right" data-toggle="modal" data-target="#deleteModal" (click)="infoConstructive(c.id,1, c.name)">
+                <i class="fa fa-remove" title="Удалить"></i>
+              </button>&nbsp;&nbsp;&nbsp;&nbsp;
+              <button class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#editModal" (click)="infoConstructive(c.id,1, c.name)">
+                <i class="fa fa-pencil" title="Редактировать"></i>
+              </button>
+            </button>
+          </ng-container>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-4 col-lg-4">
+        <button class="btn btn-primary btn-sm btn-block" *ngIf="constructiveRootId != null" (click)="toggleFormConstructive(2)">Добавить подконструктив</button>
+        <ng-container *ngIf="selectedAddFirstRemark">
+          <div class="input-group">
+            <input type="text" class="form-control" ([ngModel])="firstConstructiveRemark" #firstConstructiveRemark>
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-success" (click)="addConstructiveRemark(firstConstructiveRemark.value,1)">Сохранить</button>
+            </div>
+          </div>
+        </ng-container>
+        <div class="list-group-sm">
+          <ng-container *ngFor="let ch of typeRemark1">
+            <button class="list-group-item" style="padding:3px" (click)="loadTypeRemark(constructiveRootId,2,ch.id)">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="col-md-9">
+                    <div class="row">
+                      {{ch.name}}
+                    </div>
+                  </div>
+                  <button class="btn btn-sm btn-danger pull-right" data-toggle="modal" data-target="#deleteModal" (click)="infoConstructive(ch.id,2,ch.name)">
+                    <i class="fa fa-remove" title="Удалить"></i>
+                  </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <button class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#editModal" (click)="infoConstructive(ch.id,2,ch.name)">
+                    <i class="fa fa-pencil" title="Редактировать"></i>
+                  </button>
+                </div>
+              </div>
+            </button>
+          </ng-container>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-4 col-lg-4">
+        <button class="btn btn-primary btn-sm btn-block" *ngIf="typeRemark2 != null " (click)="toggleFormConstructive(3)">Добавить замечание</button>
+        <ng-container *ngIf="selectedAddSecondRemark">
+          <div class="input-group">
+            <input type="text" class="form-control" ([ngModel])="secondConstructiveRemark" #secondConstructiveRemark>
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-success" (click)="addConstructiveRemark(secondConstructiveRemark.value,2)">Сохранить</button>
+            </div>
+          </div>
+        </ng-container>
+        <div class="list-group-sm">
+          <ng-container *ngFor="let ch1 of typeRemark2">
+            <button class="list-group-item" style="padding:3px">{{ch1.name}}
+              <button class="btn btn-sm btn-danger pull-right" data-toggle="modal" data-target="#deleteModal" (click)="infoConstructive(ch1.id,3,ch1.name)">
+                <i class="fa fa-remove" title="Удалить"></i>
+              </button>&nbsp;&nbsp;&nbsp;&nbsp;
+              <button class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#editModal" (click)="infoConstructive(ch1.id,3,ch1.name)">
+                <i class="fa fa-pencil" title="Редактировать"></i>
+              </button>
+            </button>
+          </ng-container>
+        </div>
+      </div>
+      <!--div class="col-md-8 col-sm-8 col-lg-8">
+        <button>Добавить замечание</button>
+        <ng-container *ngIf="typeRemark1?.length > 0">
+          <select class="form-control" id="firstRemark" [(ngModel)]="listRemrk.firstRemark" name="firstRemark" (change)="loadTypeRemark(rpmConstructivRemark.id,2,listRemrk.firstRemark)">
+            <option value="0" selected="selected">Все</option>
+            <ng-container *ngFor="let child of typeRemark1">
+              <option [value]="child.id">{{child.name}}</option>
+            </ng-container>
+          </select>
+        </ng-container>
+      </div-->
+    </div>
+  </div>
+</div>
+<div id="editModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Редактировать наименование конструктива</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" [value]="editModel.Id">
+        <input type="text" class="form-control" [(ngModel)]="editModel.Name">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+        <button type="button" class="btn btn-success" (click)="editConstructive()">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="deleteModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Удалить конструктива</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" [value]="deleteModel.Id"> Вы действительно хотите удалить конструктив
+        <strong>{{deleteModel.Name}}</strong> ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Нет</button>
+        <button type="button" class="btn btn-danger" (click)="deleteConstructive()">Да</button>
+      </div>
+    </div>
+  </div>
+</div>

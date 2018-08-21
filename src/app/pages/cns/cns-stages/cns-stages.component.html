@@ -1,0 +1,37 @@
+<div class="col-sm-12">
+ 
+    <a href="javascript:;" class="btn btn-primary" (click)="showAddDialog()">Добавить этап</a>
+    <br/><br/>
+    <button (click)="select(null)" class="btn btn-primary" style="margin-right: 15px;" >Все</button>
+    <button (click)="select(stage.id)" class="btn btn-primary" style="margin-right: 15px;" *ngFor="let stage of stages">Этап {{stage.number}}: {{stage.name}}</button>
+          
+ 
+    <app-standards [inputFilter]="filter" [visibleFilter]="false" [visibleTitle]="false"></app-standards>
+
+</div>
+
+
+<p-dialog header="Добавление этапа" [(visible)]="showAddDialogFlag" [responsive]="true"
+showEffect="fade" [modal]="true" minWidth="400" closable="true">
+
+
+<div class="ui-grid ui-grid-responsive ui-fluid">
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-4"><label for="number">Номер</label></div>
+    <div class="ui-grid-col-8"><input pInputText [(ngModel)]="newStage.number"/></div>
+  </div>
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-4"><label for="name">Наименование</label></div>
+    <div class="ui-grid-col-8">
+        <div class="ui-grid-col-8"><input pInputText [(ngModel)]="newStage.name"/></div>
+    </div>
+  </div>
+  
+</div>
+<p-footer>
+  <div class="ui-dialog-buttonpane ui-helper-clearfix">
+    <button type="button" pButton icon="fa-close" (click)="cancel()" label="Закрыть"></button>
+    <button type="button" pButton icon="fa-check" (click)="add()" label="Сохранить"></button>
+  </div>
+</p-footer>
+</p-dialog>

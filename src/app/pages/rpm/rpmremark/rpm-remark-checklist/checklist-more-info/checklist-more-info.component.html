@@ -1,0 +1,44 @@
+<div class="col-md-12 col-sm-12 col-lg-12">
+  <div class="row">
+    <div class="col-md-12" *ngIf="(answers?.comment != null) && (answers?.comment != '')">
+      <b>Комментарий</b>
+      <ul class="chats">
+        <li class="right">
+          <div class="message">
+            {{answers?.comment}}
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-6" *ngIf="answers?.photos?.length > 0">
+      <label>
+        <b>Фото дефекта:</b>
+      </label>
+      <div class="row">
+        <div class="scroll-block">
+          <div class="col-xs-3" *ngFor="let p of answers?.photos; let i=index" id="p_{{p.id}}">
+            <div class="thumbnail" style="text-align: center;">
+              <a href="{{p.url}}" [attr.data-caption]="asda" [attr.data-fancybox]="groupFancy">
+                <img [src]="p.url" alt="" class="img-responsive" style="min-height: 100px" />
+              </a>              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6" *ngIf="answers?.photosCorrected?.length > 0">
+      <label><b>Фотофакт подтверждающий исправление</b></label>
+      <div class="row">
+          <div class="scroll-block">
+            <div class="col-xs-3" *ngFor="let p of answers?.photosCorrected; let y=index" id="p_{{p.id}}">
+              <div class="thumbnail" style="text-align: center;">
+                <a href="{{p.url}}" [attr.data-caption]="asda" [attr.data-fancybox]="groupFancy">
+                  <img [src]="p.url" alt="" class="img-responsive" style="min-height: 100px" />
+                </a>              
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

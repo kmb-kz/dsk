@@ -1,0 +1,6 @@
+<div>
+  <label>Выберите пользователя</label>
+  <p-autoComplete [(ngModel)]="_selectedUser" (change)="select()" [suggestions]="results" (onSelect)="select()" (completeMethod)="search($event)" field="fullName">
+  </p-autoComplete>
+  <div>Выбран: <span>{{_selectedUser?.fullName}}</span></div>
+</div>

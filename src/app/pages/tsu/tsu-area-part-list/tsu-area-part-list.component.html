@@ -1,0 +1,121 @@
+﻿<br />
+
+<div class="row">
+	<div class="col-md-4">
+		<button class="btn btn-primary m-b-10" (click)='add()' *ngIf="auth.isInRole('CnsAdmin')">
+			<i class="fa fa-plus"></i> Добавить расположение
+		</button>
+		<h4>Расположения</h4>
+		<div *ngFor="let part of parts, let i = index;" class="col-md-6 col-sm-12">
+			<div class="widget widget-stats bg-green" [routerLink]='["/tsu/areas", model.Id, part.id]'>
+				<div class="stats-icon stats-icon-lg">
+					<i class="fa fa-building fa-fw"></i>
+				</div>
+				<div class="stats-title">
+					{{part.typeName}}
+					<ng-container *ngIf='auth.isInRole("cnsAdmin")'>
+						<button click-stop-propagation class="btn btn-danger btn-icon btn-circle btn-sm pull-right" (click)='delete(part, i)'>
+							<i class="fa fa-remove"></i>
+						</button>
+						<button click-stop-propagation class="btn btn-warning btn-icon btn-circle btn-sm pull-right m-r-5" (click)='edit(part)'>
+							<i class="fa fa-pencil"></i>
+						</button>
+					</ng-container>
+				</div>
+				<div class="stats-number">
+					{{part.name}}
+				</div>
+				<div class="stats-progress progress">
+					<div class="progress-bar" style="width: 100%;"></div>
+				</div>
+				<div class="stats-desc">
+					<div class="col-md-6">Отмечено</div>
+					<div class="col-md-6">
+						<b>{{part.notMatches || 0}}</b>
+					</div>
+					<div class="col-md-6">В работе</div>
+					<div class="col-md-6">
+						<b>{{part.notMatches - part.fixed || 0}}</b>
+					</div>
+					<div class="col-md-6">Исполнено</div>
+					<div class="col-md-6">
+						<b>{{part.fixed || 0}}</b>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<button class="btn btn-primary m-b-10" (click)='addRemark()' *ngIf="auth.isInRole('CnsAdmin')">
+			<i class="fa fa-plus"></i> Добавить замечание
+		</button>
+		<h4>Замечания</h4>
+		<div *ngFor="let remark of remarks, let i = index;" class="col-md-12 tsu-remark bg-green">
+			{{remark.message}}
+		</div>
+	</div>
+</div>
+
+<div *ngIf='part!=null' class="modal fade in" id="modal-dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" (click)='cancel()' aria-hidden="true">×</button>
+				<h4 class="modal-title">Расположение</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="form-group">
+						<label class="col-md-3 control-label">Тип</label>
+						<div class="col-md-9">
+							<select [(ngModel)]='part.typeId' class="form-control">
+								<option *ngFor="let item of (nsi.areaPartTypes() | async)" [value]='item.id'>{{item.name}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">Название</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" [(ngModel)]='part.name'>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal" (click)='cancel()'>Отменить</a>
+				<a href="javascript:;" class="btn btn-sm btn-success" (click)='save()'>Сохранить</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf='remark!=null' class="modal fade in" id="modal-dialog" style="display: block;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" (click)='cancelRemark()' aria-hidden="true">×</button>
+				<h4 class="modal-title">Замечание</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="form-group">
+						<label class="col-md-3 control-label">Точка</label>
+						<div class="col-md-9">
+							<input type="text" class="form-control" [(ngModel)]='remark.point' />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-3 control-label">Замечание</label>
+						<div class="col-md-9">
+							<textarea class="form-control" [(ngModel)]='remark.message'></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal" (click)='cancelRemark()'>Отменить</a>
+				<a href="javascript:;" class="btn btn-sm btn-success" (click)='saveRemark()'>Сохранить</a>
+			</div>
+		</div>
+	</div>
+</div>

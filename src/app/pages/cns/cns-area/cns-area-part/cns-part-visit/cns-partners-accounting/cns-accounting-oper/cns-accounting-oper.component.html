@@ -1,0 +1,27 @@
+<button (click)="printToCart('printSectionId')" class="btn btn-primary">
+  Печать</button>
+
+<div id="printSectionId">
+
+  <p-schedule [events]="events" class="calendar " [header]="header" locale="ru" #fc (onViewRender)="loadEvents($event)" [eventRender]="eventRender"
+    [eventLimit]="500" [editable]="true" (onEventClick)="clickEvent($event)"></p-schedule>
+
+  <table class="table table-bordered" style="width: 400px;margin-top: 30px;">
+    <tr>
+      <td>
+        <b>Выработка на 1 человека</b>
+      </td>
+      <td>{{forOne.volumeForOne}} м
+        <sup>2</sup>
+      </td>
+    </tr>
+    <tr>
+      <td>Штормовых предупреждений</td>
+      <td>{{forOne.countWeatherReasons}}</td>
+    </tr>
+    <tr>
+      <td>Выходные дни</td>
+      <td>{{forOne.countHolidays}}</td>
+    </tr>
+  </table>
+</div>

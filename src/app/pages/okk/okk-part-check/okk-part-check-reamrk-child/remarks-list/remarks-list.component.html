@@ -1,0 +1,59 @@
+<div class="note  ppo-note col-md-12" [ngClass]="{
+  'text-success':remark?.answerType?.id == 5,
+  'text-danger':remark?.answerType?.id == 6
+}">
+  <div class="col-md-5">
+    <b>Дата выявления:</b>
+    <span>{{remark?.dateCreated}}</span>
+    <br/>
+    <b>Дата исправления:</b>
+    <span>{{remark?.dateUpdated}}</span>
+    <br/>
+    <b>Текст замечания:</b>
+    <span>{{remark?.comment}}</span>
+  </div>
+  <div class="col-md-5">
+    <ng-container *ngFor="let i of remark?.images">
+      <div class="thumbnail">
+        <img src="{{i.url}}" width="200px" class="img-thumbnail img-responsive">
+      </div>
+    </ng-container>
+  </div>
+  <div class="col-md-2">
+    <ng-container *ngIf="!isPauseRoom || !(auth.isInRole('OkkInspector'))">
+      <div style="padding-top: 10px;">
+        <a data-toggle="modal" href="#myModal2" class="btn btn-sm" (click)="infoRemark(remark?.id)" [ngClass]="{
+            'btn-success':remark?.answerType.id == 5,
+            'btn-primary':remark?.answerType.id != 5
+          }">Исправлено</a>
+        <br/>
+        <button class="btn btn-sm" (click)="noCorrected(remark?.id)" [ngClass]="{
+            'btn-danger':remark?.answerType.id == 6,
+            'btn-primary':remark?.answerType.id != 6
+          }">Не исправлено</button>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<div class="modal" id="myModal2" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" (click)="close()">×</button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="container"></div>
+      <div class="modal-body">
+        <h5>Файлы</h5>
+        <app-files name="files" [(ngModel)]="corrected.images"></app-files>
+        <h5>Комментарий</h5>
+        <textarea class="check-comment" [(ngModel)]="corrected.comment"></textarea>
+        <br/>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" (click)="close()">Закрыть</button>
+        <button class="btn btn-primary" (click)="saveRemarks(5)">Сохранить</button>
+      </div>
+    </div>
+  </div>

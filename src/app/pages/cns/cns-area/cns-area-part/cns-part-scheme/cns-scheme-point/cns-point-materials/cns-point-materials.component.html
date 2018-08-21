@@ -1,0 +1,34 @@
+<div>
+    <button (click)="showDialodAdd()" class="btn">Форма добавления</button>
+</div>
+<div  [hidden]="!showAddDialogFlag" style="margin-bottom: 10px; background: #C7CFD8;padding: 5px">
+  <div>Материал</div>
+  <div>
+     
+    <select [(ngModel)]="newMaterialVolume.materialId">
+    <option value="{{material.id}}" *ngFor="let material of materials">
+      {{material.name}}
+    </option>
+    </select>
+  </div>
+  <div>
+    Объем 
+  </div>
+  <div>
+      <input pInputText [(ngModel)]="newMaterialVolume.volume" /> м<sup>2</sup>
+  </div>
+  <br/>
+  <div>
+    <button class="btn btn-primary" (click)="add()">Добавить пункт расхода</button>
+  </div>
+ 
+</div>
+<div class="col-sm-12">
+  <h5>Список используемых материалов:</h5>
+  <table class="table table-hover">
+      <tr *ngFor="let vol of materialVolumes">
+        <app-cns-point-material [volume]="vol" (removeMaterials)="removeMaterials($event)" ></app-cns-point-material>
+      </tr>
+</table>
+</div>
+

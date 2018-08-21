@@ -1,0 +1,83 @@
+<div class="login-cover">
+  <div class="login-cover-image" style="background-image: url('../../../assets/img/bg-3.jpg'); background-size: 100% 100%; background-repeat: no-repeat"></div>
+  <div class="login-cover-bg"></div>
+</div>
+<div class="col-sm-5 col-sm-offset-0 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+
+  <div class="login login-v2" data-pageload-addclass="animated fadeIn">
+    <!-- begin brand -->
+    <div class="login-header">
+      <div class="brand">
+        <img src="../../../assets/img/logo.png" width="50" /> BI Group
+        <small>Контроль качества</small>
+      </div>
+      <div class="icon">
+        <i class="fa fa-sign-in"></i>
+      </div>
+    </div>
+    <!-- end brand -->
+    <div class="login-content" (keyup.enter)="authUser(email,pass)">
+      <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+      <div class="margin-bottom-0" role="form" name="authForm">
+        <div class="form-group m-b-15">
+          <input type="text" class="form-control" placeholder="Email" name="email" value="" [(ngModel)]="email" required/>
+        </div>
+        <div class="form-group m-b-15">
+          <input type="password" class="form-control" placeholder="Пароль" name="pass" value="" [(ngModel)]="pass" required />
+        </div>
+
+        <div class="login-buttons">
+          <button class="btn btn-primary btn-block " (click)="authUser(email,pass)">
+            <span *ngIf="!inProgress">Войти</span>
+            <span *ngIf="inProgress">Подождите пожалуйста ...</span>
+          </button>
+        </div>
+        <hr />
+        <p class="text-center">
+          &copy; BI Group 2018
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="theme-panel" style="width: 400px;">
+  <a href="javascript:;" data-click="theme-panel-expand" class="theme-collapse-btn">
+    <i class="fa fa-phone"></i>
+  </a>
+  <div class="theme-panel-content">
+    <div>
+      <p>
+        <b>
+          По всем техническим вопросам ПОРТАЛА:
+        </b>
+        <br>
+        <i class="fa fa-phone"></i> 8 (7172) 91-89-89
+
+      </p>
+      <p>
+        <b>
+          По всем техническим вопросам модуля Прием-передач объекта:
+        </b>
+        <br>
+        <i class="fa fa-envelope-open-o"></i> ppo@bi-group.org
+
+      </p>
+      <p>
+        <b>
+          По всем техническим вопросам модуля Корпоративные стандарты:
+        </b>
+        <br>
+        <i class="fa fa-envelope-open-o"></i> ks@bi-group.org
+
+      </p>
+      <p>
+        <b>
+          По всем техническим вопросам модуля Инспектор качества:
+        </b>
+        <br>
+        <i class="fa fa-envelope-open-o"></i> ik@bi-group.org
+
+      </p>
+    </div>
+  </div>
+</div>

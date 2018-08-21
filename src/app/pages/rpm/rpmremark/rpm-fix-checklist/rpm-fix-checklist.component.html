@@ -1,0 +1,49 @@
+<h1 class="page-header">Замечания по объекту "{{(area | async)?.name}}"</h1>
+<div class="row">
+  <div class="left-panel">
+    <ng-container *ngIf="detour?.statusDetour == 0">
+      <button class="btn btn-sm btn-primary btn-block" (click)="changeDetour(detour?.id)">Начать обход №{{detour?.numDetour}} </button>
+    </ng-container>
+    <ng-container *ngIf="detour == null">
+      <div class="alert alert-info">Для проекта нет ни одного активного обхода</div>
+    </ng-container>
+        
+    <a class="btn btn-primary btn-block btn-sm" [routerLink]='["/rpm/object/detail/", areaId]'>
+      <i class="fa fa-send"></i>&nbsp;&nbsp; Свободная форма замечаний
+    </a>
+    <h5>Фиксированные чек листы</h5>
+    <ng-container *ngIf="detour?.statusDetour == 2">
+      <b>Обход №{{detour?.numDetour}} завершен</b>
+    </ng-container>
+    <ng-container *ngIf="detour?.statusDetour == 1 && !auth.isInRole('ManagerRpm,RpmGM')">
+      <button class="btn btn-sm btn-primary btn-block" (click)="changeDetour(detour?.id)">Завершить обход №{{detour?.numDetour}} </button>
+    </ng-container>
+    <!--div>
+      <label>Расположение</label>
+      <select class="form-control" [(ngModel)]="areaPartId" (change)="changeAreaPart()" [disabled]="detour == null || detour?.statusDetour == 0 || detour?.statusDetour == 2">
+        <ng-container *ngFor="let a of areaParts">
+          <option style="font-weight:bold" [value]="a.id">{{a.name}}</option>
+          <ng-container *ngFor="let child of a.children">
+            <option [value]="child.id">&nbsp;&nbsp;- {{child.name}}</option>
+            <ng-container *ngFor="let c of child.children">
+              <option [value]="c.id">&nbsp;&nbsp;&nbsp;&nbsp;- {{c.name}}</option>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </select>
+    </div-->
+    <div class="btn-group-vertical btn-group-ppo">      
+      <ng-container *ngFor="let i of itemsList; let in = index">
+        <button type="button" class="col-md-3 btn btn-white btn-ppo" (click)="selectedInfo(i.id, in,detour?.id)" 
+        [ngClass]="{'active':i.id == constructiveId}" [disabled]="detour?.statusDetour == 0">
+          {{i.name}}
+        </button>
+      </ng-container>
+    </div>
+  </div>
+  <div class="right-panel">
+    <ng-container *ngFor="let clf of checkList?.items">
+      <app-rpm-clf-item [itemsCheckList]="clf" [detour]="detour"></app-rpm-clf-item>
+    </ng-container>
+  </div>
+</div>

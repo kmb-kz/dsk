@@ -1,0 +1,131 @@
+<h4>
+  Конструктивы</h4>
+<p-treeTable [value]="constructives" selectionMode="single" [(selection)]="selected" (onNodeSelect)="onSelect($event)" [contextMenu]="cm">
+  <p-header>
+    <div class="ui-helper-clearfix" style="width:100%">
+      <button type="button" pButton icon="fa-plus" style="float:left" *ngIf="selected" (click)="addChildDialog()" label="Добавить подконструктив"></button>
+      <button type="button" pButton icon="fa-list-ol" style="float:left" *ngIf="selected" [routerLink]='["/cns/stages", selected.data.id]'
+        label="Этапы"></button>
+      <button type="button" pButton icon="fa-edit" style="float:left" *ngIf="selected" (click)="showEditVolume()" label="Редактировать объем"></button>
+      <button type="button" pButton icon="fa-remove" style="float:left" *ngIf="selected" (click)="showRemove()" label="Удалить"></button>
+      <select [(ngModel)]="filterArea" (change)="loadData()" class="form-control pull-right" style="width: 200px">
+        <option value="null" selected>Выберите объект</option>
+        <option *ngFor="let area of areas" value="{{area.id}}">{{area.name}}</option>
+      </select>
+      <input type="text" (keyup)="loadData()" class="form-control pull-right" style="width: 200px" [(ngModel)]="filterCnstr" placeholder="Поиск по конструктиву"
+      />
+
+    </div>
+  </p-header>
+  <p-column field="name" header="Конструктив"></p-column>
+  <p-column field="volume" header="Объем за 1 ед."></p-column>
+  <p-column field="areas" header="Испольуется в объектах"></p-column>
+</p-treeTable>
+
+<p-contextMenu #cm [model]="contextMenus"></p-contextMenu>
+
+<p-dialog header="Добавление подконструктива" [(visible)]="showAddDialogFlag" [responsive]="true" [width]="400" showEffect="fade"
+  [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12" padding="2">
+      </div>
+      <div class="ui-grid-col-4" padding="2" data-width="200">
+      </div>
+
+    </div>
+
+  </div>
+
+  <br/>
+  <br/>
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <label for="firstName">Наименование</label>
+      </div>
+      <div class="ui-grid-col-6">
+        <input pInputText id="firstName" [(ngModel)]="newConstructive.name" />
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <label for="lastName">Объем за 1 ед</label>
+      </div>
+      <div class="ui-grid-col-6">
+        <input pInputText id="volume" [(ngModel)]="newConstructive.volume" />
+      </div>
+    </div>
+
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="cancel()" label="Закрыть"></button>
+      <button type="button" pButton icon="fa-check" (click)="addChild()" label="Сохранить"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+
+<p-dialog header="Редактирование объема" [(visible)]="showEditDialogFlag" [responsive]="true" [width]="400" showEffect="fade"
+  [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12" padding="2">
+      </div>
+      <div class="ui-grid-col-4" padding="2" data-width="200">
+      </div>
+
+    </div>
+
+  </div>
+
+  <br/>
+  <br/>
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <label for="volume">Объем за 1 ед</label>
+      </div>
+      <div class="ui-grid-col-6">
+        <input pInputText id="volume" [(ngModel)]="selected?.data.volume" />
+      </div>
+    </div>
+
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="cancelEditVolume()" label="Закрыть"></button>
+      <button type="button" pButton icon="fa-check" (click)="saveVolume()" label="Сохранить"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog header="Удалить подконструктива" [(visible)]="showRemoveDialogFlag" [responsive]="true" [width]="400" showEffect="fade" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12" padding="2">
+      </div>
+      <div class="ui-grid-col-4" padding="2" data-width="200">
+      </div>
+
+    </div>
+
+  </div>
+
+  <br/>
+  <br/>
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      Вы точно хотите удалить конструктив {{newConstructive.name}}?
+    </div>
+   
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="cancelRemove()" label="Закрыть"></button>
+      <button type="button" pButton icon="fa-check" (click)="remove()" label="Удалить"></button>
+    </div>
+  </p-footer>
+</p-dialog>

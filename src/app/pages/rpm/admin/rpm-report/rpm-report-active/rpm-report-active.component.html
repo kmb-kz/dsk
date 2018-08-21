@@ -1,0 +1,35 @@
+<div class="col-md-4 col-sm-3">
+  <select class="form-control" [(ngModel)]="statActive" (change)="getStatActive($event.target.value)">
+    <option value="0">По всем</option>
+    <option value="1">По застройщикам</option>
+    <option value="2">По сервисным компаниям</option>
+  </select>
+</div>
+<div class="btn-group">
+  <button class="btn btn-white" [ngClass]="{'active':tableVisable}" (click)="visableElement(1)">
+    <i class="fa fa-list" title="Табличный вид"></i>
+  </button>
+  <button class="btn btn-white" [ngClass]="{'active':grafVisable}" (click)="visableElement(2)">
+    <i class="fa fa-bar-chart-o" title="Графический вид"></i>
+  </button>
+</div>
+<div class="col-md-12 col-sm-12">
+  <br/>
+  <table id="data-table" class="table table-bordered dataTable" *ngIf="tableVisable == true;">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Наименование объекта</th>
+        <th>Количество замечаний</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let d of data; let i = index">
+        <td>{{i+1}}</td>
+        <td>{{d.name}}</td>
+        <td>{{d.cnt}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p-chart type="horizontalBar" [data]="dataGraf" [options]='options' *ngIf="grafVisable == true;"></p-chart>
+</div>

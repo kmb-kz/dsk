@@ -1,0 +1,18 @@
+<div class="flex">
+  <div class="full flex column">
+    <div class="title">
+      {{parameter.name}}
+    </div>
+    <div>
+      <div class="status">Статус:</div>
+      <div class="show-details" (click)='showDetails = !showDetails'>Подробнее</div>      
+    </div>
+    <div class="details" *ngIf="showDetails"></div>
+  </div>
+  <div class="image">
+
+  </div>
+  <div class="stats"></div>
+  <div class="pause"></div>
+  <div class="done"></div>
+</div>

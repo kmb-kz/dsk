@@ -1,0 +1,38 @@
+<ng-container *ngIf="!certificate">
+  <button class="btn btn-primary btn-sm" (click)='add()' *ngIf="auth.isInRole('CnsAdmin')">Добавить</button>
+  <br/>
+
+  <table class="table table-hover table-bordered" style="margin-top: 10px;">
+    <thead>
+      <tr>
+        <th rowspan="2">
+          Дата создания
+        </th>
+        <th colspan="2">Период</th>
+        <th rowspan="2"></th>
+      </tr>
+      <tr>
+        <th>
+          С
+        </th>
+        <th>По</th>
+        
+      </tr>
+    </thead>
+    <ng-container *ngFor="let item of certificates">
+      <tr *ngIf="!item.deleted" style="cursor: pointer;">
+        <td>
+          <a [routerLink]='[item.id]'>{{item.dateCreated}}</a>
+        </td>
+        <td>{{item.dateStart}}</td>
+        <td>{{item.dateEnd}}</td>
+        <td>
+          <!-- <a class="btn btn-sm btn-primary" (click)='edit(item)'>Редактировать</a> -->
+          <a class="btn btn-sm btn-danger" (click)='remove(item)' *ngIf="auth.isInRole('CnsAdmin')">Удалить</a>
+        </td>
+        
+      </tr>
+    </ng-container>
+  </table>
+</ng-container>
+<app-cns-acc-cert-item [contractId]='contractId' [certificate]='certificate' *ngIf="certificate" (ok)='onOk()' (cancel)='onCancel()'></app-cns-acc-cert-item>

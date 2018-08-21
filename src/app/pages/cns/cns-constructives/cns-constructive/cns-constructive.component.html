@@ -1,0 +1,49 @@
+<div class="col-sm-12" style="border-bottom: 1px solid #f4f9ff;; padding-bottom: 3px;padding-top: 3px;">
+  <div class="col-sm-8" [ngClass]='{"child-constructive":isChild}'>
+      <span *ngIf="!isChild"><a href="javascript:;" (click)="addChildDialog(constructive.id)" title="Добавить подконструктив"><i class="fa fa-plus"></i> </a></span>
+      <span ><a href="javascript:;"  [routerLink]='["/cns/stages", constructive.id]' title="Этапы в чек листе"><i class="fa fa-list-ol"></i></a></span>  
+      
+  <b *ngIf="!isChild">{{constructive.name}}</b>
+  <i *ngIf="isChild">- {{constructive.name}}</i>
+  </div>
+<div class="col-sm-4" >
+        <input type="text" [(ngModel)]="constructive.volume" class="form-control btn-xs" [attr.disabled]="editMode ==false?'':null" style="width:70px; float:left;"/>
+        <button class="btn btn-primary btn-xs" (click)="enableEdit(true)"  title="Редактировать" *ngIf="editMode == false"><i class="fa fa-pencil"></i></button>
+        <button class="btn btn-success btn-xs" (click)="saveVolume()" title="Сохранить" *ngIf="editMode == true"><i class="fa fa-check"></i></button>
+        <button class="btn btn-danger btn-xs" (click)="enableEdit(false)"  title="Отменить" *ngIf="editMode == true"><i class="fa fa-close"></i></button>
+</div>
+
+</div>
+
+<p-dialog header="Добавление подконструктива" [(visible)]="showAddDiialogFlag" [responsive]="true" [width]="400" showEffect="fade" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12" padding="2">
+      </div>
+      <div class="ui-grid-col-4" padding="2" data-width="200">
+      </div>
+
+    </div>
+
+  </div>
+
+  <br/>
+  <br/>
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6"><label for="firstName">Наименование</label></div>
+      <div class="ui-grid-col-6"><input pInputText id="firstName" [(ngModel)]="newConstructive.name"/></div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6"><label for="lastName">Объем за 1 ед</label></div>
+      <div class="ui-grid-col-6"><input pInputText id="lastName" [(ngModel)]="newConstructive.volume" /></div>
+    </div>
+   
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="cancel()" label="Закрыть"></button>
+      <button type="button" pButton icon="fa-check" (click)="addChild()" label="Сохранить"></button>
+    </div>
+  </p-footer>
+</p-dialog>

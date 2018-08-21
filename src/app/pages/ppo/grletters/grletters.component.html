@@ -1,0 +1,101 @@
+<h1 class="page-header">Гарантийные письма</h1>
+<div class="row">
+  <div class=col-md-3>
+    <div class="panel">
+      <div class="filter-container">
+        <h4>{{objectInfo?.name}}</h4>
+        <br>
+        <b>Дата создания</b>
+        <div>{{objectInfo?.dateCreated | date:'dd.MM.yyyy'}}
+          <!-- <span *ngIf="today.getTime() <objectInfo?.dateCreated.getTime()" style="color: red"> (Просрочено)</span> -->
+
+        </div>
+        <br/>
+
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="panel">
+      <div *ngIf="objectInfo?.grLetters.length==0" class="alert alert-info">
+        Гарантийных писем нет
+      </div>
+      <div class="panel panel-primary" *ngFor="let gl of objectInfo?.grLetters">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a class="accordion-toggle accordion-toggle-styled collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{gl.id}}">
+              <i class="fa fa-plus-circle pull-right"></i>
+              {{gl?.itemName}}
+            </a>
+
+            <span class="label label-primary" *ngIf="gl?.checklistId">
+              <a [routerLink]='["/ppo/object/checklistf/detail", gl?.checklistId]'>Чек лист</a>
+            </span>
+          </h4>
+        </div>
+        <div id="collapse_{{gl.id}}" class="panel-collapse collapse in">
+          <div class="panel-body ">
+            <div class="col-sm-8">
+              <div>
+                <label>Дата исправления:</label>
+                <i class="fa fa-clock-o"></i> {{gl.dateOfCorrected | date:'dd.MM.yyyy'}}
+              </div>
+              <div>
+                <label>Гарантийное письмо:</label>
+                <a href="{{gl.fileUrl}}" target="_blank">
+                  <i class="fa fa-download"></i> Скачать</a>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <a class="btn btn-primary pull-right" (click)="addAudit(gl?.id, objectInfo?.id)" *ngIf="auth.isInRole('Inspector,PpoInspector')">
+                <i class="fa fa-plus"></i> Создать проверку</a>
+            </div>
+            <div class="col-sm-12">
+
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Дата проверки</th>
+                    <th>Результат</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="gl.audits.length==0">
+                    <td colspan="3">Инспектор еще не назначил дату проверки</td>
+                  </tr>
+                  <tr *ngFor="let grA of gl.audits; let i = index">
+                    <td style="padding-left:35px;">- Проверка от {{grA.dateCreated | date:'dd.MM.yyyy'}}</td>
+                    <td>
+                      <span *ngIf="grA.isCorrected == true">Соответствует</span>
+                      <span *ngIf="grA.isCorrected == false">Не соответствует</span>
+                      <span *ngIf="grA.isCorrected == null">Не проверено</span>
+                      <span class="label label-danger" *ngIf="grA.isRequestedNew == true">Запрошена повторная проверка</span>
+
+                    </td>
+                    <td>
+                      <div *ngIf="auth.isInRole('Inspector,PpoInspector')">
+                        <a class="btn btn-zakon btn-sm {{grA.isCorrected == true ? 'btn-success' : 'btn-primary'}}" (click)="checkResultAudit(grA?.id, true, objectInfo?.id)">
+                          <i class="fa fa-check"></i>
+                        </a>
+                        <a class="btn btn-zakon btn-sm {{grA.isCorrected == false ? 'btn-danger' : 'btn-primary'}}" (click)="checkResultAudit(grA?.id, false, objectInfo?.id)">
+                          <i class="fa fa-close"></i>
+                        </a>
+                      </div>
+                      <div *ngIf="auth.isInRole('ProjectManager,PpoManager') && grA.isCorrected == false ">
+                        <a *ngIf="i+1==gl.audits.length" (click)="requestAudit(grA?.id,objectInfo?.id)" href="javascript:">
+                          <i class="fa fa-history"></i> Запрос на повторную проверку</a>
+                      </div>
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

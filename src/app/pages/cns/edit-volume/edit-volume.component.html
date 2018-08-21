@@ -1,0 +1,187 @@
+
+
+<!--<div class="alert alert-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>-->
+<p-dataTable [value]="cnsMaterialCostList" selectionMode="single" [(selection)]="selRec" [paginator]="true" rows="20" [responsive]="true">
+  <p-header>
+    <div class="ui-helper-clearfix" style="width:100%">
+
+      <button data-toggle="modal" data-target="#modalShowEditVolume" type="button" pButton icon="fa-plus" style="float:left"  label="Добавить" (click)="add()" ></button>
+      <button data-toggle="modal" data-target="#modalShowUpdateVolume" type="button" pButton icon="fa-edit" style="float:left"  label="Редактировать" (click)="edit()" ></button>
+      <button type="button" pButton icon="fa-minus" style="float:left"  label="Удалить" (click)="deleteMaterialCosts()"></button>
+
+      <input type="text" class="form-control pull-right"   style="width: 300px" placeholder="Поиск"/>
+
+    </div>
+
+  </p-header>
+
+  <p-column field="constructiveName" header="Конструктив" [sortable]="true"></p-column>
+  <p-column field="constructiveTypeName" header="Тип конструктива" [sortable]="true"></p-column>
+  <p-column field="materialName" header="Материал" [sortable]="true"></p-column>
+  <p-column field="mKeyName" header="Ед. измерения" [sortable]="true"></p-column>
+  <p-column field="costs" header="Значение" [sortable]="true"></p-column>
+
+</p-dataTable>
+
+
+<div class="modal inmodal" id="modalShowEditVolume" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left" >Добавление</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <div class="form-horizontal">
+          <div class="form-group">
+            <!--<h3>Конструктив</h3>-->
+            <!--<p-dropdown [options]="constructiveList" [(ngModel)]="constructiveSel" [style]="{'width':'400px'}" filter="true" optionLabel="name" data-click="selConstructiveM(constructiveSel)"></p-dropdown>-->
+            <label class="col-md-3 control-label">Конструктив</label>
+            <div class="col-md-9">
+              <select  class="form-control" [(ngModel)]="cnsMaterialCostRequest.ConstructiveId" (change)="selConstructiveM(cnsMaterialCostRequest.ConstructiveId)">
+                <ng-container *ngFor="let c of constructiveList">
+                  <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+                  <ng-container *ngFor="let child of c.children">
+                    <option [value]="child.id">-   {{child.name}}</option>
+                  </ng-container>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="constructiveTypeShow==true">
+            <!--<h3>Тип конструктива</h3>-->
+            <!--<p-dropdown [options]="constructiveSel.constructiveTypes" [(ngModel)]="constructiveTypeSel" [style]="{'width':'400px'}" filter="true" optionLabel="name"></p-dropdown>-->
+            <label class="col-md-3 control-label">Тип конструктива</label>
+            <div class="col-md-9">
+              <select class="form-control" [(ngModel)]="cnsMaterialCostRequest.ConstructiveTypeId">
+                <ng-container *ngFor="let c of constructiveTypeList">
+                  <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <!--<h3>Материал</h3>-->
+            <!--<p-dropdown [options]="materialList" [(ngModel)]="materialSel" [style]="{'width':'400px'}" filter="true" optionLabel="name"></p-dropdown>-->
+            <label class="col-md-3 control-label">Материал</label>
+            <div class="col-md-9">
+              <select class="form-control" [(ngModel)]="cnsMaterialCostRequest.MaterialId">
+                <ng-container *ngFor="let c of materialList">
+                  <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <!--<h3>Ед. измерения</h3>-->
+            <!--<p-dropdown [options]="mKeyList" [(ngModel)]="mKeySel" [style]="{'width':'400px'}" filter="true" optionLabel="name"></p-dropdown>-->
+            <label class="col-md-3 control-label">Ед. измерения</label>
+            <div class="col-md-9">
+              <select class="form-control" [(ngModel)]="cnsMaterialCostRequest.MKeyId">
+                <ng-container *ngFor="let c of mKeyList">
+                  <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Обьем</label>
+            <div class="col-md-9">
+              <input type="text" id="title" [(ngModel)]="cnsMaterialCostRequest.Costs" class="form-control" placeholder="Обьем">
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="saveMaterialCosts()"  data-dismiss="modal">Сохранить</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="modalShowUpdateVolume" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" *ngIf="selRec" >
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left" >Редактирование</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <div class="form-horizontal">
+          <div class="form-group">
+            <!--<h3>Конструктив</h3>-->
+            <!--<p-dropdown [options]="constructiveList" [(ngModel)]="constructiveSel" [style]="{'width':'400px'}" filter="true" optionLabel="name" data-click="selConstructiveM(constructiveSel)"></p-dropdown>-->
+            <label class="col-md-3 control-label">Конструктив</label>
+            <div class="col-md-9">
+              <select class="form-control" [(ngModel)]="selRec.constructiveId" (change)="selConstructiveM(selRec.constructiveId)">
+                <ng-container *ngFor="let c of constructiveList" >
+                  <option style="font-weight:bold" [value]="c.id" [selected]="c.id===selRec.constructiveId">{{c.name}}</option>
+                  <ng-container *ngFor="let child of c.children">
+                    <option [value]="child.id" [selected]="child.id===selRec.constructiveId">-   {{child.name}}</option>
+                  </ng-container>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group" *ngIf="constructiveTypeShow==true">
+            <!--<h3>Тип конструктива</h3>-->
+            <!--<p-dropdown [options]="constructiveSel.constructiveTypes" [(ngModel)]="constructiveTypeSel" [style]="{'width':'400px'}" filter="true" optionLabel="name"></p-dropdown>-->
+            <label class="col-md-3 control-label">Тип конструктива</label>
+            <div class="col-md-9">
+              <select class="form-control" [(ngModel)]="selRec.constructiveTypeId">
+                <ng-container *ngFor="let c of constructiveTypeList">
+                  <option style="font-weight:bold" [value]="c.id" [selected]="c.id===selRec.constructiveTypeId">{{c.name}}</option>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <!--<h3>Материал</h3>-->
+            <!--<p-dropdown [options]="materialList" [(ngModel)]="materialSel" [style]="{'width':'400px'}" filter="true" optionLabel="name"></p-dropdown>-->
+            <label class="col-md-3 control-label">Материал</label>
+            <div class="col-md-9">
+              <select class="form-control" [(ngModel)]="selRec.materialId">
+                <ng-container *ngFor="let c of materialList">
+                  <option style="font-weight:bold" [value]="c.id" [selected]="c.id===selRec.materialId">{{c.name}}</option>
+                </ng-container>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <!--<h3>Ед. измерения</h3>-->
+            <!--<p-dropdown [options]="mKeyList" [(ngModel)]="mKeySel" [style]="{'width':'400px'}" filter="true" optionLabel="name"></p-dropdown>-->
+            <label class="col-md-3 control-label">Ед. измерения</label>
+            <div class="col-md-9">
+              <select class="form-control" [(ngModel)]="selRec.mKeyId">
+
+                  <option style="font-weight:bold" *ngFor="let c of mKeyList" value={{c.id}} [selected]="c.id===selRec.mKeyId">{{c.name}}</option>
+
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Обьем</label>
+            <div class="col-md-9">
+              <input type="text" id="title" class="form-control" placeholder="Обьем" [(ngModel)]="selRec.costs" >
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="updateMaterialCosts()"  data-dismiss="modal">Сохранить</button>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,100 @@
+
+<button (click)="printToCart('printSectionId')" class="btn btn-primary">Печать</button>
+<div id="printSectionId">
+  <h5>Заказчик: {{cert?.companyCustomer}}</h5>
+<h5>Подрядчик: {{cert?.companySupplier}}</h5>
+<p>Наименование стройки: {{cert?.contractTitle}}</p>
+<p>Наименование объекта: {{cert?.areaName}}</p>
+<h4 style="text-align: center;">Справка об объемах выполненных работ на {{cert?.dateStart | date: 'dd.MM.yyyy'}} - {{cert?.dateEnd | date: 'dd.MM.yyyy'}}</h4>
+<table class="table table-bordered">
+  <tr>
+    <th>№ п/п</th>
+    <th>Наименование работ и материалов по смете ГЭ</th>
+    <th>Наименование работ и материалов</th>
+    <th>Ед.изм.</th>
+    <th>Кол-во</th>
+    <th>Стоимость (тг)</th>
+  </tr>
+  <tr *ngFor="let item of cert?.parameters; let i = index; ">
+    <td>{{i+1}}</td>
+    <td>{{item.stageName}}</td>
+    <td>{{item.name}}</td>
+    <td innerHtml = "{{item.measurement}}"></td>
+    <td>{{item.value}}</td>
+    <td>{{item.cost}}</td>
+  </tr>
+  <tfoot>
+    <tr>
+      <td colspan="4"><b>ИТОГО</b></td>
+      <td><b>{{totalValue | number : '1.2-2' }}</b></td>
+      <td><b>{{totalCost}}</b></td>
+
+    </tr>
+  </tfoot>
+</table>
+
+<div class="col-sm-6">
+    <h5>Сдал</h5>
+<div *ngFor="let signer of cert?.signers">
+   
+      <div class="form-group" style="clear:both" *ngIf="signer.positionId == 1">
+          <label class="col-md-3 control-label"> Прораб от Подрядчика:</label>
+          <div class="col-md-9">
+            {{signer.fullName}}
+          </div>
+      </div>
+    </div>
+</div>
+<div class="col-sm-6">
+    <h5>Принял:</h5>
+<div  *ngFor="let signer of cert?.signers">
+  
+    <div class="form-group" style="clear:both" *ngIf="signer.positionId == 2">
+        <label class="col-md-3 control-label">Мастер:</label>
+        <div class="col-md-9">
+          {{signer.fullName}}
+        </div>
+    </div>
+
+
+    <div class="form-group" style="clear:both" *ngIf="signer.positionId == 3">
+        <label class="col-md-3 control-label">Прораб:</label>
+        <div class="col-md-9">
+          {{signer.fullName}}
+        </div>
+    </div>
+
+
+    <div class="form-group" style="clear:both" *ngIf="signer.positionId == 4">
+        <label class="col-md-3 control-label">Начальник участка:</label>
+        <div class="col-md-9">
+          {{signer.fullName}}
+        </div>
+    </div>
+
+
+    <div class="form-group" style="clear:both" *ngIf="signer.positionId == 5">
+        <label class="col-md-3 control-label">Технадзор:</label>
+        <div class="col-md-9">
+          {{signer.fullName}}
+        </div>
+    </div>
+
+
+    <div class="form-group" style="clear:both" *ngIf="signer.positionId == 6">
+        <label class="col-md-3 control-label">Инженер ПТО:</label>
+        <div class="col-md-9">
+          {{signer.fullName}}
+        </div>
+    </div>
+
+
+    <div class="form-group" style="clear:both" *ngIf="signer.positionId == 7">
+        <label class="col-md-3 control-label">Экономист:</label>
+        <div class="col-md-9">
+          {{signer.fullName}}
+        </div>
+    </div>
+</div>
+</div>
+</div>

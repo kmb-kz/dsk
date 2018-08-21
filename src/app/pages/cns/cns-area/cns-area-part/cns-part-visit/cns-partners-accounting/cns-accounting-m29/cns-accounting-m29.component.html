@@ -1,0 +1,54 @@
+<button (click)="printToCart('printSectionId')" class="btn btn-primary">Печать</button>
+<div id="printSectionId">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Наименование материала</th>
+      <th>Количество по проекту</th>
+      <th>
+        <a *ngIf="monthsDisplay" (click)='monthsDisplay = false' class="btn btn-warning btn-icon btn-circle btn-xs">
+          <i class="fa fa-minus"></i>
+        </a>
+        <a *ngIf="!monthsDisplay" (click)='monthsDisplay = true' class="btn btn-warning btn-icon btn-circle btn-xs">
+          <i class="fa fa-plus"></i>
+        </a>Всего (факт)
+      </th>
+      <th class='vert' *ngIf="monthsDisplay">Январь</th>
+      <th class='vert' *ngIf="monthsDisplay">Февраль</th>
+      <th class='vert' *ngIf="monthsDisplay">Март</th>
+      <th class='vert' *ngIf="monthsDisplay">Апрель</th>
+      <th class='vert' *ngIf="monthsDisplay">Май</th>
+      <th class='vert' *ngIf="monthsDisplay">Июнь</th>
+      <th class='vert' *ngIf="monthsDisplay">Июль</th>
+      <th class='vert' *ngIf="monthsDisplay">Август</th>
+      <th class='vert' *ngIf="monthsDisplay">Сентябрь</th>
+      <th class='vert' *ngIf="monthsDisplay">Октябрь</th>
+      <th class='vert' *ngIf="monthsDisplay">Ноябрь</th>
+      <th class='vert' *ngIf="monthsDisplay">Декабрь</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let item of result">
+      <tr>
+        <td>{{item.name}}</td>
+        <td>{{item.total}}</td>
+        <td>{{item.m1 + item.m2 + item.m3 + item.m3 + item.m4 + item.m5 + item.m6 + item.m7 + item.m8 + item.m9 + item.m10 +
+          item.m11 + item.m12}}</td>
+        <td *ngIf="monthsDisplay">{{item.m1}}</td>
+        <td *ngIf="monthsDisplay">{{item.m2}}</td>
+        <td *ngIf="monthsDisplay">{{item.m3}}</td>
+        <td *ngIf="monthsDisplay">{{item.m4}}</td>
+        <td *ngIf="monthsDisplay">{{item.m5}}</td>
+        <td *ngIf="monthsDisplay">{{item.m6}}</td>
+        <td *ngIf="monthsDisplay">{{item.m7}}</td>
+        <td *ngIf="monthsDisplay">{{item.m8}}</td>
+        <td *ngIf="monthsDisplay">{{item.m9}}</td>
+        <td *ngIf="monthsDisplay">{{item.m10}}</td>
+        <td *ngIf="monthsDisplay">{{item.m11}}</td>
+        <td *ngIf="monthsDisplay">{{item.m12}}</td>
+        
+      </tr>
+    </ng-container>
+  </tbody>
+</table>
+</div>

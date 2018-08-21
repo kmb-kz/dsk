@@ -1,0 +1,36 @@
+{
+    "obj": [
+        {
+            "Id": 1,
+            "Name": "ЖК1",
+            "PhotoUrl": "",
+            "Desc": "ЖК desc",
+            "DeveloperName": "BI-Group",
+            "DateCreated": "2017-11-09"
+        },
+        {
+            "Id": 2,
+            "Name": "ЖК2",
+            "PhotoUrl": "",
+            "Desc": "ЖК desc",
+            "DeveloperName": "BI-Group",
+            "DateCreated": "2017-11-09"
+        },
+        {
+            "Id": 3,
+            "Name": "ЖК3",
+            "PhotoUrl": "",
+            "Desc": "ЖК desc",
+            "DeveloperName": "BI-Group",
+            "DateCreated": "2017-11-09"
+        },
+        {
+            "Id": 4,
+            "Name": "ЖК4",
+            "PhotoUrl": "",
+            "Desc": "ЖК desc",
+            "DeveloperName": "BI-Group",
+            "DateCreated": "2017-11-09"
+        }
+    ]
+}

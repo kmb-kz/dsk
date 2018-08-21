@@ -1,0 +1,38 @@
+<div class="panel panel-primary" data-sortable-id="ui-widget-6">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse">
+                <i class="fa fa-minus"></i>
+            </a>
+        </div>
+        <h4 class="panel-title">
+            <span *ngIf='(model.Version|async)?.byDefault' class="label label-success m-r-10 pull-left">
+                <i class="fa fa-check"></i>
+                По умолчанию
+            </span> Версия
+        </h4>
+    </div>
+    <div class="panel-body">
+        <p>{{(model.Version|async)?.description}}</p>
+        <table class="table table-hover">
+            <tr>
+                <th colspan="3">Показатели</th>
+            </tr>
+            <tr *ngFor='let parameter of (model.Version|async)?.parameters'>
+                <td>{{parameter.type}}</td>
+                <td>{{parameter.value}}</td>
+                <td>{{parameter.measurement}}</td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Примеры корректной работы</h5>
+                <p-galleria [images]="validImages" panelWidth="100%" [autoPlay]='false'></p-galleria>
+            </div>
+            <div class="col-md-6">
+                <h5>Примеры некорректной работы</h5>
+                <p-galleria [images]="invalidImages" panelWidth="100%" [autoPlay]='false'></p-galleria>
+            </div>
+        </div>
+    </div>
+</div>

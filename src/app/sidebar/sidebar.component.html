@@ -1,0 +1,218 @@
+<!-- begin #sidebar -->
+<div id="sidebar" class="sidebar" [ngClass]="{'sidebar-transparent': page_sidebar_transparent}">
+  <!-- begin sidebar scrollbar -->
+  <div data-scrollbar="true" data-height="100%">
+    <!-- begin sidebar user -->
+    <ul class="nav">
+      <li class="nav-profile">
+        <div class="info">
+          {{userName}}
+          <small>
+            <span>{{rolesDescr}}</span>
+          </small>
+        </div>
+      </li>
+    </ul>
+    <!-- end sidebar user -->
+
+    <ul class="nav">
+      <li class="has-sub" [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin')">
+        <a [routerLink]="['objects']">
+          <i class="fa fa-building"></i>Объекты
+        </a>
+      </li>
+      <li class="has-sub" [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,RpmAdmin,CnsAdmin')">
+        <a [routerLink]="['account/users']">
+          <i class="fa fa-users"></i> Пользователи</a>
+      </li>
+
+      <li class="has-sub" [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,CnsAdmin,ProjectManager')">
+        <a [routerLink]="['std/area/areas']">
+          <b class="caret pull-right"></b>
+          <i class="fa fa-cubes"></i>
+          <span>Корпоративные стандарты</span>
+        </a>
+        <ul class="sub-menu">
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['std/area/areas']">Объекты</a>
+          </li>
+          <!--li [routerLinkActive]="['active']">
+            <a [routerLink]="['std/standard/standards']">Стандарты</a>
+          </li-->
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['std/standard/standards2']">Стандарты</a>
+          </li>
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['std/requests']">Запросы на замену</a>
+          </li>
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['std/version']">Версии</a>
+          </li>
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['std/template']">Шаблоны</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="has-sub" *ngIf="auth.isInRole('Admin')">
+        <a href="javascript:;">
+          <b class="caret pull-right"></b>
+          <i class="fa fa-puzzle-piece"></i>
+          <span>Проектирование</span>
+        </a>
+        <ul class="sub-menu">
+          <li>
+            <a href="https://biportal.bi-group.org/CheckListBIM" target="_blank">BIM (3D проектирование)</a>
+          </li>
+          <li>
+            <a href="https://biportal.bi-group.org/TehOtdelRequest" target="_blank">Технический отдел</a>
+          </li>
+        </ul>
+      </li>
+
+
+      <li class="has-sub" [routerLinkActive]="['active']" *ngIf="auth.isInRole('CnsInspector') || auth.isInRole('Admin,CnsAdmin,CnsManager,OkkAdmin,OkkInspector,Master,Prorab')">
+        <a [routerLink]="['cns/area']">
+          <b class="caret pull-right"></b>
+          <i class="fa fa-puzzle-piece"></i>
+          <span>Строительство</span>
+        </a>
+        <ul class="sub-menu">
+          <li class="has-sub closed">
+            <a href="javascript:;">ИТР проекта </a>
+            <ul class="sub-menu">
+              <li [routerLinkActive]="['active']">
+                <a [routerLink]="['cns/area']">Объекты</a>
+              </li>
+              <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,CnsAdmin')">
+                <a [routerLink]="['cns/stats']">Статистика</a>
+              </li>
+              <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,CnsAdmin')">
+                <a [routerLink]="['cns/partner']">Подрядчики</a>
+              </li>
+              <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,CnsAdmin')">
+                <a [routerLink]="['cns/constructives']">Конструктивы</a>
+              </li>
+              <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,CnsAdmin')">
+                <a [routerLink]="['cns/material']">Материалы</a>
+              </li>
+              <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,CnsAdmin')">
+                <a [routerLink]="['cns/techcard']">Тех. карта</a>
+              </li>
+            </ul>
+          </li>
+
+
+          <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,OkkAdmin,OkkInspector,CnsManager,Partner,Master,Guest,Prorab')">
+            <a [routerLink]="['okk/finite']">ОКК: Чистовая отделка</a>
+          </li>
+          <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,OkkAdmin,OkkInspector,CnsManager,Partner,Master,Guest,Prorab')">
+            <a [routerLink]="['okk/roughing']">ОКК: Черновая отделка</a>
+          </li>
+
+          <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,OkkAdmin,OkkInspector,CnsManager,Partner,Master,Guest,Prorab')">
+            <a [routerLink]="['okk/osp']">ОКК: СОСП</a>
+          </li>
+          <li *ngIf="auth.isInRole('Admin')">
+            <a href="https://bi-portal.bi-group.org/sites/Tehnadzor/_layouts/15/start.aspx#/SitePages/Home.aspx" target="_blank">ДТН/БиОТ</a>
+          </li>
+        </ul>
+      </li>
+
+      <!--li class="has-sub" [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin') || auth.isInRole('OkkAdmin') || auth.isInRole('OkkInspector')">
+        <a [routerLink]="['okk/roughing']">
+          <b class="caret pull-right"></b>
+          <i class="fa fa-puzzle-piece"></i>
+          <span>Строительство ОКК</span>
+        </a>
+        <ul class="sub-menu">
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['okk/finite']">Черновая отделка</a>
+          </li>
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['okk/roughing']">Чистовая отделка</a>
+          </li>
+
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['okk/osp']">ОСП</a>
+          </li>
+        </ul>
+      </li-->
+
+
+      <li class="has-sub" [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,PpoAdmin,Okk,PpoInspector,Inspector,ProjectManager')">
+        <a [routerLink]="['ppo']">
+          <b class="caret pull-right"></b>
+          <i class="fa fa-arrows-h"></i>
+          <span>Прием-передача объектов</span>
+        </a>
+        <ul class="sub-menu">
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['ppo/object']">Объекты</a>
+          </li>
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['ppo/inspections']">График проверок</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="has-sub" [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin')">
+        <a [routerLink]="['tsu']">
+          <b class="caret pull-right"></b>
+          <i class="fa fa-puzzle-piece"></i>
+          <span>Тех. надзор</span>
+        </a>
+        <ul class="sub-menu">
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['tsu/areas']">Замечания</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="has-sub" [routerLinkActive]="['active']" *ngIf="auth.isInRole('RpmAdmin,ManagerRpm') || auth.isInRole('Admin,RpmGM,InspectorRpm,Developers, DeveloperEmployee')">
+        <a [routerLink]="['rpm/object']">
+          <b class="caret pull-right"></b>
+          <i class="fa fa-cogs"></i>
+          <span>BI-Service</span>
+        </a>
+        <ul class="sub-menu">
+          <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('RpmGM')">
+            <a [routerLink]="['rpm/gmo']">Главная страница ГМО</a>
+          </li>
+          <li [routerLinkActive]="['active']" *ngIf="!auth.isInRole('RpmGM')">
+            <a [routerLink]="['rpm/object']">Объекты</a>
+          </li>
+          <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,RpmAdmin')">
+            <a [routerLink]="['rpm/admin/llc']">Сервисная служба</a>
+          </li>
+          <li class="has-sub closed" *ngIf="auth.isInRole('Admin,RpmAdmin,InspectorRpm')">
+            <a href="javascript:;" [routerLink]="['rpm/admin/locations']">Администрирование</a>
+            <ul class="sub-menu">
+              <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,RpmAdmin')">
+                <a [routerLink]="['rpm/admin/locations']">Расположения</a>
+              </li>
+              <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,RpmAdmin')">
+                <a [routerLink]="['rpm/admin/constructives']">Конструктивы</a>
+              </li>
+              <li [routerLinkActive]="['active']" *ngIf="auth.isInRole('Admin,RpmAdmin,InspectorRpm')">
+                <a [routerLink]="['rpm/admin/fix-constructives']">Фиксированные конструктивы</a>
+              </li>
+            </ul>
+          </li>
+          <li [routerLinkActive]="['active']">
+            <a [routerLink]="['rpm/admin/report']">Отчет</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <!-- end sidebar nav -->
+    <div class="call-center">
+      Call center: +7 7172 918989
+    </div>
+
+  </div>
+  <!-- end sidebar scrollbar -->
+</div>
+
+<div class="sidebar-bg"></div>
+<!-- end #sidebar -->

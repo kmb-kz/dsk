@@ -1,0 +1,111 @@
+<h1 class="page-header">Проекты</h1>
+<div class="row">
+  <div class="col-md-12">
+    <div>
+      <button class="btn btn-primary btn-sm" (click)="toggleForm()" *ngIf="auth.isInRole('Admin,OkkAdmin')">Добавить проект</button>
+      <input type="text" class="form-control pull-right" name='search' [(ngModel)]='search' style="width: 300px" placeholder="Поиск по названию..."
+      />
+      <div class="col-sm-3 pull-right">
+        <select [(ngModel)]="divisionSort" class="form-control" (change)="load()">
+          <option [value]="''" style="font-weight:bold">ВСЕ</option>
+          <ng-container *ngFor="let d of (divisions |async)">
+            <option [value]="d.id" style="font-weight:bold">{{d.name}}</option>
+            <ng-container *ngIf="d.children != null">
+              <ng-container *ngFor="let c of d.children">
+                <option [value]="c.id">&nbsp;&nbsp; -{{c.name}}</option>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+        </select>
+      </div>
+      <br/>
+      <br/>
+
+    </div>
+
+  </div>
+  <div class="col-md-12" *ngIf="visableAddObject">
+    <div class="col-md-6" style="margin-left: 0px;">
+      <div class="panel">
+        <div class="panel-body">
+          <form>
+            <fieldset>
+              <legend>Добавление проекта</legend>
+              <div class="form-group">
+                <label for="division">Дивизион</label>
+                <select [(ngModel)]="divisionId" name="divisionId" class="form-control">
+                  <option [value]="''" style="font-weight:bold">ВСЕ</option>
+                  <ng-container *ngFor="let d of (divisions |async)">
+                    <option [value]="d.id" style="font-weight:bold">{{d.name}}</option>
+                    <ng-container *ngIf="d.children != null">
+                      <ng-container *ngFor="let c of d.children">
+                        <option [value]="c.id">&nbsp;&nbsp; -{{c.name}}</option>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="nameObject">Наименование проекта</label>
+                <input class="form-control" pInputText [(ngModel)]="name" name="name" />
+              </div>
+              <button type="button" class="btn btn-sm btn-primary m-r-5" (click)="add()">Сохранить</button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngFor="let o of (areas|async)">
+    <div class="col-md-4 ui-sortable" *ngIf='!search || o.name.toLowerCase().indexOf(search.toLowerCase()) > -1'>
+      <div class="panel panel-inverse" data-sortable-id="index-1" [routerLink]="['/okk/roughing/area', o.id]">
+        <div class="panel-heading">
+          <h4 class="panel-title" style="cursor:pointer">
+            <i class="fa fa-home"></i> {{o.name}}
+          </h4>
+        </div>
+        <div style="background-image: url('/assets/img/no-photo.jpg');
+        height: 150px;  
+        background-size: cover;">
+
+        </div>
+        <div class="list-group">
+          <a class="list-group-item list-group-item-inverse text-ellipsis">
+            <span class="badge badge-success">{{o.notMatches || 0}}</span>
+            1. Отмечено
+          </a>
+          <a class="list-group-item list-group-item-inverse text-ellipsis">
+            <span class="badge badge-primary">{{o.notMatches - o.fixed || 0}}</span>
+            2. В работе
+          </a>
+          <a class="list-group-item list-group-item-inverse text-ellipsis">
+            <span class="badge badge-success">{{o.notMatches || 0}}</span>
+            3. Количество квартир
+          </a>
+          <a class="list-group-item list-group-item-inverse text-ellipsis">
+            <span class="badge badge-success">{{o.notMatches || 0}}</span>
+            4. Количество сданных
+          </a>
+          <a class="list-group-item list-group-item-inverse text-ellipsis">
+            <span class="badge badge-success">{{o.notMatches || 0}}</span>
+            5. Кол-во выданных замечаний
+          </a>
+          <a class="list-group-item list-group-item-inverse text-ellipsis">
+            <span class="badge badge-success">{{o.notMatches || 0}}</span>
+            6. Кол-во устран-х замечаний
+          </a>
+          <a class="list-group-item list-group-item-inverse text-ellipsis">
+            <span class="badge badge-success">{{o.notMatches || 0}}</span>
+            7. Кол-во просроченных замечаний
+          </a>
+          <a class="list-group-item list-group-item-inverse text-ellipsis">
+            <span class="badge badge-success">{{o.notMatches || 0}}</span>
+            8. Кол-во сданных квартир с 1-го раза
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

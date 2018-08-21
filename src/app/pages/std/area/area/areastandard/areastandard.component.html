@@ -1,0 +1,9 @@
+<h4>
+  {{(model.Standard|async)?.standardNumber}} - {{(model.Standard|async)?.title}}
+</h4>
+<div *ngIf='(model.Standard|async)?.changeRequestStatus'>
+  <div class="alert alert-success">
+    {{(model.Standard|async)?.changeRequestStatus}}
+  </div>
+</div>
+<router-outlet></router-outlet>

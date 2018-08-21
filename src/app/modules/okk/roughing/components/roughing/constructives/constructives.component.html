@@ -1,0 +1,5 @@
+<div class="constructives">
+  <div *ngFor="let item of constructives">
+    <app-constructive (click)='select.emit(item.id)'></app-constructive>
+  </div>
+</div>

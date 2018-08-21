@@ -1,0 +1,67 @@
+<h4>
+  Технологическая карта
+</h4>
+<button class="btn btn-primary" (click)="showAddModal(true)">Добавить</button>
+ <button class="btn btn-danger" *ngIf="techCard!=null" (click)="remove()">Удалить</button>
+
+
+<div style="margin-bottom: 10px; margin-top: 10px;">
+      <div class="col-sm-4" style="padding-left: 0px;">
+<select [(ngModel)]="selectedAreaId" class='form-control' (change)="loadTechCards()">
+  <option value="">Выберите объект</option>
+  <option value="{{area.id}}" *ngFor="let area of areas" selected>{{area.name}}</option>
+</select>
+</div>
+<div class="col-sm-4"  style="padding-left: 0px;">
+<select [(ngModel)]="selectedTechCardId" class='form-control' (change)="loadTechCard()">
+    <option value="">Выберите Тех. карту</option>  
+  <option value="{{tc.id}}" *ngFor="let tc of techCards" selected>{{tc.title}}</option>
+</select>
+</div>
+</div>
+<br/>
+<div *ngIf="techCard==null" style="margin-top: 30px;" class="alert alert-danger">Выберите Объект и Тех.карту</div>
+<div [sanitizeHtml]="techCard?.urlHtml" *ngIf="techCard?.url!=null && techCard?.url!=''" id="techCardContainer" style="margin-top: 30px;"  >
+</div> 
+
+
+<p-dialog header="Добавление Тех. карты" [(visible)]="flagAddModal" [responsive]="true"
+  showEffect="fade" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12" padding="2">
+      </div>
+      <div class="ui-grid-col-4" padding="2" data-width="200">
+      </div>
+    </div>
+  </div>
+
+  <br/>
+  <br/>
+  <div class="ui-grid ui-grid-responsive ui-fluid">  
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12"><label for="lastName">Объект</label></div>
+      <div class="ui-grid-col-12">
+        <select [(ngModel)]="newTechCard.areaId">
+          <option *ngFor="let area of areas" value="{{area.id}}" selected>{{area.name}}</option>
+        </select>
+      </div>
+    </div>   
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-12"><label for="title">Наименование документа</label></div>
+        <div class="ui-grid-col-12"><input pInputText id="title" [(ngModel)]="newTechCard.title" /></div>
+      </div>   
+    <div class="ui-grid-row">
+          <div class="ui-grid-col-12"><label for="url">Ссылка из <a href="https://onedrive.live.com">OneDrive</a> </label></div>
+          <div class="ui-grid-col-12"><input pInputText id="url" [(ngModel)]="newTechCard.url" /></div>
+     </div>   
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="showAddModal(false)" label="Закрыть"></button>
+      <button type="button" pButton icon="fa-check" (click)="saveTechCard()" label="Сохранить"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+

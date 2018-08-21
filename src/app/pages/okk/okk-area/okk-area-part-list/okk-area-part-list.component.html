@@ -1,0 +1,99 @@
+<button class="btn btn-sm btn-primary m-b-10" (click)='add()'>
+    <i class="fa fa-plus"></i> Добавить расположение
+</button>
+
+<a *ngIf="auth.isInRole('OkkInspector,OkkAdmin,Admin') && (partTypeId == '2' || partTypeId == '4') && pathValue=='roughing'" class="btn btn-sm btn-primary m-r-5 m-b-10"
+    [routerLink]="['../check', partIds]">
+    <i class="fa fa-calendar"></i> Чек листы (Проверка)
+</a>
+<a *ngIf="auth.isInRole('OkkInspector,OkkAdmin,Admin') && (partTypeId == '2' || partTypeId == '4') && pathValue=='finite'" class="btn btn-sm btn-primary m-r-5 m-b-10"
+    [routerLink]="['../check', partIds]">
+    <i class="fa fa-calendar"></i> Чек листы (Проверка)
+</a>
+
+<div class="row">
+    <div *ngFor="let part of parts, let i = index;" class="col-md-3 col-sm-6">
+        <div class="widget widget-stats bg-green" [routerLink]='["/okk",this.pathValue,"area", areaModel.Id, part.id]'>
+            <div class="stats-icon stats-icon-lg">
+                <i class="fa fa-building fa-fw"></i>
+            </div>
+            <div class="stats-title">{{part.typeName}}
+                <ng-container *ngIf='auth.isInRole("cnsAdmin") || true'>
+                    <button click-stop-propagation class="btn btn-danger btn-icon btn-circle btn-sm pull-right" (click)='delete(part, i)'>
+                        <i class="fa fa-remove"></i>
+                    </button>z
+                    <button click-stop-propagation class="btn btn-warning btn-icon btn-circle btn-sm pull-right m-r-5" (click)='edit(part)'>
+                        <i class="fa fa-pencil"></i>
+                    </button>
+
+                </ng-container>
+            </div>
+            <div class="stats-number">{{part.name}}
+            </div>
+            <div class="stats-progress progress">
+                <div class="progress-bar" style="width: 100%;"></div>
+            </div>
+            <div class="stats-desc">
+                <div class="col-md-9">Кол-во актуальных замечаний</div>
+                <div class="col-md-3">
+                    <b>{{part.notMatches || 0}}</b>
+                </div>
+                <div class="col-md-9">Количество сданных </div>
+                <div class="col-md-3">
+                    <b>{{part.notMatches - part.fixed || 0}}</b>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf='part!=null' class="modal fade in" id="modal-dialog" style="display: block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" (click)='cancel()' aria-hidden="true">×</button>
+                <h4 class="modal-title">Расположение</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label">Тип</label>
+                        <div class="col-md-9">
+                            <select [(ngModel)]='part.typeId' class="form-control">
+                                <ng-container *ngFor="let item of (nsi.areaPartTypes() | async)">
+                                    <option [value]='item.id'>{{item.name}}</option>
+                                </ng-container>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" *ngIf="part.typeId != 4">Название</label>
+                        <label class="col-md-3 control-label" *ngIf="part.typeId == 4">Кол-во квартир</label>
+                        <div class="col-md-9">
+                            <ng-container *ngIf="part.typeId == 4">
+                                <div class="m-b-3">
+                                    Указать квартиры в диапазоне
+                                    <div class="material-switch pull-right">
+                                        <input id="someSwitchOptionPrimary" name="someSwitchOption001" [(ngModel)]="checkRange" type="checkbox" />
+                                        <label for="someSwitchOptionPrimary" class="label-primary"></label>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="checkRange">
+                                <input type="text" class="form-control" [(ngModel)]='part.name'>
+                                <p class="help-block" *ngIf="part.typeId == 4">Например: 1-20 </p>
+                            </ng-container>
+                            <ng-container *ngIf="checkRange == false">
+                                <input type="text" class="form-control" [(ngModel)]='part.name'>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-sm btn-white" data-dismiss="modal" (click)='cancel()'>Отменить</a>
+                <a href="javascript:;" class="btn btn-sm btn-success" (click)='save()'>Сохранить</a>
+            </div>
+        </div>
+    </div>
+</div>

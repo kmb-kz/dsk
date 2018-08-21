@@ -1,0 +1,111 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <span class="label label-success m-r-10 pull-left"></span> {{selected?.Standard?.constructive?.name}}
+            <div class="btn-group pull-right" data-toggle="buttons">
+                <label class="btn btn-success btn-xs" *ngFor="let version of selected?.Standard?.versions">
+                    <i class="fa " [ngClass]='{"fa-check":version.byDefault}'></i> Версия от {{version?.dateCreated | date: 'dd.MM.yyyy'}}
+                </label>
+
+            </div>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <h4>{{selected?.Standard?.title }}</h4>
+        <app-standardstage [standardId]='selected?.Standard?.id' [constructiveId]="selected?.Standard?.constructive?.id" [stages]="stages"
+            [stageId]="selected?.Standard?.stageId"></app-standardstage>
+        <div class="row">
+
+            <div class="standard-image" *ngFor="let img of invalidImages">
+                <div class="thumbnail" style="text-align: center;">
+                    <a href="{{img.source}}" [attr.data-caption]="" data-fancybox="group">
+                        <img src="{{img.source}}" style="min-height: 70px;">
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="standard-image" *ngFor="let img of validImages">
+                <div class="thumbnail" style="text-align: center;">
+                    <a href="{{img.source}}" [attr.data-caption]="" data-fancybox="group">
+                        <img src="{{img.source}}" style="min-height: 70px;">
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+        <p>{{selected?.Standard?.versions[0]?.description}}</p>
+        <table class="table table-hover">
+            <tr>
+                <th colspan="3">Показатели
+                    <button *ngIf="auth.isInRole('Admin,CnsAdmin')" class="btn btn-success btn-xs m-r-5" (click)="toggleDialogAddParam()">Добавить параметр</button>
+
+                </th>
+            </tr>
+            <tr *ngFor='let parameter of selected?.Standard?.versions[0]?.parameters'>
+                <td>
+                    <app-cns-point-percentage *ngIf="auth.isInRole('Admin,CnsAdmin')" [parameterId]="parameter.id" [percentage]="parameter.percentage"></app-cns-point-percentage>
+                    <button *ngIf="auth.isInRole('Admin,CnsAdmin')" class="btn btn-primary btn-xs" (click)="showDialogMaterilVolumes(parameter.id)"
+                        title="Материалы">
+                        <i class="fa fa-cogs"></i>
+                    </button>
+                    <button *ngIf="auth.isInRole('Admin,CnsAdmin')" class="btn btn-danger btn-xs" (click)="deleteParameter(parameter.id)" title="Удалить">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <br/> {{parameter.type}}
+                </td>
+                <td>{{parameter.value}}</td>
+                <td>{{parameter.measurement}}</td>
+            </tr>
+        </table>
+
+        <div class="areas-by-standard" *ngIf="(areasByVersion | async)!=null">
+            <label>Объекты:</label>
+            <div class="areas">
+                <span *ngFor="let area of (areasByVersion | async) ">
+                    <i class="fa fa-tag" style="color:#507299"></i> {{area.name}},
+                </span>
+            </div>
+        </div>
+        <button class="btn btn-success btn-xs m-r-5" (click)="loadAreasByVersion()">Показать объекты</button>
+
+    </div>
+</div>
+
+
+
+<p-dialog header="Материалы" [(visible)]="dialogFlag" [responsive]="true" showEffect="fade" [modal]="true" minWidth="70%"
+    closable="true">
+    <app-cns-point-materials [parameterId]="currentParameterId" [materials]="materials"></app-cns-point-materials>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="hideDialogMaterilVolumes()" label="Закрыть"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog header="Добавление параметра" [(visible)]="paramDialogFlag" [responsive]="true" showEffect="fade" [modal]="true"
+    minWidth="70%" closable="true">
+    <div>
+        <label class="col-md-3 control-label">Показатель</label>
+        <div class="col-md-9">
+            <input type="text" class="form-control" [(ngModel)]='newParam.type'>
+        </div>
+        <label class="col-md-3 control-label">Значение</label>
+        <div class="col-md-9">
+            <input type="text" class="form-control" [(ngModel)]='newParam.value'>
+        </div>
+        <label class="col-md-3 control-label">Ед.измерения</label>
+        <div class="col-md-9">
+            <input type="text" class="form-control" [(ngModel)]='newParam.measurement'>
+        </div>
+
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa-close" (click)="addParam()" label="Добавить"></button>
+            <button type="button" pButton icon="fa-close" (click)="toggleDialogAddParam()" label="Закрыть"></button>
+        </div>
+    </p-footer>
+</p-dialog>

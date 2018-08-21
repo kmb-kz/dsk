@@ -1,0 +1,28 @@
+.ui-sortable .panel-heading {
+    cursor: default;
+}
+
+#label{
+    background: #ffffff;
+    font-weight: 600;
+    padding: 3px 8px;
+    text-shadow: none;
+}
+.compliesCheckText{
+    padding-top:15px;    
+}
+.compliesCheckText textarea{
+    width: 70%; height: 150px;
+}
+.fileinput-button input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 30px !important;
+    direction: ltr;
+    cursor: pointer;
+    
+}

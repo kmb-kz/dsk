@@ -1,0 +1,216 @@
+<div class="row note  ppo-note col-md-12" *ngIf="item?.status.id == 3" [ngClass]="{  
+  'text-danger':item?.criticaled==true,
+  'text-success':item?.criticaled==false && item?.overdue==null,
+  'text-warning':item?.criticaled==false && (item?.overdue?.IsOverdue==true || item?.overdue!=null)  
+}">
+  <div class="col-md-5 col-xs-6 col-sm-6">
+    <h5>
+      <a *ngIf="item" [routerLink]="['/rpm/object/remark',item?.id]">
+         {{item?.firstRemarkType.name}} &rarr; {{item?.remarkType.name}} 
+      </a>
+      <a *ngIf="!item"> {{item?.firstRemarkType.name}} &rarr; {{item?.remarkType.name}} </a>
+    </h5>
+
+    <div>
+      <b>Расположение:</b>
+      <span>{{item?.areaParts}} {{item?.answers[0]?.place}}</span>
+    </div>
+    <ng-container>
+      <b>Критичность:</b>&nbsp;
+      <span *ngIf="item?.criticaled==true">Критично</span>
+      <span *ngIf="item?.criticaled!=true">Не критично</span>
+    </ng-container>
+
+    <div class="infoStatusCheckList">
+      <div class="revealed" *ngIf="item?.answers[0].status.id == 1">
+        <b>Замечание выявлено:</b>
+        <br/> {{item?.answers[0]?.dateCreated}} ({{item?.answers[0]?.userCreated.fullName}}) &nbsp;&nbsp;&nbsp;
+      </div>
+
+      <ng-container *ngIf="item?.answers.length > 1">
+        <a class="accordion-toggle accordion-toggle-styled collapsed a-more" data-toggle="collapse" data-parent="#accordion" href="#collapse_short_{{item?.id}}">
+          Посмотреть всю историю
+          <i class="fa fa-angle-down"></i>
+        </a>
+      </ng-container>
+      <div id="collapse_short_{{item?.id}}" class="panel-collapse collapse">
+        <ng-container *ngFor="let i of item?.answers">
+          <div id="collapse_{{i.id}}" class="panel-collapse collapse">
+            <div class="timingRemark" *ngIf="i?.status.id == 5">
+              <b>Отклонено Менеджером объекта:</b>
+              <br/>
+              <span>
+                {{i?.userCreated.fullName}}
+              </span>
+            </div>
+            <div class="revealed" *ngIf="i?.userReceiver.id != null">
+              <b>Замечание перенаправлено:</b>
+              <div>
+                {{i?.userReceiver.fullName}}
+              </div>
+            </div>
+
+            <div class="timingRemark" *ngIf="i.issetCorrectedDate == true && i?.status.id == 6">
+              <b>Сроки устранения замечания от Мендежера объекта:</b>
+              <br/>
+              <span>{{i.dateOfCorrectionStart | date:'dd.MM.yyyy'}} - {{i.dateOfCorrectionEnd | date:'dd.MM.yyyy'}} ({{i?.userCreated.fullName}})
+                {{i.dateDiff}}
+              </span>
+            </div>
+            <div class="timingRemark" *ngIf="i?.status.id == 2">
+              <b>Исправлен менеджером:</b>
+              <br/>
+              <span>{{i.dateCreated }} ({{i?.userCreated.fullName}}) </span>
+            </div>
+            <div class="remarkRemoved" *ngIf="i?.status.id == 3">
+              <b>Замечание устранено:</b>
+              <br/>
+              <span>{{i.dateCreated }} ({{i?.userCreated.fullName}}) </span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-xs-4 col-sm-4">
+    <span class="label label-info" *ngIf="item?.answers == null">Не отмечено</span>
+    <span class="label label-success" *ngIf="item?.criticality?.id == 1">Не критично</span>
+    <span class="label label-danger" *ngIf="item?.criticality?.id == 2">Высокая</span>
+    <span class="label label-warning" *ngIf="item?.criticality?.id == 3">Средняя</span>
+    <span class="label label-info" *ngIf="item?.criticality?.id == 4">Низкая</span>
+    <br/>
+    <br/>
+    <b>Статус:</b>&nbsp;
+    <span>{{item?.status.name}}</span>
+    <span *ngIf="auth.isInRole('ManagerRpm') && item?.status.id == 1">Неустановленные сроки</span>
+    <div>
+      <ng-container>
+        <div class="thumbnail" style="text-align: center;">
+          <a href="{{item?.answers[0].photos[0].url}}" [attr.data-caption]="" [attr.data-fancybox]="item?.id">
+            <img [src]="item?.answers[0].photos[0].url" alt="" class="img-responsive" style="min-height: 100px" />
+          </a>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="col-md-3 col-xs-2 col-sm-6">
+    <app-rpm-remark-buttons [item]="item" [answerListId]="answerListId" [breakdownList]="breakdown" (refresh)="refresh()"></app-rpm-remark-buttons>
+  </div>
+  <!--app-checklist-more-info [answers]="item?.answers[0]" id="collapse_{{item?.id}}" [groupFancy]="item?.id" class="panel-collapse collapse"></app-checklist-more-info-->
+</div>
+
+<div class="row note  ppo-note col-md-12" *ngIf="item?.status.id != 3" [ngClass]="{  
+  'text-danger':item?.criticaled==true,
+  'text-success':item?.criticaled==false || item?.overdue==null,
+  'text-warning':item?.criticaled==false && (item?.overdue?.IsOverdue==true || item?.overdue!=null)
+ 
+}">
+  <div class="col-md-5 col-xs-6 col-sm-6">
+    <h5>
+      <a *ngIf="item" [routerLink]="['/rpm/object/remark',item?.id]">
+        {{item?.firstRemarkType.name}} &rarr;  {{item?.remarkType.name}}
+      </a>
+      <a *ngIf="!item">{{item?.firstRemarkType.name}} &rarr;  {{item?.remarkType.name}}</a>
+    </h5>
+    <div>
+      <b>Расположение:</b>
+      <span>{{item?.areaParts}} {{item?.answers[0]?.place}}</span>
+    </div>
+    <ng-container>
+      <b>Критность:</b>&nbsp;
+      <span *ngIf="item?.criticaled==true">Критично</span>
+      <span *ngIf="item?.criticaled!=true">Не критично</span>
+      <br/>
+    </ng-container>
+
+    <div class="infoStatusCheckList">
+      <div class="revealed" *ngIf=" item?.answers[0]?.status.id == 1">
+        <b>Замечание выявлено:</b>
+        <br/> {{item?.answers[0]?.dateCreated}} ({{item?.answers[0]?.userCreated.fullName}}) &nbsp;&nbsp;&nbsp;
+      </div>
+      <ng-container *ngIf="item?.answers.length > 1">
+        <a class="accordion-toggle accordion-toggle-styled collapsed a-more" data-toggle="collapse" data-parent="#accordion" href="#collapse_short_{{item?.id}}">
+          Посмотреть всю историю
+          <i class="fa fa-angle-down"></i>
+        </a>
+      </ng-container>
+      <div id="collapse_short_{{item?.id}}" class="panel-collapse collapse">
+
+        <ng-container *ngFor="let i of item?.answers">
+
+          <div class="timingRemark" *ngIf="i?.status.id == 5">
+            <b>Отклонено Менеджером объекта:</b>
+            <br/>
+            <span>
+              <b>{{i?.userCreated.fullName}}</b>
+            </span>
+          </div>
+
+
+          <div class="revealed" *ngIf="i?.userReceiver.id != null">
+            <b>Замечание перенаправлено:</b>
+            <div>
+              {{i?.userReceiver.fullName}}
+            </div>
+          </div>
+
+          <div class="timingRemark" *ngIf="i.issetCorrectedDate == true && i?.status.id == 6 && i?.isReview != true">
+            <b>Сроки устранения замечания от Мендежера объекта:</b>
+            <br/>
+            <span>
+              <b>{{i.dateDiff}} {{decOfNum(i.dateDiff)}}</b> c {{i.dateOfCorrectionStart | date:'dd.MM.yyyy'}} по {{i.dateOfCorrectionEnd
+              | date:'dd.MM.yyyy'}} ({{i?.userCreated.fullName}})
+            </span>
+          </div>
+
+          <div class="timingRemark" *ngIf="i.issetCorrectedDate == true && i?.status.id == 6 && i?.isReview == true">
+            <b>Сроки устранения замечания от Главного мендежера объекта:</b>
+            <br/>
+            <span>{{i.dateOfCorrectionStart | date:'dd.MM.yyyy'}} - {{i.dateOfCorrectionEnd | date:'dd.MM.yyyy'}} ({{i?.userCreated.fullName}})
+            </span>
+          </div>
+
+          <div class="timingRemark" *ngIf="i?.status.id == 2">
+            <b>Исправлен менеджером:</b>
+            <br/>
+            <span>{{i.dateCreated }} ({{i?.userCreated.fullName}}) </span>
+          </div>
+          <div class="remarkRemoved" *ngIf="i?.status.id == 3">
+            <b>Замечание устранено:</b>
+            <br/>
+            <span>{{i.dateCreated }} ({{i?.userCreated.fullName}}) </span>
+          </div>
+
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 col-xs-4 col-sm-4">
+    <span class="label label-info" *ngIf="item?.answers == null">Не отмечено</span>
+    <span class="label label-success" *ngIf="item?.criticality?.id == 1">Не критично</span>
+    <span class="label label-danger" *ngIf="item?.criticality?.id == 2">Высокая</span>
+    <span class="label label-warning" *ngIf="item?.criticality?.id == 3">Средняя</span>
+    <span class="label label-info" *ngIf="item?.criticality?.id == 4">Низкая</span>
+    <br/>
+    <br/>
+    <b>Статус:</b>&nbsp;
+    <span>{{item?.status?.name}}</span>
+    <span *ngIf="auth.isInRole('ManagerRpm') && item?.status.id == 1">Неустановленные сроки</span>
+
+
+    <div>
+      <ng-container>
+        <div class="thumbnail" style="text-align: center;">
+          <a href="{{item?.answers[0].photos[0].url}}" [attr.data-caption]="" [attr.data-fancybox]="item?.id">
+            <img [src]="item?.answers[0].photos[0].url" alt="" class="img-responsive" style="min-height: 100px" />
+          </a>
+        </div>
+      </ng-container>
+    </div>
+
+  </div>
+  <div class="col-md-3 col-xs-2 col-sm-6">
+    <app-rpm-remark-buttons [item]="item" [answerListId]="answerListId" [breakdownList]="breakdown" (refresh)="refresh()"></app-rpm-remark-buttons>
+  </div>
+  <!--app-checklist-more-info [answers]="item?.answers[0]" id="collapse_{{item?.id}}" [groupFancy]="item?.id" class="panel-collapse collapse"></app-checklist-more-info-->
+</div>

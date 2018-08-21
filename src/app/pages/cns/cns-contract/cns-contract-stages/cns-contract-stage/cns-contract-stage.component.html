@@ -1,0 +1,15 @@
+<div class="col-sm-8">{{stageVolume.name}}</div>
+<div class="col-sm-4">
+    <input type="number" min="0" max="100" [(ngModel)]="stageVolume.volume" class="form-control btn-xs" [attr.disabled]="editMode ==false?'':null"
+      style="width:50px; float:left;" />
+    <button class="btn btn-primary btn-xs" (click)="enableEdit(true)" title="Редактировать" *ngIf="editMode == false">
+      <i class="fa fa-pencil"></i></button>
+    <button class="btn btn-success btn-xs" (click)="update()" title="Сохранить" *ngIf="editMode == true">
+      <i class="fa fa-check"></i>
+    </button>
+    <button class="btn btn-danger btn-xs" (click)="enableEdit(false)" title="Отменить" *ngIf="editMode == true">
+      <i class="fa fa-close"></i>
+    </button>
+  </div>
+
+  

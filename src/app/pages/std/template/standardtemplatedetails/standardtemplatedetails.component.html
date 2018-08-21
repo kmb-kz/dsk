@@ -1,0 +1,41 @@
+<h1 class="page-header">Шаблон</h1>
+<div class="panel panel-primary" data-sortable-id="ui-widget-1">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse">
+                <i class="fa fa-minus"></i>
+            </a>
+        </div>
+        <h4 class="panel-title">Детализация </h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="title" class="col-md-3 control-label">Наименование</label>
+                        <div class="col-md-9">
+                            {{(template|async)?.title}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="parameters" class="col-md-3 control-label">Стандарты</label>
+                        <div class="col-md-9">
+                            <table class="table table-responsive">
+                                <tr *ngFor="let standard of (template|async)?.standards; let i = index">
+                                    <td>№{{standard.id}} - {{standard.title}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <div class="col-md-9 col-md-offset-3">
+                            <a [routerLink]='["/std/template/edit", (template|async)?.id || ""]' type="button" class="btn btn-success">
+                                <i class="fa fa-save"></i> Редактировать</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

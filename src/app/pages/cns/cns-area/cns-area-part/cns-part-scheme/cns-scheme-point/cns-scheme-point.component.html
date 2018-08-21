@@ -1,0 +1,43 @@
+<i class="fa fa-angle-right"></i>
+<b>Конструктив : {{schemeModel.SelectedPoint?.constructive.name}}</b>
+<span *ngIf='auth.isInRole("cnsAdmin")' class="pull-right">Всего процентов : {{sumPercentage()}}%</span><br>
+<ng-container *ngFor='let step of steps, let i = index;'>
+  <span>Этап {{step.checkOrder}} ({{done(step)}}%)</span>
+  <div *ngFor='let standard of step.standards' class="panel panel-default" data-sortable-id="ui-widget-10">
+    <div class="panel-heading">
+      <div class="panel-heading-btn">
+
+      </div>
+      <h4 class="panel-title">Показатель : {{standard.standard.name}}</h4>
+    </div>
+    <div class="panel-body answer-panel">
+      <ng-container *ngFor='let parameter of standard.parameters'>
+        <app-cns-point-parameter [standardId]='standard.standard.id' [materials]="materials" [parameter]='parameter'></app-cns-point-parameter>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+<!-- <ul class="nav nav-pills">
+    <li [ngClass]="{'active': i == 0}" *ngFor='let step of steps, let i = index;'>
+        <a href="#nav-pills-tab-{{step.checkOrder}}" data-toggle="tab">
+            <span>Этап {{step.checkOrder}} ({{done(step)}}%)</span>
+        </a>
+    </li>
+</ul>
+<div class="tab-content" style="padding:0px;margin-top:-5px;">
+    <div *ngFor='let step of steps, let i = index;' [ngClass]="{'active': i == 0}" class="tab-pane fade in" id="nav-pills-tab-{{step.checkOrder}}">
+        <div *ngFor='let standard of step.standards' class="panel panel-default" data-sortable-id="ui-widget-10">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                  
+                </div>
+                <h4 class="panel-title">Показатель : {{standard.standard.name}}</h4>
+            </div>
+            <div class="panel-body answer-panel">
+                <ng-container *ngFor='let parameter of standard.parameters'>
+                    <app-cns-point-parameter [standardId]='standard.standard.id' [materials]="materials" [parameter]='parameter'></app-cns-point-parameter>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div> -->

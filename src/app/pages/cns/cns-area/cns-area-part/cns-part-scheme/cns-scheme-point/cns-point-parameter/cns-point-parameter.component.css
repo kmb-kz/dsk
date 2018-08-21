@@ -1,0 +1,53 @@
+.answer{
+    border-left: #6596f1 solid 5px;
+    border-bottom: #6596f1 solid 1px;
+    padding:10px;  
+    margin-bottom: -1px;  
+}
+.answer.yes{
+    border-color: #00acac;
+}
+.answer.no{
+    border-color: #ff5b57;
+}
+
+table.parameter{
+    width: 100%;
+}
+div.image{
+    background-position: center center;
+    width:90px;
+    height:90px; 
+    background-size: cover;
+    border-radius: 3px;
+    margin: 3px 3px 3px 0px;
+    display: inline-block;
+    text-align: right;
+}
+div.image > a{
+    width:90px;
+    height:90px;
+    display:block;
+}
+div.image i{
+    position: absolute;
+    color: rgb(235, 100, 100);
+    margin-left: -11px;
+}
+table.parameter tr td{
+    vertical-align: top;
+}
+table.parameter tr:nth-child(1) td:last-child{
+    display: flex;
+}
+table.parameter tr:nth-child(1) td:nth-child(2){
+    width: 100%;
+}
+.parameter-name {
+    display:inline-block;
+}
+@media (max-width: 700px) {
+    .parameter-name {
+        display: none;
+    }
+}

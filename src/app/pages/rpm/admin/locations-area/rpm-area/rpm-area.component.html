@@ -1,0 +1,115 @@
+<h1 class="page-header">Расположения</h1>
+<div>
+  <button class="btn btn-primary btn-sm" (click)="toggleForm()" *ngIf="auth.isInRole('Admin,RpmAdmin')">Добавить объект</button>
+
+  <input type="text" class="form-control pull-right" [(ngModel)]="searchTxt" (keyup)="getObjects()" style="width: 300px" placeholder="Поиск"
+  />
+  <div class="col-sm-3 pull-right">
+    <select [(ngModel)]="sortType" class="form-control" (change)="getObjects()">
+      <option value="1">По дате (по возрастанию)</option>
+      <option value="2">По дате (по убыванию)</option>
+      <option value="3">По наименованию (по возрастанию)</option>
+      <option value="4">По наименованию (по убыванию)</option>
+    </select>
+  </div>
+  <br/>
+  <br/>
+  <br/>
+</div>
+
+<div class="row" *ngIf="visableAddObject">
+  <div class="col-md-6">
+    <div class="panel">
+      <div class="panel-body">
+        <form [formGroup]="objectForm" novalidate>
+          <fieldset>
+            <legend>Добавление объекта</legend>
+            <div class="alert alert-danger" *ngIf="objectForm.controls['nameObject'].invalid && objectForm.controls['nameObject'].touched">
+              Вы не ввели наименование объекта
+            </div>
+            <div class="alert alert-danger" *ngIf="objectForm.controls['llc'].invalid">
+              Вы не выбрали сервисную службу из списка
+            </div>
+            <div class="form-group">
+              <label>Сервисная служба</label>
+              <select class="form-control" [(ngModel)]="llc" name="llc" formControlName="llc">
+                <ng-container *ngFor="let l of (llcList|async)">
+                  <option [value]="l.id">{{l.name}}</option>
+                </ng-container>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="nameObject">Наименование объекта</label>
+              <input type="text" class="form-control" placeholder="Наименование объекта" [(ngModel)]="nameObject" name="nameObject" formControlName="nameObject">
+            </div>
+            <!--div class="form-group">
+              <div class="alert alert-danger" *ngIf="objectForm.controls['descObject'].invalid && objectForm.controls['descObject'].touched">
+                Вы не ввели описание объекта
+              </div>
+              <label for="descObject">Описание объекта</label>
+              <textarea class="form-control summernote" id="descObject" ([ngModel])="descObject" #descObject formControlName="descObject"></textarea>s
+            </div-->
+            <button type="button" class="btn btn-sm btn-primary m-r-5" (click)="addObject(llc, nameObject,'')" [disabled]="!objectForm.valid || statusClickSave == true">Сохранить</button>
+          </fieldset>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-4" *ngFor="let o of (rpmObject|async)">
+        <div class="panel panel-inverse" data-sortable-id="index-1">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <i class="fa fa-home"></i> {{o.name}}
+              <button class="btn btn-danger btn-icon btn-circle btn-sm pull-right" title="Удалить объект" (click)="removeArea(o.id,o.name)">
+                <i class="fa fa-remove"></i>
+              </button>
+            </h4>
+          </div>
+          <div  style="cursor:pointer" [routerLink]="['/rpm/admin/locations', o?.id]">
+            <div *ngIf="o.photoUrl==null" style="background-image: url('/assets/img/no-photo.jpg');
+          height: 150px;  
+          overflow: hidden;  
+          background-size: cover;">
+
+            </div>
+            <div *ngIf="o.photoUrl!=null" style="
+         width: 100%;
+         height: 150px;  
+         overflow: hidden;  
+         background-size: cover;">
+              <img src="{{o.photoUrl}}" style="width: 100%" />
+            </div>
+            <div class="list-group">
+              <a class="list-group-item list-group-item-inverse text-ellipsis">
+                <span class="badge">
+                  <u>{{o.status.name}}</u>
+                </span>
+                Статус:
+              </a>
+              <a class="list-group-item list-group-item-inverse text-ellipsis">
+                <span class="badge">
+                  <ng-container *ngIf="o.descr == ''">
+                    0
+                  </ng-container>
+
+                  <ng-container *ngIf="o.descr != ''">
+                    <u>{{o.descr}}
+                      <span style="color:yellow" *ngIf="o.newDescr != 0">/ {{o.newDescr}} новых</span>
+                    </u>
+                  </ng-container>
+                </span>
+                Замечаний:
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>

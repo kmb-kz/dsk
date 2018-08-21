@@ -1,0 +1,124 @@
+<h5 *ngIf="partner!=null">{{partner[0]?.bin}} - {{partner[0]?.name}}</h5>
+<p-dataTable [value]="contracts" selectionMode="single" [(selection)]="selected" [paginator]="true" rows="20" [responsive]="true">
+  <p-header>
+    <div class="ui-helper-clearfix" style="width:100%">
+      <button type="button" pButton icon="" style="float:left" [routerLink]="['/cns/partner']" label="Назад"></button>
+     
+      <button type="button" pButton icon="fa-plus" style="float:left" (click)="showAddDialog()" label="Добавить"></button>
+      <button type="button" pButton icon="fa-plus" style="float:left" *ngIf="selected" (click)="showEditDialog()" label="Редактировать"></button>
+      <!--<button type="button" pButton icon="fa-list" style="float:left" *ngIf="selected" (click)="showDialogStages(true)" label="Разбить по этапам"></button> -->
+      <button type="button" pButton icon="fa-list" style="float:left" *ngIf="selected" [routerLink]="['/cns/contractconstructives', selected?.id]"
+        label="Конструктивы"></button>
+
+    </div>
+
+  </p-header>
+
+  <p-column field="number" header="Номер" [sortable]="true"></p-column>
+  <p-column field="descr" header="Наименование работы" [sortable]="true"></p-column>
+  <p-column field="volume" header="Объем" [sortable]="true"><span>(м<sup>2</sup>)</span></p-column>
+  <p-column field="dateStart" header="Дата начала" [sortable]="true"></p-column>
+  <p-column field="dateFinish" header="Дата окончания" [sortable]="true"></p-column>
+</p-dataTable>
+
+<p-dialog header="Добавление договора" [(visible)]="showAddDialogFlag" [responsive]="true" showEffect="fade" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12" padding="2">
+      </div>
+      <div class="ui-grid-col-4" padding="2" data-width="200">
+      </div>
+
+    </div>
+
+  </div>
+
+  <br/>
+  <br/>
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label for="firstName">Номер</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input type="text" [(ngModel)]="newContract.number" />
+      </div>
+    </div>
+    <div class="ui-grid-row">
+        <div class="ui-grid-col-4">
+          <label>Наименование работы</label>
+        </div>
+        <div class="ui-grid-col-8">
+          <input type="text" [(ngModel)]="newContract.descr" />
+        </div>
+      </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label for="lastName">Расположение</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <select class="form-control" [(ngModel)]="newContract.areaPartId">
+          <ng-container *ngFor="let a of (areas | async)">
+            <option style="font-weight:bold" disabled [value]="a.id">{{a.name}}</option>
+            <ng-container *ngFor="let child of a.areaParts">
+              <option [value]="child.id">- {{child.name}}</option>
+            </ng-container>
+          </ng-container>
+        </select>
+      </div>
+    </div>
+
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label>Объем (м^2)</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input pInputText [(ngModel)]="newContract.volume" />
+      </div>
+    </div>
+    <!-- <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label>Стоимость</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input pInputText [(ngModel)]="newContract.price" />
+      </div>
+    </div> -->
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label>Дата начала</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input type="date" [(ngModel)]="newContract.dateStart"/>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        <label>Дата окончания</label>
+      </div>
+      <div class="ui-grid-col-8">
+        <input type="date" [(ngModel)]="newContract.dateFinish"/>
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="hideAddDialog()" label="Закрыть"></button>
+      <button type="button" pButton icon="fa-check" (click)="add()" label="Сохранить"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+
+<p-dialog header="Разбивка объема по этапам" [(visible)]="dialogFlagStages" [responsive]="true" showEffect="fade" [modal]="true"
+  minWidth="400" closable="true">
+
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <app-cns-contract-stages *ngIf="selected" [contractId]="selected.id"></app-cns-contract-stages>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-helper-clearfix">
+      <button type="button" pButton icon="fa-close" (click)="showDialogStages(false)" label="Закрыть"></button>
+    </div>
+  </p-footer>
+</p-dialog>

@@ -1,0 +1,44 @@
+<div class="col-md-12 infoCheck" id="infoCheck_{{groupFancy}}">
+  <div class="row">
+    <div class="col-md-12" *ngIf="(commentText != null) && (commentText != '')">
+      <b>Комментарий</b>
+      <ul class="chats">
+        <li class="right">
+          <div class="message">
+            {{commentText}}
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-12" *ngIf="photos?.length > 0">
+      <label>
+        <b>Фото:</b>
+      </label>
+      <div class="row">
+        <div class="scroll-block">
+          <div class="col-xs-3" *ngFor="let p of photos; let i=index" id="p_{{p.id}}">
+            <div class="thumbnail" style="text-align: center;">
+              <div *ngIf="auth.isInRole('PpoInspector') || auth.isInRole('Okk') || auth.isInRole('Admin') || auth.isInRole('PpoAdmin')  && statusId == 1  ">
+                <a href="javascript:" (click)="modalPhoto(p.id)">Сменить каринку </a>
+                <!--a href="javascript:" (click)="removePicture(p.id)" class="pull-right">Удалить</a-->
+              </div>
+              <a href="{{p.url}}" [attr.data-caption]="nameCheckList" [attr.data-fancybox]="groupFancy">
+                <img [src]="p.url" alt="" class="img-responsive" style="min-height: 100px" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-qc-modal [visible]="displayCheckPhoto" [header]="'Сменить картинку'" (hide)="hideCheckDialogPhoto()">
+  <h5>Файлы</h5>
+  <app-files [(ngModel)]="photo" name="files"></app-files>
+  <button class="btn btn-primary" (click)="changePhoto()" >
+    <i class="fa fa-save"></i> Сохранить</button>
+  <button type="button" class="btn btn-primary" (click)="displayCheckPhoto=false">
+    <i class="fa fa-close"></i>
+    Отменить
+  </button>
+</app-qc-modal>

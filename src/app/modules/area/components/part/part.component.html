@@ -1,0 +1,46 @@
+<button (click)='adding = true;' class='btn btn-primary'>Добавить</button>
+<app-module-buttons [part]='state.Part'></app-module-buttons>
+<div class="row">
+  <div class="part col-xs-6 col-sm-4 col-md-3" *ngFor="let part of parts; let i = index">
+    <div class="widget widget-stats bg-green">
+      <div class="stats-icon stats-icon-lg">
+        <i class="fa fa-building fa-fw"></i>
+      </div>
+      <div class="stats-title">
+        <span (click)='state.Part = part' [routerLink]='["../", part.id]'>
+          {{part.typeName}}</span>
+        <ng-container *ngIf='auth.isInRole("cnsAdmin")'>
+          <button click-stop-propagation class="btn btn-danger btn-icon btn-circle btn-sm pull-right" (click)='deletePart(part, i)'>
+            <i class="fa fa-remove"></i>
+          </button>
+          <button click-stop-propagation class="btn btn-warning btn-icon btn-circle btn-sm pull-right m-r-5" (click)='editing = part'>
+            <i class="fa fa-pencil"></i>
+          </button>
+        </ng-container>
+      </div>
+      <div class="stats-number">
+        <span (click)='state.Part = part' [routerLink]='["../", part.id]'>
+          {{part.name}}</span>
+      </div>
+      <div class="stats-progress progress">
+        <div class="progress-bar" style="width: 100%;"></div>
+      </div>
+      <div class="stats-desc">
+        <div class="col-xs-6">Отмечено</div>
+        <div class="col-xs-6">
+          <b>{{part.notMatches || 0}}</b>
+        </div>
+        <div class="col-xs-6">В работе</div>
+        <div class="col-xs-6">
+          <b>{{part.notMatches - part.fixed || 0}}</b>
+        </div>
+        <div class="col-xs-6">Исполнено</div>
+        <div class="col-xs-6">
+          <b>{{part.fixed || 0}}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-add-part (submit)='addPart($event)' (cancel)='adding = false;' *ngIf="adding"></app-add-part>
+<app-edit-part (submit)='editPart($event)' (cancel)='editing = null;' *ngIf="editing"></app-edit-part>

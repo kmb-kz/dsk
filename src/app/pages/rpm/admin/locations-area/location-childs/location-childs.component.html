@@ -1,0 +1,6 @@
+<h1 class="page-header">
+    <a [routerLink]='["/rpm/admin/locations/",model.Id]'>
+        <i class="fa fa-home"></i> {{(model.Area | async)?.name}}
+    </a>
+</h1>
+<router-outlet></router-outlet>

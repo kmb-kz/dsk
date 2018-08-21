@@ -1,0 +1,66 @@
+.ppo-note{
+    background: #E4E7E8;
+}
+.timeline {
+    padding-left: 10px;
+}
+.timeline .timeline-time{
+    width: auto !important;
+}
+.timeline .timeline-icon{
+    left: 30px !important; 
+}
+
+.timeline .timeline-body{
+    margin-left: 120px !important; 
+    padding: 5px 20px;
+    margin-right: 0px;
+}
+.timeline-header{
+    padding-bottom: 5px; 
+}
+
+.timeline-header .username, .timeline-header .username a{
+    color: #2D353C;
+}
+.timeline-header .username {
+    font-size: 14px;
+}
+.timeline-content+.timeline-footer, .timeline-header+.timeline-content, .timeline-header+.timeline-footer{
+    margin-top: 5px;
+}
+.timeline-content{
+    font-size: 12px;
+}
+.timeline .timeline-icon a{
+    width: 35px; 
+    height: 35px;
+    line-height: 35px;
+    border: 2px;
+}
+.timeline .timeline-time .time{
+    font-size: 14px;
+}
+.timeline>li+li{
+    margin-top: 10px;
+}
+h5 {
+    margin-bottom: 5px;
+}
+.timeline:before{
+    width: 3px; 
+    left: 118px;
+}
+.capital::first-letter {
+    text-transform: uppercase;
+}
+
+@media (max-width: 767px){
+    .timeline .timeline-time {
+        right: 50%;
+        left: 0;
+        width: auto;
+        margin-right: 40px;
+        padding-top: 5px;
+    }
+}

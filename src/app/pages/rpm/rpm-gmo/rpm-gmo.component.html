@@ -1,0 +1,333 @@
+<h1 class="page-header">Главная страница ГМО</h1>
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <div class="panel panel-inverse" data-sortable-id="ui-widget-1">
+      <div class="panel-heading">
+        <div class="panel-heading-btn">
+          <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+            <i class="fa fa-minus"></i>
+          </a>
+        </div>
+        <h4 class="panel-title">Группа А (Все критичные замечания и Не закрытые замечания)</h4>
+      </div>
+      <div class="panel-body">
+        <div class="">
+          <ul class="result-list">
+              <table class="table  table-stripped table-hover table-bordered">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>ЖК</th>
+                      <th>Путь</th>
+                      <th>Фото</th>
+                      <th>Конструктив</th>  
+                      <th>Степень</th>  
+                      <th>Вид замечание</th>  
+                      <th>Текущий статус</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let r of remarksA;let i = index">
+                      <tr>
+                        <td>{{i+1}}</td>
+                        <td> <a [routerLink]="['/rpm/object/remark/',r.checkListItemId]">{{r.areaName}}</a></td>
+                        <td>{{r.locationPart}}</td>
+                        <td>{{r.photoUrl}}</td>
+                        <td>{{r.constructiveName}}</td>
+                        <td>{{r.criticalName}}</td>
+                        <td>{{r.remarkType}}</td>
+                        <td>{{r.lastStatus}}</td>
+                      </tr>
+            
+                    </ng-container>
+                  </tbody>
+                </table>
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-inverse" data-sortable-id="ui-widget-2">
+        <div class="panel-heading">
+          <div class="panel-heading-btn">
+            <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+              <i class="fa fa-minus"></i>
+            </a>
+          </div>
+          <h4 class="panel-title">Группа B (Все новые замечания в статусе: выявлено ИК и Не просроченные)</h4>
+        </div>
+        <div class="panel-body">
+          <div class="">
+            <ul class="result-list">
+                <table class="table  table-stripped table-hover table-bordered">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>ЖК</th>
+                        <th>Путь</th>
+                        <th>Фото</th>
+                        <th>Конструктив</th>  
+                        <th>Степень</th>  
+                        <th>Вид замечание</th>  
+                        <th>Текущий статус</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container *ngFor="let r of remarksB;let i = index">
+                        <tr>
+                          <td>{{i+1}}</td>
+                          <td><a [routerLink]="['/rpm/object/remark/',r.checkListItemId]">{{r.areaName}}</a></td>
+                          <td>{{r.locationPart}}</td>
+                          <td></td>
+                          <td>{{r.constructiveName}}</td>
+                          <td>{{r.criticalName}}</td>
+                          <td>{{r.remarkType}}</td>
+                          <td>{{r.lastStatus}}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table> 
+  
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-inverse" data-sortable-id="ui-widget-3">
+          <div class="panel-heading">
+            <div class="panel-heading-btn">
+              <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+                <i class="fa fa-minus"></i>
+              </a>
+            </div>
+            <h4 class="panel-title">Группа C (Все просроченные замечания МО)</h4>
+          </div>
+          <div class="panel-body">
+            <div class="">
+              <ul class="result-list">
+                  <table class="table  table-stripped table-hover table-bordered">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>ЖК</th>
+                          <th>Путь</th>
+                          <th>Фото</th>
+                          <th>Конструктив</th>  
+                          <th>Степень</th>  
+                          <th>Вид замечание</th>  
+                          <th>Текущий статус</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngFor="let r of remarksC;let i = index">
+                          <tr>
+                            <td>{{i+1}}</td>
+                            <td><a [routerLink]="['/rpm/object/remark/',r.checkListItemId]">{{r.areaName}}</a></td>
+                            <td>{{r.locationPart}}</td>
+                            <td></td>
+                            <td>{{r.constructiveName}}</td>
+                            <td>{{r.criticalName}}</td>
+                            <td>{{r.remarkType}}</td>
+                            <td>{{r.lastStatus}}</td>
+                          </tr>                
+                        </ng-container>
+                      </tbody>
+                    </table>
+    
+    
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-inverse" data-sortable-id="ui-widget-4">
+            <div class="panel-heading">
+              <div class="panel-heading-btn">
+                <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+                  <i class="fa fa-minus"></i>
+                </a>
+              </div>
+              <h4 class="panel-title">Группа D (На исполнении у МО (МО принял) и Все критичные замечания)</h4>
+            </div>
+            <div class="panel-body">
+              <div class="">
+                <ul class="result-list">
+                    <table class="table  table-stripped table-hover table-bordered">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>ЖК</th>
+                            <th>Путь</th>
+                            <th>Фото</th>
+                            <th>Конструктив</th>  
+                            <th>Степень</th>  
+                            <th>Вид замечание</th>  
+                            <th>Текущий статус</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <ng-container *ngFor="let r of remarksD;let i = index">
+                            <tr>
+                              <td>{{i+1}}</td>
+                              <td><a [routerLink]="['/rpm/object/remark/',r.checkListItemId]">{{r.areaName}}</a></td>
+                              <td>{{r.locationPart}}</td>
+                              <td></td>
+                              <td>{{r.constructiveName}}</td>
+                              <td>{{r.criticalName}}</td>
+                              <td>{{r.remarkType}}</td>
+                              <td>{{r.lastStatus}}</td>
+                            </tr>
+                  
+                          </ng-container>
+                        </tbody>
+                      </table>
+      
+      
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-inverse" data-sortable-id="ui-widget-5">
+              <div class="panel-heading">
+                <div class="panel-heading-btn">
+                  <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+                    <i class="fa fa-minus"></i>
+                  </a>
+                </div>
+                <h4 class="panel-title">Группа E (На ревизии у ИК и Все законченные работы МО)</h4>
+              </div>
+              <div class="panel-body">
+                <div class="">
+                  <ul class="result-list">
+                      <table class="table  table-stripped table-hover table-bordered">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>ЖК</th>
+                              <th>Путь</th>
+                              <th>Фото</th>
+                              <th>Конструктив</th>  
+                              <th>Степень</th>  
+                              <th>Вид замечание</th>  
+                              <th>Текущий статус</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <ng-container *ngFor="let r of remarksE;let i = index">
+                              <tr>
+                                <td>{{i+1}}</td>
+                                <td><a [routerLink]="['/rpm/object/remark/',r.checkListItemId]">{{r.areaName}}</a></td>
+                                <td>{{r.locationPart}}</td>
+                                <td></td>
+                                <td>{{r.constructiveName}}</td>
+                                <td>{{r.criticalName}}</td>
+                                <td>{{r.remarkType}}</td>
+                                <td>{{r.lastStatus}}</td>
+                              </tr>
+                    
+                            </ng-container>
+                          </tbody>
+                        </table>
+        
+        
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="panel panel-inverse" data-sortable-id="ui-widget-6">
+                <div class="panel-heading">
+                  <div class="panel-heading-btn">
+                    <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+                      <i class="fa fa-minus"></i>
+                    </a>
+                  </div>
+                  <h4 class="panel-title">Группа F (Все замечания кроме  Закрытыx замечании)</h4>
+                </div>
+                <div class="panel-body">
+                  <div class="">
+                    <ul class="result-list">
+                        <table class="table  table-stripped table-hover table-bordered">
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th>ЖК</th>
+                                <th>Путь</th>
+                                <th>Фото</th>
+                                <th>Конструктив</th>  
+                                <th>Степень</th>  
+                                <th>Вид замечание</th>  
+                                <th>Текущий статус</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <ng-container *ngFor="let r of remarksF;let i = index">
+                                <tr>
+                                  <td>{{i+1}}</td>
+                                  <td><a [routerLink]="['/rpm/object/remark/',r.checkListItemId]">{{r.areaName}}</a></td>
+                                  <td>{{r.locationPart}}</td>
+                                  <td></td>
+                                  <td>{{r.constructiveName}}</td>
+                                  <td>{{r.criticalName}}</td>
+                                  <td>{{r.remarkType}}</td>
+                                  <td>{{r.lastStatus}}</td>
+                                </tr>
+                      
+                              </ng-container>
+                            </tbody>
+                          </table>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-inverse" data-sortable-id="ui-widget-7">
+                  <div class="panel-heading">
+                    <div class="panel-heading-btn">
+                      <a class="btn btn-xs btn-icon btn-circle btn-warning" data-click="panel-collapse" href="javascript:;" title="" data-init="true">
+                        <i class="fa fa-minus"></i>
+                      </a>
+                    </div>
+                    <h4 class="panel-title">Группа G (Закрытые замечания)</h4>
+                  </div>
+                  <div class="panel-body">
+                    <div class="">
+                      <ul class="result-list">
+                          <table class="table  table-stripped table-hover table-bordered">
+                              <thead>
+                                <tr>
+                                  <th>#</th>
+                                  <th>ЖК</th>
+                                  <th>Путь</th>
+                                  <th>Фото</th>
+                                  <th>Конструктив</th>  
+                                  <th>Степень</th>  
+                                  <th>Вид замечание</th>  
+                                  <th>Текущий статус</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <ng-container *ngFor="let r of remarksG;let i = index">
+                                  <tr>
+                                    <td>{{i+1}}</td>
+                                    <td><a [routerLink]="['/rpm/object/remark/',r.checkListItemId]">{{r.areaName}}</a></td>
+                                    <td>{{r.locationPart}}</td>
+                                    <td></td>
+                                    <td>{{r.constructiveName}}</td>
+                                    <td>{{r.criticalName}}</td>
+                                    <td>{{r.remarkType}}</td>
+                                    <td>{{r.lastStatus}}</td>
+                                  </tr>
+                        
+                                </ng-container>
+                              </tbody>
+                            </table>
+            
+            
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+    
+
+  </div>
+</div>

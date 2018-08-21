@@ -1,0 +1,22 @@
+<div class="col-md-12 col-sm-12">
+  <table class="table  table-stripped table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>ЖК</th>
+        <th>Путь</th>
+        <th>Расположение</th>
+        <th>Конструктив</th>        
+        <th>Вид замечание</th>        
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of remarkCriticales">
+        <td>{{r.areaName}}</td>
+        <td>{{r.locationPart}}</td>
+        <td>{{r.partName}}</td>
+        <td>{{r.constructiveName}}</td>
+        <td>{{r.remarkType}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

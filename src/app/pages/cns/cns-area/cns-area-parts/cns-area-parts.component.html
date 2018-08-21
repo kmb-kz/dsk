@@ -1,0 +1,24 @@
+<div class="row m-b-10">
+  <div class="col-md-2">
+    <!--<small>Руководитель проекта</small>
+    <br> Айтказин А.-->
+  </div>
+  <div class="col-md-2">
+    <!--<small>Начальник участка</small>
+    <br> Арбабаев Э.-->
+  </div> 
+  <div class="col-md-1 pull-right">
+    <small>Несоответсвий</small>
+    <br> {{statistics.fixed}}
+  </div>
+  <div class="col-md-1 pull-right">
+    <small>В работе</small>
+    <br> {{statistics.notMatches - statistics.fixed}}
+  </div>
+  <div class="col-md-1 pull-right">
+    <small>Отмечено</small>
+    <br> {{statistics.notMatches}}
+  </div>
+</div>
+<a [routerLink]="['answers']" class="btn btn-warning m-b-10">Список последних замечаний</a>
+<app-cns-area-part-list [parts]='parts'></app-cns-area-part-list>

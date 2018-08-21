@@ -1,0 +1,15 @@
+<br>
+<a [routerLink]='["visit"]' class="btn btn-primary m-r-5 m-b-10">
+  <i class="fa fa-list-ol"></i> Журнал посещений
+</a>
+<a *ngIf='auth.isInRole("cnsAdmin")' class="btn btn-primary m-r-5 m-b-10" [routerLink]='["../","scheme"]'>
+  <i class="fa fa-plus"></i> Добавить схему
+</a>
+<a *ngFor='let scheme of (schemes|async)' class="btn btn-white m-r-5 m-b-10" [routerLink]='["../", scheme.id]'>
+  <i class="fa fa-crop"></i> {{scheme.title}}
+  <ng-container *ngIf='scheme.notMatches > 0'>
+    :
+    <span class="text-danger">{{scheme.notMatches - scheme.fixed}}</span>/{{scheme.notMatches}}
+  </ng-container>
+</a>
+<app-cns-area-part-list [parts]='children'></app-cns-area-part-list>

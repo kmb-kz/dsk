@@ -1,0 +1,22 @@
+<select style="width:auto;" class="form-control m-b-10" (change)='areaSelected()' [(ngModel)]='areaId'>
+  <option value=''>Все</option>
+  <option *ngFor="let area of (areas|async)" value='{{area.id}}'>{{area.name}}</option>
+</select>
+<ul class="nav nav-pills">
+  <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }">
+    <a [routerLink]='["/cns/stats"]'>
+      <span>Расположение</span>
+    </a>
+  </li>
+  <li [routerLinkActive]="['active']">
+    <a [routerLink]="['/cns/stats/partners']">
+      <span>У подрядчиков</span>
+    </a>
+  </li>
+  <li [routerLinkActive]="['active']">
+    <a [routerLink]="['/cns/stats/constructive']">
+      <span>По точкам</span>
+    </a>
+  </li>
+</ul>
+<router-outlet></router-outlet>

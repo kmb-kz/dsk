@@ -1,0 +1,11 @@
+<div class="flex column">
+  <div class="flex">
+    <div class="full">
+      {{standard.title}}
+    </div>
+    <div>
+
+    </div>
+  </div>
+  <app-parameter [parameter]='parameter' *ngFor="let parameter of standard.parameters"></app-parameter>
+</div>

@@ -1,0 +1,100 @@
+<h1 class="page-header">Проекты</h1>
+<!--div class="alert alert-success fade in m-b-15">
+  В этом разделе вы можете просмотрать данные о всех объектах
+</div-->
+<div class="row">
+  <div class="col-md-12 col-xs-12 m-b-10">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-5">
+        <div class="row">
+          <div class="col-xs-12 col-md-12 col-sm-12">
+            <button class="btn btn-primary btn-sm hidden-xs" (click)="toggleForm()" *ngIf="auth.isInRole('Admin,PpoAdmin,Okk')">Добавить объект</button>
+            <button class="btn btn-primary btn-block visible-xs-block" (click)="toggleForm()" *ngIf="auth.isInRole('Admin,PpoAdmin,Okk')">Добавить объект</button>
+          </div>
+        </div>
+      </div>
+      <div class="m-xs-b-5"></div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-md-offset-2 col-lg-4 col-lg-offset-3">
+        <input type="text" class="form-control pull-right" [(ngModel)]="searchTxt" (keyup)="getObjects()" placeholder="Поиск" />
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="row" *ngIf="visableAddObject">
+  <div class="col-md-6">
+    <div class="panel">
+      <div class="panel-body">
+        <form [formGroup]="objectForm" novalidate>
+          <fieldset>
+            <legend>Добавление проекта</legend>
+            <div class="alert alert-danger" *ngIf="objectForm.controls['nameObject'].invalid && objectForm.controls['nameObject'].touched">
+              Вы не ввели наименование проекта
+            </div>
+            <div class="form-group">
+              <label for="nameObject">Наименование проекта</label>
+              <input type="text" class="form-control" id="nameObject" placeholder="Наименование объекта" ([ngModel])="nameObject" #nameObject
+                formControlName="nameObject">
+            </div>
+
+            <button type="button" class="btn btn-sm btn-primary m-r-5" (click)="addObject(nameObject.value)" [disabled]="!objectForm.valid">Сохранить</button>
+          </fieldset>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div *ngFor="let o of objectList">
+    <div class="col-md-4 ui-sortable">
+      <div class="panel panel-inverse" data-sortable-id="index-1">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <i class="fa fa-home"></i> {{o.name}}
+            <button class="btn btn-danger btn-icon btn-circle btn-sm pull-right" title="Удалить проект" *ngIf="auth.isInRole('Admin,PpoAdmin')"
+              (click)="removeArea(o?.id,o?.name)">
+              <i class="fa fa-remove"></i>
+            </button>
+          </h4>
+        </div>
+        <div style="cursor:pointer" [routerLink]="['/ppo/object/detail', o?.id]">
+          <div *ngIf="o.photoUrl==null" style="background-image: url('/assets/img/no-photo.jpg');
+            height: 150px;  
+            overflow: hidden;  
+            background-size: cover;">
+
+          </div>
+          <div *ngIf="o.photoUrl!=null" style="
+            width: 100%;
+            height: 150px;  
+            overflow: hidden;  
+            background-size: cover;">
+            <img src="{{o.photoUrl}}" style="width: 100%" />
+
+          </div>
+          <div class="list-group">
+            <a class="list-group-item list-group-item-inverse text-ellipsis">
+              <span class="badge badge-success">
+                <span *ngIf="o?.rkAudit?.dateCreated"> {{o.rkAudit?.dateAudit | date:'dd.MM.yyyy'}}</span>
+                <span *ngIf="!o?.rkAudit?.dateCreated"> -</span>
+              </span>
+              Последняя РК
+            </a>
+            <a class="list-group-item list-group-item-inverse text-ellipsis">
+              <span class="badge badge-primary">
+                <span *ngIf="o.pkAudits?.dateCreated"> {{o.pkAudits?.dateAudit | date:'dd.MM.yyyy'}}</span>
+                <span *ngIf="!o.pkAudits?.dateCreated"> -</span>
+              </span>
+              Последняя ПК
+            </a>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

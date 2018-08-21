@@ -1,0 +1,121 @@
+<!-- begin #header -->
+<div id="header" class="header navbar navbar-default navbar-fixed-top">
+    <!-- begin container-fluid -->
+    <div class="container-fluid">
+        <!-- begin mobile sidebar expand / collapse button -->
+        <div class="navbar-header" style="width: 100%;">
+            <button type="button" class="navbar-toggle" data-click="sidebar-toggled" [ngClass]="{'pull-left':page_with_two_sidebar}">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <button *ngIf="this.page_with_two_sidebar" type="button" class="navbar-toggle pull-right" data-click="right-sidebar-toggled">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a routerLink="/" class="navbar-brand">Контроль качества</a>
+            <button *ngIf="this.page_with_mega_menu" type="button" class="navbar-toggle p-0 m-r-5" data-toggle="collapse" data-target="#top-navbar">
+                <span class="fa-stack fa-lg text-inverse">
+                    <i class="fa fa-square-o fa-stack-2x m-t-2"></i>
+                    <i class="fa fa-cog fa-stack-1x"></i>
+                </span>
+            </button>
+            <ul class="nav navbar-nav navbar-right" style="display: inline">
+                <li class="dropdown">
+                  <a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
+                    <i class="fa fa-bell-o"></i>
+                    <span class="label">{{cntNotification}}</span>
+                  </a>
+                  <ul class="dropdown-menu media-list pull-right animated fadeInDown" style='min-width: 450px'>
+                    <li class="dropdown-header">Уведомлений ({{cntNotification}})</li>
+                    <li class="media notificationMess" *ngFor="let rec of notitifications">
+                      <a href="javascript:;" style='white-space: initial' data-toggle="modal" data-target="#modalShowNotifications" 
+                      (click)="selNotificationCL(rec)" *ngIf="!rec.isOpened">
+                        <div class="media-left">
+                          <i class="fa fa-envelope media-object bg-blue"></i>
+                        </div>
+                        <div class="media-body" style="">
+                          <div class="media-heading media-heading-body" innerHtml="{{rec.body}}"> </div>
+                          <div class="text-muted f-s-11">{{rec.dateCreated | date: 'dd-MM-yyyy HH:mm:ss'}}</div>
+                        </div>
+                      </a>
+                    </li>
+      
+                    <li class="dropdown-footer text-center">
+                      <a href="javascript:;" data-toggle="modal" data-target="#modalShowAllNotifications">Показать больше</a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="dropdown navbar-user">
+                      <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                          <span class="hidden-xs">{{userName}}</span>
+                          <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu animated fadeInLeft">
+                          <li class="arrow"></li>
+                          <li>
+                              <a  [routerLink]="['/profile']">Изменить профиль</a>
+                          </li>
+                       
+                          <li class="divider"></li>
+                          <li>
+                              <a href="javascript:;" (click)='logout()'>Выйти</a>
+                          </li>
+                      </ul>
+                  </li>
+              </ul>
+        </div>
+        <!-- end mobile sidebar expand / collapse button -->
+
+
+        <!-- begin header navigation right -->
+       
+        <!-- end header navigation right -->
+    </div>
+    <!-- end container-fluid -->
+</div>
+<!-- end #header -->
+
+<div class="modal inmodal" id="modalShowNotifications" tabindex="-1" role="dialog" aria-hidden="true" [ngStyle]="{'display':displayAddLeader}">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left" >{{selectNotification.title}}</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+          <p class="list-group-item-text" innerHtml = {{selectNotification.body}}></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal" id="modalShowAllNotifications" tabindex="0" role="dialog" aria-hidden="true" [ngStyle]="{'display':displayAddLeader}">
+  <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+      <div class="modal-header">
+        <h3 style="float:left" >Все уведомления</h3>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">×</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+
+        <div class="list-group">
+          <a href="javascript:;"  class="list-group-item" *ngFor="let rec of notitifications" (click)="selNotificationInAll(rec)">
+            <h4 class="list-group-item-heading">{{rec.title}}</h4>
+            <p class="list-group-item-text" innerHtml = {{rec.body}}></p>
+            <p></p>
+            <p class="list-group-item-text">({{rec.dateCreated | date: 'dd-MM-yyyy HH:mm:ss'}})</p>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

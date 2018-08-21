@@ -1,0 +1,379 @@
+/* You can add global styles to this file, and also import other style files */
+
+body {
+  background: white !important;
+}
+
+
+.logo-new {
+  text-align: center;
+  padding-top: 50px;
+}
+
+.welcome-text {
+  padding-left: 30%;
+  padding-top: 50px;
+}
+
+.filter-container {
+  top: 95px;
+  left: 0px;
+  background: #ffffff;
+  padding: 10px;
+  margin: 0 auto;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.infoCheck {
+  color: #000000;
+  padding-top: 20px;
+}
+
+.note {
+  margin-bottom: 5px;
+  border-bottom: 1px solid #E2E7EB;
+  border-right: 1px solid #E2E7EB;
+  border-top: 1px solid #E2E7EB;
+  background: white;
+}
+
+.remark-text {
+  color: black;
+}
+
+.remark-status {
+  color: black
+}
+
+.comment-container {
+  border-left: 1px solid #E2E7EB;
+  min-height: 15px;
+}
+
+.a-more,
+.a-more:hover {
+  color: gray;
+  text-decoration: none;
+}
+
+.panel {
+  margin-bottom: 5px;
+  box-shadow: 2px 2px 7px grey;
+}
+
+.navbar.navbar-default {
+  background: #283E4A;
+  color: white;
+}
+
+.navbar.navbar-default a {
+  color: white !important;
+}
+
+.btn-primary {
+  background: #507299 !important;
+  border: white !important;
+}
+
+.btn-xs {
+  height: 20px !important;
+}
+
+.btn-icon.btn-xs {
+  height: 16px !important;
+}
+
+.btn-primary:hover {
+  background: #5c7ea5 !important;
+}
+
+.panel-primary>.panel-heading {
+  background: #507299 !important;
+  border: #004A92 !important;
+}
+
+.alert-success {
+  background: #00ACAC !important;
+  color: #00ACAC !important;
+  color: white !important;
+}
+
+.alert-danger {
+  background: #c57272 !important;
+  color: white !important;
+}
+
+.navbar.navbar-inverse .navbar-brand,
+.sidebar .nav>li.active>a,
+.sidebar .nav>li.active>a:focus,
+.sidebar .nav>li.active>a:hover,
+.page-sidebar-minified .sidebar .nav>li.has-sub.active:focus>a,
+.page-sidebar-minified .sidebar .nav>li.has-sub.active:hover>a,
+.page-sidebar-minified .sidebar .nav>li.has-sub.active>a,
+.label.label-theme,
+.btn.btn-scroll-to-top {
+  background: #507299 !important;
+}
+
+.text-theme,
+.sidebar .sub-menu>li.active>a:before {
+  color: #507299 !important;
+}
+
+.filter-container {
+  background: #cdd3d6;
+}
+
+.panel-body {
+  background: white;
+  border: 1px solid #cdd3d6;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.navbar-nav>li>.dropdown-menu {
+  background: #283E4A !important
+}
+
+.navbar-nav>li>.dropdown-menu a:hover {
+  background: #1A2229 !important
+}
+
+.table {
+  background: white;
+}
+
+.thumbnail {
+  border: none;
+}
+
+.scroll-block {
+  max-height: 150px !important;
+  overflow: auto;
+  position: relative;
+  height: 150px;
+}
+
+.object-item {
+  min-height: 70px !important;
+}
+
+.object-item-a,
+.object-item-a:hover {
+  text-decoration: none !important;
+}
+
+.object-item-a:hover .object-item {
+  background: #5c7ea5;
+}
+
+.object-item {
+  min-height: 140px;
+  border: 1px solid #507299;
+  box-shadow: 2px 2px 2px #888888;
+  background: #507299;
+  color: white;
+  padding: 10px;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+a.active {
+  color: inherit;
+  pointer-events: none;
+  text-decoration: none;
+  cursor: default;
+}
+
+a.object-item {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.result-list .btn-row a {
+  color: white !important;
+}
+
+.list-group-item-primary,
+.list-group-item-primary:hover {
+  background: #507299 !important;
+}
+
+.forms-or {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.form-or {
+  display: flex;
+  align-items: center;
+  height: 2em;
+  font-size: 14px;
+  font-weight: bolder;
+  padding-left: 37%
+}
+
+.bor {
+  vertical-align: middle;
+  display: inline-block;
+  border-right: 1px solid #000;
+  display: table-cell;
+  width: 2.2%;
+  height: 83px;
+}
+
+/*Мешает для календаря белый фон*/
+
+/* .ui-widget-content a {
+    color: white !important;
+} */
+
+.fc-event-container {
+  text-align: center !important;
+}
+
+.fc-title {
+  font-size: 10px !important;
+}
+
+.toPage {
+  color: white;
+  font-weight: bolder;
+  text-decoration: none;
+}
+
+.toPage:hover {
+  color: white;
+}
+
+.notificationMess {
+  background: #fff;
+}
+
+.navbar-nav>li>.dropdown-menu>.notificationMess a:hover {
+  background: #eeeeee !important;
+}
+
+.standard-item {
+  border-bottom: 1px solid #283E4A;
+  padding: 5px;
+}
+
+.standard-item:hover,
+.standard-item-active {
+  background: #c7cfd8;
+  cursor: pointer;
+}
+
+.standard-item-number {
+  font-weight: bold;
+}
+
+.standard-image {
+  float: left;
+  overflow: hidden;
+  max-width: 200px;
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid #c7cfd8;
+}
+
+.standard-image img {
+  max-width: 190px;
+  max-height: 190px;
+}
+
+.filter {
+  padding-left: 0px;
+}
+
+/*.filter select, 
+.filter input,
+.filter .btn {
+    height: 27px;
+    padding: 3px;
+    max-width: 150px;
+}  */
+
+.areas-by-standard {
+  margin-bottom: 10px;
+}
+
+.standard-item-title {
+  color: #507299;
+  font-weight: bold;
+}
+
+.standards-container {
+  max-height: 400px;
+  overflow: auto;
+}
+
+.standard-item-labels,
+.standard-item-constructive {
+  text-align: right;
+  color: gray;
+}
+
+.standard-item-constructive span {
+  color: gray;
+}
+
+.header.nav::after,
+.header.navbar-header::after,
+.navbar::before {
+  display: inline !important;
+}
+
+@media (max-width: 767px) {
+  /* .page-header-fixed{
+        padding-top: 30px !important;
+    }*/
+  .login.login-v2 {
+    margin: 168px 0 0 0 !important;
+    width: 100%;
+  }
+}
+
+.equal,
+.equal>div[class*='col-'] {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  flex: 1 0 auto;
+  flex-wrap: wrap;
+}
+
+.tsu-remark {
+  display: block;
+  padding: 16px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.check-comment {
+  width: 100%;
+  height: 80px;
+}
+
+@media print {
+  .more {
+    page-break-after: always;
+  }
+}
+
+.flex {
+  display: flex;
+}
+
+.flex .full {
+  flex: 9999;
+}
+.flex.column{
+  flex-direction: column;
+}

@@ -1,0 +1,42 @@
+
+<div class="col-sm-12" style="margin-left:0px;padding-left:0px;padding-right: 0px; margin-right: 0px;  ">
+  <div class="col-sm-5" style="margin-left:0px;padding-left:0px;">
+    <label>Подрядчик:</label>
+    <br/> {{model.Partner.bin}} - {{model.Partner.name}}</div>
+  <div class="col-sm-4">
+    <label>Договор:</label>
+    <br/>
+    <select [(ngModel)]="contractId" (change)="changeContract()">
+      <option *ngFor="let contract_ of contracts; let i = index; " value="{{contract_.id}}">{{contract_.number}} от {{contract_.dateStart | date: 'dd.MM.yyyy'}}</option>
+    </select>
+  </div>
+  <div class="col-sm-3" style="padding-right: 0px; margin-right: 0px;" *ngIf="auth.isInRole('CnsAdmin,CnsInspector,ProjectManager')">
+    <button class="btn btn-primary" [routerLinkActive]="['active']" [routerLink]='["cert"]' style="width: 100%">
+      Справка
+    </button>
+    <!--br/>
+    <button class="btn btn-primary" style="width: 100%;margin-top: 5px">
+      Акт скрытых работ
+    </button-->
+  </div>
+</div>
+<ng-container *ngIf="model.ConstructiveId">
+  <ul class="nav nav-pills">
+    <li [routerLinkActive]="['active']">
+      <a [routerLink]='["oper"]'>
+        <span>Оперативный учет</span>
+      </a>
+    </li>
+    <li [routerLinkActive]="['active']">
+      <a [routerLink]='["store"]'>
+        <span>Накопитель</span>
+      </a>
+    </li>
+    <li [routerLinkActive]="['active']">
+      <a [routerLink]='["m29"]'>
+        <span>Справка М-29</span>
+      </a>
+    </li>
+  </ul>
+  <router-outlet></router-outlet>
+</ng-container>

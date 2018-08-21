@@ -1,0 +1,32 @@
+<h1 class="page-header">Запросы на замену</h1>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <span class="label label-success m-r-10 pull-left">{{(requests | async)?.total}}</span> Резултаты поиска</h4>
+    </div>
+    <div class="panel-body">
+       
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Дата запроса</th>
+                    <th>Статус</th>
+                    <th>Объект</th>
+                    <th>Стандарт</th>
+                    <th>Предлагаемая версия</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let request of (requests | async)?.results">
+                    <td>{{request.dateRequested}}</td>
+                    <td>{{request.status?.name}}</td>
+                    <td><a [routerLink]="['/std/area/'+request.area.id+'/standard']">{{request.area.name}}</a></td>
+                    <td><a [routerLink]="['/std/area/'+request.area.id+'/standard/'+request.standard.id]">{{request.standard.title}}</a></td>
+                    <td><a [routerLink]="['/std/standard/'+request.standard.id+'/'+request.proposedVersion.id]">Версия от {{request.proposedVersion.dateCreated  | date: 'dd.MM.yyyy'}}</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <app-pagination (change)="loadPage($event)" [page]="lastFilter.page" [size]="lastFilter.size" [total]="lastFilter.total"></app-pagination>
+    </div>
+</div>

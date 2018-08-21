@@ -1,0 +1,94 @@
+<h1 class="page-header" *ngIf="visibleTitle">Корпоративные стандарты</h1>
+<div class="col-sm-12" style="padding-right:0px;padding-left:0px;">
+    <div class="panel panel-primary" data-sortable-id="ui-widget-1">
+
+        <div class="panel-body" style="background:#C7CFD8" *ngIf="visibleFilter">
+            <div class="form-horizontal">
+                <div class="col-md-12 filter">
+                    <input type="text" id="id" [(ngModel)]='filter.number' style="width:90px" placeholder="Номер" style="width: 10%; height: 32px;">
+                    <select id="constructiveId" [(ngModel)]="filter.constructiveId" style="width: 15%; height: 32px;">
+                        <option value="null" selected>Все конструктивы</option>
+                        <ng-container *ngFor="let c of (constructives | async)">
+                            <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+                            <ng-container *ngFor="let child of c.children">
+                                <option [value]="child.id">- {{child.name}}</option>
+                            </ng-container>
+                        </ng-container>
+
+                    </select>
+
+                    <select id="classId" [(ngModel)]="filter.classId" style="width: 15%; height: 32px;" placeholder="Классность">
+                        <option value="null" selected>Все классы</option>
+                        <option *ngFor="let c of (nsi.classes() | async)" [value]="c.id">{{c.name}}</option>
+                    </select>
+                    <select id="groupId" [(ngModel)]="filter.groupId" style="width: 15%; height: 32px;">
+                        <option value="null" selected>Все группы</option>
+                        <option *ngFor="let c of (nsi.groups() | async)" [value]="c.id">{{c.name}}</option>
+                    </select>
+
+                    <select id="areaId" [(ngModel)]="filter.areaId" style="width: 15%; height: 32px;">
+                        <option value="null" selected>Все объекты</option>
+                        <option *ngFor="let c of (areas | async)" [value]="c.id">{{c.name}}</option>
+                    </select>
+
+                    <select id="isConfirmed" [(ngModel)]="filter.isConfirmed" style="width: 10%; height: 32px;">
+                        <option value="null" selected>Не/Утвержденные</option>
+                        <option [value]='true'>Утвержденные</option>
+                        <option [value]='false'>Не утвержденные</option>
+                    </select>
+
+                    <select id="isDeleted" [(ngModel)]="filter.isDeleted" style="width: 10%; height: 32px;">
+                        <option value="null" selected>Не/Удаленные</option>
+                        <option [value]='true'>Удаленные</option>
+                        <option [value]='false'>Не удаленные</option>
+                    </select>
+
+                    <button class="btn btn-success" (click)="search()">Поиск</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-sm-4" style="padding-right:0px;padding-left:0px;">
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <span class="label label-success m-r-10 pull-left">{{(standards | async)?.total}}</span> Стандарты
+                <div class="btn-group pull-right" data-toggle="buttons" style="margin-left: 3px;">
+                    <label class="btn btn-success btn-xs" [routerLink]="['/std/standard/copy']">
+                        <i class="fa fa-copy"></i> Копировать
+                    </label>
+
+                </div>
+                <div class="btn-group pull-right" data-toggle="buttons">
+                    <label class="btn btn-success btn-xs" [routerLink]="['/std/standard/edit/0']">
+                        <i class="fa fa-plus"></i> Добавить
+                    </label>
+
+                </div>
+                <div class="btn-group pull-right" data-toggle="buttons" *ngIf="selectedId!=null">
+                    <label class="btn btn-danger btn-xs" (click)="remove()">
+                        <i class="fa fa-remove"></i> Удалить
+                    </label>
+
+                </div>
+            </h4>
+
+
+        </div>
+        <div class="panel-body standards-container">
+            
+            <app-pagination (change)="loadPage($event)" [page]="lastFilter.page" [size]="lastFilter.size" [total]="lastFilter.total"></app-pagination>
+            <ng-container *ngFor="let std of (standards | async)?.results">
+                <app-standard-item [item]="std" (change)="select($event)"> </app-standard-item>
+            </ng-container>
+
+        </div>
+    </div>
+</div>
+<div class="col-sm-8" style="padding-right:0px;">
+    <app-version-item [id]="selectedId"></app-version-item>
+</div>

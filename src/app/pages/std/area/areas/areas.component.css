@@ -1,0 +1,14 @@
+.object-item{
+    min-height: 140px;
+    border: 1px solid #507299;
+    box-shadow: 2px 2px 2px #888888;
+    background: #507299;
+    color: white;   
+    padding: 10px;    
+    margin-right: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+a.object-item{
+    text-decoration: none !important;
+}

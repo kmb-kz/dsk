@@ -1,0 +1,40 @@
+<h4>Копирование показателей</h4>
+
+<div class="form-group">
+    <label class="col-md-3 control-label">Группа</label>
+    <div class="col-md-9">
+      <select class="form-control" [(ngModel)]="groupId">
+        <option *ngFor="let c of (groups | async)" [selected]='index == 0' [value]="c.id">{{c.name}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+      <label class="col-md-3 control-label">Конструктив (источник)</label>
+      <div class="col-md-9">
+        <select class="form-control" [(ngModel)]="srcConstructiveId">
+          <ng-container *ngFor="let c of (constructives | async)" >
+              <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+              <ng-container *ngFor="let child of c.children">
+                  <option [value]="child.id">-   {{child.name}}</option>    
+              </ng-container>
+          </ng-container>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-md-3 control-label">Конструктив (получатель)</label>
+      <div class="col-md-9">
+        <select class="form-control" [(ngModel)]="destConstructiveId">
+          <ng-container *ngFor="let c of (constructives | async)">
+              <option style="font-weight:bold" [value]="c.id">{{c.name}}</option>
+              <ng-container *ngFor="let child of c.children">
+                  <option [value]="child.id">-   {{child.name}}</option>    
+              </ng-container>
+          </ng-container>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" (click)="copy()">Копировать</button>

@@ -1,0 +1,33 @@
+<h1 class="page-header">Замечания по объекту "{{(area | async)?.name}}"</h1>
+<div class="row">
+  <div class="col-md-12 col-xs-12 col-lg-12">
+    <div class="row">
+      <div class="col-md-3 col-xs-12 ">
+        <a class="btn btn-primary btn-block btn-sm" [routerLink]='["/rpm/object/fix/", areaId]'>
+          <i class="fa fa-send"></i>&nbsp;&nbsp;Перейти фиксированные чек листы
+        </a>
+        <h5>Свободные чек листы</h5>
+        
+        <!--<ng-container *ngIf="auth.isInRole('Inspector,InspectorRpm')">
+            <button class="btn btn-primary btn-block btn-sm" data-toggle="modal" data-target="#modalAddReamrk">
+              <i class="fa fa-send"></i>&nbsp;&nbsp; Отправить уведомление
+            </button>
+            <br>
+          </ng-container> -->
+        <app-tree-view [areaId]="areaId" (infoSelect)="onSelectedInfo($event)" (areaPartId)="onSelect($event)" (issetChildren)="onSelected($event)"
+          ></app-tree-view>
+      </div>
+      <div class="col-md-9 col-xs-12">
+        <app-remarks [areaId]="areaId" [infoSelectInfo]="infoSelectTree" [areaPartId]="areaPartId" [areaName]="(area|async)?.name"
+          [issetChildren]="issetChildren"></app-remarks>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+<!--ng-container ng-if="remarkList?.constructive.items.length>0">
+    <app-rpm-remark-checklist [remarkInfo]="remarkList"></app-rpm-remark-checklist>
+  </ng-container-->

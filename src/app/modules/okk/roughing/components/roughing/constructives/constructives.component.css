@@ -1,0 +1,6 @@
+.constructive{
+  display: flex;
+}
+.constructive .label{
+  flex: 1;
+}
